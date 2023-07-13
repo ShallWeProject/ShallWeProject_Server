@@ -10,6 +10,7 @@ springdoc:
     display-request-duration: true
     supported-submit-methods: GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH, TRACE
 
+
 #    enabled: false
 #    query-config-enabled: false
 #  api-docs:
