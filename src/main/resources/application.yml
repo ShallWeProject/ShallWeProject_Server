@@ -8,16 +8,16 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8??
-    url: jdbc:mysql://shallwe.cakvufpd6nku.ap-northeast-2.rds.amazonaws.com:3306/shallwe?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://shallwedb.cakvufpd6nku.ap-northeast-2.rds.amazonaws.com:3306/shallwedb?serverTimezone=Asia/Seoul
     username: admin
-    password: shallwe1234!
+    password: shallwe8124!
   sql:
     init:
       platform: mysql
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     generate-ddl: true
     show-sql: true
     properties:
