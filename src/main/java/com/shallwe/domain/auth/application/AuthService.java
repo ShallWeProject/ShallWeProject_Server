@@ -11,6 +11,7 @@ import com.shallwe.domain.user.domain.Provider;
 import com.shallwe.domain.user.domain.Role;
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.user.domain.User;
+import com.shallwe.global.error.DefaultAuthenticationException;
 import com.shallwe.global.error.DefaultException;
 import com.shallwe.global.payload.ApiResponse;
 import com.shallwe.global.payload.ErrorCode;
@@ -36,11 +37,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class AuthService {
 
-    private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
     private final CustomTokenProviderService customTokenProviderService;
     
-    private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
 
     public ResponseEntity<?> refresh(RefreshTokenReq tokenRefreshRequest){
@@ -48,8 +46,9 @@ public class AuthService {
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
         DefaultAssert.isAuthentication(checkValid);
 
-        Optional<Token> token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken());
-        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(token.get().getUserEmail());
+        Token token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken())
+                .orElseThrow(() -> new DefaultAuthenticationException(ErrorCode.INVALID_AUTHENTICATION));
+        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(token.getUserEmail());
 
         //4. refresh token 정보 값을 업데이트 한다.
         //시간 유효성 확인
@@ -57,12 +56,12 @@ public class AuthService {
 
         Long expirationTime = customTokenProviderService.getExpiration(tokenRefreshRequest.getRefreshToken());
         if(expirationTime > 0){
-            tokenMapping = customTokenProviderService.refreshToken(authentication, token.get().getRefreshToken());
+            tokenMapping = customTokenProviderService.refreshToken(authentication, token.getRefreshToken());
         }else{
             tokenMapping = customTokenProviderService.createToken(authentication);
         }
 
-        Token updateToken = token.get().updateRefreshToken(tokenMapping.getRefreshToken());
+        Token updateToken = token.updateRefreshToken(tokenMapping.getRefreshToken());
         tokenRepository.save(updateToken);
 
         AuthRes authResponse = AuthRes.builder().accessToken(tokenMapping.getAccessToken()).refreshToken(updateToken.getRefreshToken()).build();
@@ -75,15 +74,15 @@ public class AuthService {
         DefaultAssert.isAuthentication(checkValid);
 
         //4 token 정보를 삭제한다.
-        Optional<Token> token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken());
-        tokenRepository.delete(token.get());
+        Token token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken())
+                .orElseThrow(() -> new DefaultAuthenticationException(ErrorCode.INVALID_AUTHENTICATION));
+        tokenRepository.delete(token);
         ApiResponse apiResponse = ApiResponse.builder().check(true).information(Message.builder().message("로그아웃 하였습니다.").build()).build();
 
         return ResponseEntity.ok(apiResponse);
     }
 
     private boolean valid(String refreshToken){
-
         //1. 토큰 형식 물리적 검증
         boolean validateCheck = customTokenProviderService.validateToken(refreshToken);
         DefaultAssert.isTrue(validateCheck, "Token 검증에 실패하였습니다.");
@@ -98,6 +97,5 @@ public class AuthService {
 
         return true;
     }
-
 
 }
