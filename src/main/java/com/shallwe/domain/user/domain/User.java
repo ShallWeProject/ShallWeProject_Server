@@ -18,9 +18,9 @@ import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "status = 'ACTIVE'")
 public class User extends BaseEntity {
 
@@ -75,4 +75,5 @@ public class User extends BaseEntity {
     public void updateProfileImage(String imageUrl){
         this.profileImgUrl = imageUrl;
     }
+
 }

@@ -21,4 +21,5 @@ public class AuthRes {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
 }
