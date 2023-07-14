@@ -51,4 +51,15 @@ public class Kakao extends OAuth2UserInfo {
     public String getProvider(){
         return Provider.kakao.toString();
     }
+
+    @Override
+    public String getBirthDay() {
+        Map<String, Object> properties = (Map<String, Object>) attributes.get("kakao_account");
+
+        if (properties == null) {
+            return null;
+        }
+        return (String) properties.get("birthday");
+    }
+
 }

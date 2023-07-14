@@ -29,7 +29,7 @@ public class User extends BaseEntity {
 
     private String name;
 
-    private LocalDate birthDay;
+    private String birthDay;
 
     private Integer age;
 
@@ -53,7 +53,7 @@ public class User extends BaseEntity {
     private Role role;
 
     @Builder
-    public User(Long id, String name, LocalDate birthDay, Integer age, String email, String password, String profileImgUrl, Gender gender, Boolean marketingConsent, Provider provider, String providerId, Role role) {
+    public User(Long id, String name, String birthDay, Integer age, String email, String password, String profileImgUrl, Gender gender, Boolean marketingConsent, Provider provider, String providerId, Role role) {
         this.id = id;
         this.name = name;
         this.birthDay = birthDay;

@@ -61,6 +61,7 @@ public class CustomDefaultOAuth2UserService extends DefaultOAuth2UserService{
                     .email(oAuth2UserInfo.getEmail())
                     .profileImgUrl(oAuth2UserInfo.getImageUrl())
                     .role(Role.USER)
+                    .birthDay(oAuth2UserInfo.getBirthDay())
                     .build();
         
         return userRepository.save(user);
