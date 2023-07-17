@@ -12,7 +12,6 @@ import com.shallwe.domain.user.domain.Role;
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.global.error.DefaultAuthenticationException;
-import com.shallwe.global.error.DefaultException;
 import com.shallwe.global.payload.ApiResponse;
 import com.shallwe.global.payload.ErrorCode;
 import com.shallwe.global.payload.Message;
