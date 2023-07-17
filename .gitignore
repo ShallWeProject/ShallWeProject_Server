@@ -22,9 +22,12 @@ bin/
 *.iws
 *.iml
 *.ipr
+*.yml
+application-database.yml
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+/src/main/resources/database/application-database.yml
 
 ### NetBeans ###
 /nbproject/private/
