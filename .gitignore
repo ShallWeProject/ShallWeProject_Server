@@ -18,6 +18,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+application.yml
 .idea
 *.iws
 *.iml
@@ -28,6 +29,10 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 /src/main/resources/database/application-database.yml
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+/src/main/resources/application.yml
 
 ### NetBeans ###
 /nbproject/private/
