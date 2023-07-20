@@ -1,7 +1,7 @@
 package com.shallwe.domain.user.exception;
 
-public class DefaultException extends RuntimeException {
-    public DefaultException(){
+public class InvalidUserException extends RuntimeException {
+    public InvalidUserException(){
         super("유저가 올바르지 않습니다.");
     }
 }

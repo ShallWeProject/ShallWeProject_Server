@@ -8,8 +8,8 @@ import com.shallwe.domain.user.domain.repository.UserRepository;
 
 import com.shallwe.domain.user.dto.UserDeleteRes;
 import com.shallwe.domain.user.dto.UserRes;
-import com.shallwe.domain.user.exception.DefaultException;
-import com.shallwe.domain.user.exception.TokenExpirationException;
+import com.shallwe.domain.user.exception.InvalidUserException;
+import com.shallwe.domain.user.exception.InvalidTokenException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService{
 //        User user = userRepository.findById(userPrincipal.getId())
 //                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_CHECK, "유저가 올바르지 않습니다."));
 
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(DefaultException::new);
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
         return UserRes.toDto(user);
 
 //        ApiResponse apiResponse = ApiResponse.builder().check(true).information(user).build();
@@ -43,10 +43,10 @@ public class UserServiceImpl implements UserService{
     public UserDeleteRes deleteCurrentUser(UserPrincipal userPrincipal){
 //        User user = userRepository.findById(userPrincipal.getId())
 //                .orElseThrow(() -> new DefaultException(ErrorCode.INVALID_CHECK, "유저가 올바르지 않습니다"));
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(DefaultException::new);
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         Token token = tokenRepository.findByUserEmail(user.getEmail())
-                .orElseThrow(TokenExpirationException::new);
+                .orElseThrow(InvalidTokenException::new);
         user.updateStatus(Status.DELETE);
         tokenRepository.delete(token);
 

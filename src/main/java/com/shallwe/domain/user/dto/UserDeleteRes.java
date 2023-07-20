@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class UserDeleteRes {
+
     private String message;
 
     @Builder
@@ -21,8 +22,5 @@ public class UserDeleteRes {
 
         return builder.build();
     }
-
-
-
 
 }
