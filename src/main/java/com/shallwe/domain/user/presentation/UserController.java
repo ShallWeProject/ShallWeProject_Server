@@ -6,7 +6,7 @@ import com.shallwe.domain.user.dto.UserDeleteRes;
 import com.shallwe.domain.user.dto.UserRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
-import com.shallwe.global.dto.response.ResponseCustom;
+import com.shallwe.global.payload.ResponseCustom;
 import com.shallwe.global.payload.ErrorResponse;
 import com.shallwe.global.payload.Message;
 import io.swagger.v3.oas.annotations.Operation;

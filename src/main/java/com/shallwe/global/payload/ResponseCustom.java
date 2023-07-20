@@ -1,4 +1,4 @@
-package com.shallwe.global.dto.response;
+package com.shallwe.global.payload;
 
 
 import lombok.*;
@@ -32,7 +32,7 @@ public class ResponseCustom<T>{
     public static <T> ResponseCustom<T> CREATED(@Nullable T data) {
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .statusCode(HttpStatus.OK.value())
                 .data(data)
                 .build();
