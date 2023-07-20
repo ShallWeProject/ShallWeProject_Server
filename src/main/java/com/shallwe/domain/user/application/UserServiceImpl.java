@@ -9,7 +9,7 @@ import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.dto.UserDeleteRes;
 import com.shallwe.domain.user.dto.UserRes;
 import com.shallwe.domain.user.exception.InvalidUserException;
-import com.shallwe.domain.user.exception.TokenExpirationException;
+import com.shallwe.domain.user.exception.InvalidTokenException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         Token token = tokenRepository.findByUserEmail(user.getEmail())
-                .orElseThrow(TokenExpirationException::new);
+                .orElseThrow(InvalidTokenException::new);
         user.updateStatus(Status.DELETE);
         tokenRepository.delete(token);
 

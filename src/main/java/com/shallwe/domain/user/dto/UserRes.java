@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class UserRes {
+
     private Long id;
 
     private String name;

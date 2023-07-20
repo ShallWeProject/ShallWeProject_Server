@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.shallwe.domain.user.exception.InvalidUserException;
-import com.shallwe.domain.user.exception.DefaultNullPointerException;
-import com.shallwe.domain.user.exception.InvalidParameterException;
 import com.shallwe.global.error.DefaultAuthenticationException;
 
 
+import com.shallwe.global.error.DefaultNullPointerException;
+import com.shallwe.global.error.InvalidParameterException;
 import com.shallwe.global.payload.ErrorCode;
 
 import org.springframework.util.Assert;
@@ -30,13 +30,13 @@ public class DefaultAssert extends Assert{
 
     public static void isValidParameter(Errors errors){
         if(errors.hasErrors()){
-            throw new InvalidParameterException();
+            throw new InvalidParameterException(errors);
         }
     }
 
     public static void isObjectNull(Object object){
         if(object == null){
-            throw new DefaultNullPointerException();
+            throw new DefaultNullPointerException(ErrorCode.INVALID_CHECK);
         }
     }
 

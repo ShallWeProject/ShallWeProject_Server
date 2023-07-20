@@ -14,6 +14,7 @@ import lombok.Data;
 
 @Data
 public class ErrorResponse {
+
     private LocalDateTime timestamp = LocalDateTime.now();
 
     private String message;

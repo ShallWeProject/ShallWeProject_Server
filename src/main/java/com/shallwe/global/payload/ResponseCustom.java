@@ -108,8 +108,6 @@ public class ResponseCustom<T>{
                 .build();
     }
 
-
-
     public static <T> ResponseCustom<T> UNAUTHORIZED(){
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
@@ -141,4 +139,5 @@ public class ResponseCustom<T>{
                 .statusCode(441)
                 .build();
     }
+
 }
