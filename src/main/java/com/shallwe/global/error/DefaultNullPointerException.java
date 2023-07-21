@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class DefaultNullPointerException extends NullPointerException{
-    
+
     private ErrorCode errorCode;
 
     public DefaultNullPointerException(ErrorCode errorCode) {

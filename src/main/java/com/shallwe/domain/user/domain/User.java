@@ -1,6 +1,5 @@
 package com.shallwe.domain.user.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -8,21 +7,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shallwe.domain.common.BaseEntity;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDate;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "status = 'ACTIVE'")
 public class User extends BaseEntity {
 
@@ -31,38 +29,51 @@ public class User extends BaseEntity {
 
     private String name;
 
+    private String birthDay;
+
+    private Integer age;
+
     @Email
     private String email;
 
     private String password;
 
-    private String imageUrl;
+    private String profileImgUrl;
+
+    private Gender gender;
+
+    private Boolean marketingConsent;
 
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
+    private String providerId;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private String providerId;
-
     @Builder
-    public User(Long id, String name, String email, String password, String imageUrl, Provider provider, Role role, String providerId) {
+    public User(Long id, String name, String birthDay, Integer age, String email, String password, String profileImgUrl, Gender gender, Boolean marketingConsent, Provider provider, String providerId, Role role) {
         this.id = id;
         this.name = name;
+        this.birthDay = birthDay;
+        this.age = age;
         this.email = email;
         this.password = password;
-        this.imageUrl = imageUrl;
+        this.profileImgUrl = profileImgUrl;
+        this.gender = gender;
+        this.marketingConsent = marketingConsent;
         this.provider = provider;
-        this.role = role;
         this.providerId = providerId;
+        this.role = role;
     }
 
     public void updateName(String name){
         this.name = name;
     }
 
-    public void updateImageUrl(String imageUrl){
-        this.imageUrl = imageUrl;
+    public void updateProfileImage(String imageUrl){
+        this.profileImgUrl = imageUrl;
     }
+
 }

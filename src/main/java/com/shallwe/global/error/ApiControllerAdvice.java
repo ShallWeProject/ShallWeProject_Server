@@ -19,7 +19,7 @@ public class ApiControllerAdvice {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<?> handleHttpRequestMethodNotSupportedException(
             HttpRequestMethodNotSupportedException e) {
-        
+
         final ErrorResponse response = ErrorResponse
                 .builder()
                 .status(HttpStatus.METHOD_NOT_ALLOWED.value())
@@ -27,13 +27,13 @@ public class ApiControllerAdvice {
                 .clazz(e.getMethod())
                 .message(e.getMessage())
                 .build();
-        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();        
+        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
         return new ResponseEntity<>(apiResponse, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        
+
         ErrorResponse response = ErrorResponse
                 .builder()
                 .status(HttpStatus.METHOD_NOT_ALLOWED.value())
@@ -43,7 +43,7 @@ public class ApiControllerAdvice {
                 .fieldErrors(e.getFieldErrors())
                 .build();
 
-        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();        
+        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
@@ -57,14 +57,14 @@ public class ApiControllerAdvice {
                 .message(e.toString())
                 .fieldErrors(e.getFieldErrors())
                 .build();
-        
+
         ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @ExceptionHandler(DefaultException.class)
     protected ResponseEntity<?> handleDefaultException(DefaultException e) {
-        
+
         ErrorCode errorCode = e.getErrorCode();
 
         ErrorResponse response = ErrorResponse
@@ -73,14 +73,14 @@ public class ApiControllerAdvice {
                 .code(errorCode.getCode())
                 .message(e.toString())
                 .build();
-        
-        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();        
+
+        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
         return new ResponseEntity<>(apiResponse, HttpStatus.resolve(errorCode.getStatus()));
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> handleException(Exception e) {
-        
+
         ErrorResponse response = ErrorResponse
                 .builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -92,7 +92,7 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler(AuthenticationException.class)
     protected ResponseEntity<?> handleAuthenticationException(AuthenticationException e) {
-        
+
         ErrorResponse response = ErrorResponse
                 .builder()
                 .status(HttpStatus.NETWORK_AUTHENTICATION_REQUIRED.value())
@@ -113,7 +113,7 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    
+
     @ExceptionHandler(DefaultNullPointerException.class)
     protected ResponseEntity<?> handleNullPointerException(DefaultNullPointerException e) {
         ErrorResponse response = ErrorResponse

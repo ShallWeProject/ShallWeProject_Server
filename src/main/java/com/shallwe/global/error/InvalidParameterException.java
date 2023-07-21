@@ -22,5 +22,5 @@ public class InvalidParameterException extends DefaultException{
     public List<FieldError> getFieldErrors() {
         return errors.getFieldErrors();
     }
-    
+
 }

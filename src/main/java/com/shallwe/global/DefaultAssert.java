@@ -3,8 +3,10 @@ package com.shallwe.global;
 import java.util.List;
 import java.util.Optional;
 
+import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.error.DefaultAuthenticationException;
-import com.shallwe.global.error.DefaultException;
+
+
 import com.shallwe.global.error.DefaultNullPointerException;
 import com.shallwe.global.error.InvalidParameterException;
 import com.shallwe.global.payload.ErrorCode;
@@ -16,13 +18,13 @@ public class DefaultAssert extends Assert{
 
     public static void isTrue(boolean value){
         if(!value){
-            throw new DefaultException(ErrorCode.INVALID_CHECK);
+            throw new InvalidUserException();
         }
     }
 
     public static void isTrue(boolean value, String message){
         if(!value){
-            throw new DefaultException(ErrorCode.INVALID_CHECK, message);
+            throw new InvalidUserException();
         }
     }
 
@@ -31,7 +33,7 @@ public class DefaultAssert extends Assert{
             throw new InvalidParameterException(errors);
         }
     }
-    
+
     public static void isObjectNull(Object object){
         if(object == null){
             throw new DefaultNullPointerException(ErrorCode.INVALID_CHECK);
@@ -40,19 +42,19 @@ public class DefaultAssert extends Assert{
 
     public static void isListNull(List<Object> values){
         if(values.isEmpty()){
-            throw new DefaultException(ErrorCode.INVALID_FILE_PATH);
+            throw new InvalidUserException();
         }
     }
 
     public static void isListNull(Object[] values){
         if(values == null){
-            throw new DefaultException(ErrorCode.INVALID_FILE_PATH);
+            throw new InvalidUserException();
         }
     }
 
     public static void isOptionalPresent(Optional<?> value){
         if(!value.isPresent()){
-            throw new DefaultException(ErrorCode.INVALID_PARAMETER);
+            throw new InvalidUserException();
         }
     }
 

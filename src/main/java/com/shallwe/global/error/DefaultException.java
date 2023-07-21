@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class DefaultException extends RuntimeException{
-    
+
     private ErrorCode errorCode;
 
     public DefaultException(ErrorCode errorCode) {
