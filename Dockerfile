@@ -1,7 +1,7 @@
 FROM openjdk:17-jdk
 
 # JAR_FILE 변수 정의
-ARG JAR_FILE=./build/libs/ShallWeProject_Server-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=./build/libs/Shallwe-0.0.1-SNAPSHOT.jar
 
 # JAR 파일 메인 디렉터리에 복사
 COPY ${JAR_FILE} app.jar
