@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -55,5 +56,11 @@ public class UserController {
     ) {
         return ResponseCustom.OK(userServiceImpl.deleteCurrentUser(userPrincipal));
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> testController() {
+        return ResponseEntity.ok("test");
+    }
+
 
 }
