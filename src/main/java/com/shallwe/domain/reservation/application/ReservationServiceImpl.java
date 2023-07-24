@@ -4,9 +4,10 @@ import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
+import com.shallwe.domain.reservation.exception.DefaultException;
+import com.shallwe.domain.reservation.exception.InvalidParameterException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
-import com.shallwe.domain.user.exception.DefaultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ public class ReservationServiceImpl {
 //    private final GiftRepository giftRepository;
 
 
-    //id 로 reservation 가져오기
+    //Reservation id 로 reservation 가져오기
     private Reservation getReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow(DefaultException::new);
         return reservation;
@@ -37,6 +38,26 @@ public class ReservationServiceImpl {
 
         return reservationRepository.save(reservation);
     }
+    public List<ReservationResponse> findUserReservation(Long userId){
+        //파라미터로 넘겨받는 것도 좋지만 현재 세션 유저 정보를 받아서 findAllByUserId 하는 것도 괜찮아 보입니다.
+        List<ReservationResponse> reservationRes = new ArrayList<>();
+        List<Reservation> userReservations = reservationRepository.findAllByUserId(userId);
+        for (Reservation userreservation : userReservations) {
+            ReservationResponse reservationResponse= new ReservationResponse();
+            reservationResponse.setId(userreservation.getId());
+            //reservationRes1.setGift_id(userreservation.getGift_id());
+            reservationResponse.setPersons(userreservation.getPersons());
+            reservationResponse.setDate(userreservation.getDate());
+            reservationResponse.setSender(userreservation.getSender());
+            reservationResponse.setPhone_number(userreservation.getPhone_number());
+            reservationResponse.setInvitation_img(userreservation.getInvitation_img());
+            reservationResponse.setInvitation_comment(userreservation.getInvitation_comment());
+            reservationResponse.setReservation_status(userreservation.getReservation_status());
+            reservationRes.add(reservationResponse);
+        }
+        return reservationRes;
+    }
+
 
     public List<ReservationResponse> getAllReservation(){
         List<Reservation> reservations = reservationRepository.findAll();
