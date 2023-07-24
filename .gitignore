@@ -40,4 +40,3 @@ out/
 .vscode/
 /src/main/resources/application-ebprod.yml
 /src/main/resources/oauth2/
-/src/main/resources/database/
