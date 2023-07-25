@@ -7,4 +7,4 @@ ARG JAR_FILE=./build/libs/ShallWe-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
 # 시스템 진입점 정의
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} ${ENVIRONMENT_VALUE} -jar /app.jar"]
