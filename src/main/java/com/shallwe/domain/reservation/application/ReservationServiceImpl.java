@@ -4,11 +4,16 @@ import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
+
 import com.shallwe.domain.reservation.exception.DefaultException;
 import com.shallwe.domain.reservation.exception.InvalidParameterException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.global.config.security.token.UserPrincipal;
+import com.shallwe.domain.reservation.exception.InvalidReservationException;
+
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +32,17 @@ public class ReservationServiceImpl {
 
     //Reservation id 로 reservation 가져오기
     private Reservation getReservation(Long id) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(DefaultException::new);
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(InvalidReservationException::new);
         return reservation;
     }
 
     @Transactional
     public Reservation addReservation(Long userId, ReservationRequest reservationRequest){
+
         User user = userRepository.findById(userId).orElseThrow(DefaultException::new);
         Reservation reservation = ReservationRequest.toEntity(reservationRequest,user);
+
+        
         return reservationRepository.save(reservation);
     }
     public List<ReservationResponse> findUserReservation(Long userId){

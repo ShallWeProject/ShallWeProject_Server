@@ -5,7 +5,7 @@ import com.shallwe.domain.reservation.application.ReservationServiceImpl;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
-//import com.shallwe.global.dto.response.ResponseCustom;
+
 import com.shallwe.global.payload.ErrorResponse;
 import com.shallwe.global.payload.ResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
