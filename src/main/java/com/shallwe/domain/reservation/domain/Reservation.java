@@ -21,11 +21,12 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
+//    @OneToOne
 //    @JoinColumn(name = "gift_id")
 //    private Long gift_id;
-
-
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private Long persons;
 
@@ -47,11 +48,12 @@ public class Reservation {
 
 
     @Builder
-    public Reservation(Long id , Long gift_id, Long persons, LocalDate date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status){
+    public Reservation(Long id ,User user, Long gift_id, Long persons, LocalDate date, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status){
         this.id = id;
+        this.user= user;
         this.persons = persons;
         this.date = date;
-        this.sender = sender;
+        this.sender = user.getName();
         this.receiver = receiver;
         this.phone_number = phone_number;
         this.invitation_img = invitation_img;
