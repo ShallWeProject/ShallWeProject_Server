@@ -32,7 +32,7 @@ public class UserController {
     })
     @GetMapping
     public ResponseCustom<UserDetailRes> getCurrentUser(
-            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
         return ResponseCustom.OK(userServiceImpl.getCurrentUser(userPrincipal));
     }
@@ -44,7 +44,7 @@ public class UserController {
     })
     @DeleteMapping
     public ResponseCustom<DeleteUserRes> deleteCurrentUser(
-            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
         return ResponseCustom.OK(userServiceImpl.deleteCurrentUser(userPrincipal));
     }
@@ -56,7 +56,7 @@ public class UserController {
     })
     @PatchMapping
     public ResponseCustom<SignUpUserRes> signUpCurrentUser(
-            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @Parameter(description = "SignUpUserReq 를 확인해주세요.", required = true) @RequestBody SignUpUserReq signUpUserReq
             ) {
         return ResponseCustom.OK(userServiceImpl.signUpCurrentUser(userPrincipal, signUpUserReq));

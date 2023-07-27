@@ -39,6 +39,7 @@ public class User extends BaseEntity {
 
     private String profileImgUrl;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private Boolean marketingConsent;

@@ -3,6 +3,7 @@ package com.shallwe.domain.user.application;
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
 import com.shallwe.domain.common.Status;
+import com.shallwe.domain.user.domain.Gender;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 
