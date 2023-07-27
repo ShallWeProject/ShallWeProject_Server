@@ -4,9 +4,9 @@ import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
+import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
-import com.shallwe.domain.user.exception.InvalidUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class ReservationServiceImpl {
 
     //id 로 reservation 가져오기
     private Reservation getReservation(Long id) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(InvalidUserException::new);
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(InvalidReservationException::new);
         return reservation;
     }
 
