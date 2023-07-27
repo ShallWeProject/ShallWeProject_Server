@@ -8,6 +8,7 @@ import com.shallwe.domain.reservation.exception.DefaultException;
 import com.shallwe.domain.reservation.exception.InvalidParameterException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
+import com.shallwe.global.config.security.token.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +34,7 @@ public class ReservationServiceImpl {
     @Transactional
     public Reservation addReservation(Long userId, ReservationRequest reservationRequest){
         User user = userRepository.findById(userId).orElseThrow(DefaultException::new);
-        String userName = user.getName();
-        Reservation reservation = ReservationRequest.toEntity(reservationRequest,userName);
-
+        Reservation reservation = ReservationRequest.toEntity(reservationRequest,user);
         return reservationRepository.save(reservation);
     }
     public List<ReservationResponse> findUserReservation(Long userId){
