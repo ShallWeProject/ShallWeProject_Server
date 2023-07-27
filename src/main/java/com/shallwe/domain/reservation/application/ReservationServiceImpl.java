@@ -31,7 +31,7 @@ public class ReservationServiceImpl {
 
     @Transactional
     public Reservation addReservation(Long userId, ReservationRequest reservationRequest){
-        User user = userRepository.findById(userId).orElseThrow(InvalidReservationException::new);
+        User user = userRepository.findById(userId).orElseThrow(InvalidUserException::new);
         String userName = user.getName();
         Reservation reservation = ReservationRequest.toEntity(reservationRequest,userName);
 
