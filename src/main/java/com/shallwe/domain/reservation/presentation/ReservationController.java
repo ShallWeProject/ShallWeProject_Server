@@ -2,6 +2,7 @@ package com.shallwe.domain.reservation.presentation;
 
 import com.shallwe.domain.reservation.application.ReservationServiceImpl;
 import com.shallwe.domain.reservation.domain.Reservation;
+import com.shallwe.domain.reservation.dto.DeleteReservationRes;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
@@ -69,6 +70,17 @@ public class ReservationController {
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ){
         return ResponseCustom.OK(reservationServiceimpl.updateReservation(updateReq,userPrincipal));
+    }
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "예약 삭제 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Reservation.class))}),
+            @ApiResponse(responseCode = "400", description = "예약 삭제 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))} )
+    })
+    @DeleteMapping
+    public ResponseCustom<DeleteReservationRes> deleteReservation(
+            @Parameter(description = "예약 ID를 확인해주세요.", required = true) @RequestHeader Long id,
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ){
+        return ResponseCustom.OK(reservationServiceimpl.deleteReservation(userPrincipal,id));
     }
 
 }

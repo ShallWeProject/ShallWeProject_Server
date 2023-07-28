@@ -2,6 +2,7 @@ package com.shallwe.domain.reservation.application;
 
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
+import com.shallwe.domain.reservation.dto.DeleteReservationRes;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
@@ -68,6 +69,7 @@ public class ReservationServiceImpl {
         for (Reservation reservation : reservations) {
             ReservationResponse reservationResponse1 = new ReservationResponse();
             reservationResponse1.setId(reservation.getId());
+            reservationResponse1.setUserId(reservation.getUser().getId());
             //reservationRes1.setGift_id(reservation.getGift_id());
             reservationResponse1.setPersons(reservation.getPersons());
             reservationResponse1.setDate(reservation.getDate());
@@ -104,9 +106,11 @@ public class ReservationServiceImpl {
     }
 
     @Transactional
-    public void deleteReservation(Long id) {
-        Reservation reservation = getReservation(id);
-        reservationRepository.delete(reservation);
+    public DeleteReservationRes deleteReservation(UserPrincipal userPrincipal, Long id) {
+        Optional<Reservation> foundReservation = reservationRepository.findByUserIdAndId(userPrincipal.getId(),id);
+        foundReservation.ifPresent(reservationRepository::delete);
+        foundReservation.orElseThrow(InvalidReservationException::new);
+        return DeleteReservationRes.toDTO();
     }
 
 
