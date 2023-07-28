@@ -44,9 +44,12 @@ public class ReservationController {
             @ApiResponse(responseCode = "400", description = "해당 유저 예약 정보 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
 
     })
-    @GetMapping("/user/{userId}")
-    public ResponseCustom<List<ReservationResponse>> getUserReservations(@PathVariable Long userId){
-        return ResponseCustom.OK(reservationServiceimpl.findUserReservation(userId));
+    @GetMapping("/user")
+    public ResponseCustom<List<ReservationResponse>> getUserReservations(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+
+    ){
+        return ResponseCustom.OK(reservationServiceimpl.findUserReservation(userPrincipal));
     }
     @Operation(summary ="예약 추가하기", description = "현재 유저, 경험을 가져와 예약을 추가합니다.")
     @ApiResponses(value = {

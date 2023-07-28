@@ -55,4 +55,19 @@ public class ReservationResponse {
         return builder.build();
     }
 
+    public static ReservationResponse fromReservation(Reservation reservation) {
+        ReservationResponse reservationResponse = new ReservationResponse();
+        reservationResponse.setId(reservation.getId());
+        reservationResponse.setUserId(reservationResponse.getUserId());
+        reservationResponse.setPersons(reservation.getPersons());
+        reservationResponse.setDate(reservation.getDate());
+        reservationResponse.setSender(reservation.getSender());
+        reservationResponse.setReceiver(reservation.getReceiver());
+        reservationResponse.setPhone_number(reservation.getPhone_number());
+        reservationResponse.setInvitation_img(reservation.getInvitation_img());
+        reservationResponse.setInvitation_comment(reservation.getInvitation_comment());
+        reservationResponse.setReservation_status(reservation.getReservation_status());
+
+        return reservationResponse;
+    }
 }
