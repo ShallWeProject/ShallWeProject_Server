@@ -22,7 +22,7 @@ public class Reservation {
 
     private Long id;
 
-//    @ManyToOne
+//    @OneToOne
 //    @JoinColumn(name = "gift_id")
 //    private Long gift_id;
 
@@ -54,7 +54,7 @@ public class Reservation {
         this.user = user;
         this.persons = persons;
         this.date = date;
-        this.sender = sender;
+        this.sender = user.getName();
         this.receiver = receiver;
         this.phone_number = phone_number;
         this.invitation_img = invitation_img;
@@ -70,4 +70,5 @@ public class Reservation {
         this.invitation_img = Optional.ofNullable(updateReq.getInvitation_img()).orElse(this.invitation_img);
         this.invitation_comment = Optional.ofNullable(updateReq.getInvitation_comment()).orElse(this.invitation_comment);
     }
+
 }
