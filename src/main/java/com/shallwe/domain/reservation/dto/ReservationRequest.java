@@ -13,10 +13,9 @@ import static com.shallwe.domain.reservation.domain.Reservation_status.BOOKED;
 @Getter
 @Setter
 @Data
-@ToString
 public class ReservationRequest {
     //private Long gift_id;
-
+    private Long userid;
     private Long persons;
     private LocalDateTime date;
     private String sender;
@@ -26,7 +25,7 @@ public class ReservationRequest {
     private String invitation_comment;
     private Reservation_status reservation_status;
 
-    public static Reservation toEntity(final ReservationRequest reservationRequest, final User user){
+    public static Reservation toEntity(final ReservationRequest reservationRequest, final User user) {
         try {
             Reservation toEntity = Reservation.builder()
                     .user(user)

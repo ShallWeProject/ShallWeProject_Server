@@ -4,6 +4,7 @@ import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
+import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.reservation.exception.InvalidUserException;
 import com.shallwe.domain.user.domain.User;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -80,11 +82,19 @@ public class ReservationServiceImpl {
     }
 
     @Transactional
-    public Reservation updateReservation(Long id, ReservationRequest updateRequest) {
-
-        Reservation reservation = getReservation(id);
-        return reservation;
+    public ReservationResponse updateReservation(UpdateReservationReq updateReq, UserPrincipal userPrincipal) {
+        // 로그인한 사용자 ID와 예약 ID로 예약 찾기
+        Optional<Reservation> foundReservation =
+                reservationRepository.findByUserIdAndId(userPrincipal.getId(), updateReq.getId());
+        // 예약을 찾은 후 업데이트 및 저장, 아니면 예외 처리
+        Reservation updatedReservation = foundReservation.map(reservation -> {
+            reservation.updateReservation(updateReq);
+            return reservationRepository.save(reservation);
+        }).orElseThrow(InvalidReservationException::new);
+        // DTO로 변환 후 반환
+        return ReservationResponse.toDto(updatedReservation);
     }
+
 
     @Transactional
     public Reservation cancelReservation(Long id) {

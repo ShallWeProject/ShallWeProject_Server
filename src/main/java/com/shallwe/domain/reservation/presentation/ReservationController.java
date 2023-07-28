@@ -4,6 +4,7 @@ import com.shallwe.domain.reservation.application.ReservationServiceImpl;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
+import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.user.dto.SignUpUserReq;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -50,15 +51,24 @@ public class ReservationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "예약 생성 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Reservation.class))}),
             @ApiResponse(responseCode = "400", description = "예약 생성 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))} )
-
     })
     @PostMapping
     public ResponseCustom<ReservationResponse> createReservation(
-            @Parameter(description = " 를 확인해주세요.", required = true) @RequestBody ReservationRequest reservationRequest,
+            @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationRequest reservationRequest,
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ){
-
-
         return ResponseCustom.OK(reservationServiceimpl.addReservation(reservationRequest,userPrincipal));
+    }@Operation(summary ="예약 수정하기", description = "예약을 수정합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "예약 수정 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Reservation.class))}),
+            @ApiResponse(responseCode = "400", description = "예약 수정 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))} )
+    })
+    @PutMapping
+    public ResponseCustom<ReservationResponse> updateReservation(
+            @Parameter(description = "수정 요청을 확인해주세요.", required = true) @RequestBody UpdateReservationReq updateReq,
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ){
+        return ResponseCustom.OK(reservationServiceimpl.updateReservation(updateReq,userPrincipal));
     }
+
 }

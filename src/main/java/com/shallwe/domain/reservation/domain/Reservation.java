@@ -1,5 +1,6 @@
 package com.shallwe.domain.reservation.domain;
 
+import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -46,9 +48,8 @@ public class Reservation {
     private Reservation_status reservation_status;
 
 
-
     @Builder
-    public Reservation(Long id , Long gift_id,User user, Long persons, LocalDateTime date,String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status){
+    public Reservation(Long id, Long gift_id, User user, Long persons, LocalDateTime date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status) {
         this.id = id;
         this.user = user;
         this.persons = persons;
@@ -60,32 +61,13 @@ public class Reservation {
         this.invitation_comment = invitation_comment;
         this.reservation_status = reservation_status;
     }
-    public void updatePersons(Long persons){
-        this.persons=persons;
-    }
-    public void updateDate(LocalDateTime date){
-        this.date = date;
-    }
-    public void updateReceiver(String receiver){
-        this.receiver=receiver;
-    }
-    public void updatePhoneNumber(String phone_number){
-        this.phone_number=phone_number;
-    }
-    public void updateInvitation_img(String invitation_img){
-        this.invitation_img=invitation_img;
-    }
-    public void updateInvitation_comment(String invitation_comment){
-        this.invitation_comment=invitation_comment;
-    }
-    public void updateReservationStatus(Reservation_status reservationStatus){
-        this.reservation_status = reservationStatus;
-    }
 
-
-
-
-
-
-
+    public void updateReservation(UpdateReservationReq updateReq) {
+        this.persons = Optional.ofNullable(updateReq.getPersons()).orElse(this.persons);
+        this.date = Optional.ofNullable(updateReq.getDate()).orElse(this.date);
+        this.receiver = Optional.ofNullable(updateReq.getReceiver()).orElse(this.receiver);
+        this.phone_number = Optional.ofNullable(updateReq.getPhone_number()).orElse(this.phone_number);
+        this.invitation_img = Optional.ofNullable(updateReq.getInvitation_img()).orElse(this.invitation_img);
+        this.invitation_comment = Optional.ofNullable(updateReq.getInvitation_comment()).orElse(this.invitation_comment);
+    }
 }
