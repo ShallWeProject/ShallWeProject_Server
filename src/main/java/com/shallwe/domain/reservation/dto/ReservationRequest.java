@@ -2,6 +2,7 @@ package com.shallwe.domain.reservation.dto;
 
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.Reservation_status;
+import com.shallwe.domain.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,12 +38,12 @@ public class ReservationRequest {
         this.reservation_status=reservation_status;
     }
 
-    public static Reservation toEntity(ReservationRequest reservationRequest,String username){
+    public static Reservation toEntity(ReservationRequest reservationRequest, User user){
         return Reservation.builder()
                 .id(reservationRequest.getId())
+                .user(user)
                 .persons(reservationRequest.getPersons())
                 .date(reservationRequest.getDate())
-                .sender(username)
                 .receiver(reservationRequest.getReceiver())
                 .phone_number(reservationRequest.getPhone_number())
                 .invitation_img(reservationRequest.getInvitation_img())
