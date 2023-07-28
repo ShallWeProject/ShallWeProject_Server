@@ -58,17 +58,7 @@ public class ReservationServiceImpl {
         List<Reservation> reservations = reservationRepository.findAll();
         List<ReservationResponse> reservationRes = new ArrayList<>();
         for (Reservation reservation : reservations) {
-            ReservationResponse reservationResponse1 = new ReservationResponse();
-            reservationResponse1.setId(reservation.getId());
-            reservationResponse1.setUserId(reservation.getUser().getId());
-            //reservationRes1.setGift_id(reservation.getGift_id());
-            reservationResponse1.setPersons(reservation.getPersons());
-            reservationResponse1.setDate(reservation.getDate());
-            reservationResponse1.setSender(reservation.getSender());
-            reservationResponse1.setPhone_number(reservation.getPhone_number());
-            reservationResponse1.setInvitation_img(reservation.getInvitation_img());
-            reservationResponse1.setInvitation_comment(reservation.getInvitation_comment());
-            reservationResponse1.setReservation_status(reservation.getReservation_status());
+            ReservationResponse reservationResponse1 =  ReservationResponse.fromReservation(reservation);
             reservationRes.add(reservationResponse1);
         }
         return reservationRes;
