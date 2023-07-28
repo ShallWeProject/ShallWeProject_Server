@@ -6,14 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @RequiredArgsConstructor
 public class ReservationResponse {
     private Long id;
+    private Long userId;
     //private Long gift_id;
     private Long persons;
-    private LocalDate date;
+    private LocalDateTime date;
     private String sender;
     private String receiver;
     private String phone_number;
@@ -22,9 +24,8 @@ public class ReservationResponse {
     private Reservation_status reservation_status;
 
     @Builder
-    public ReservationResponse(Long id, /*Long gift_id*/ Long persons, LocalDate date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status){
-        this.id = id;
-//        this.gift_id = gift_id;
+    public ReservationResponse(Long id, /*Long gift_id*/ Long persons, LocalDateTime date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status){
+//      this.gift_id = gift_id;
         this.persons=persons;
         this.date  = date;
         this.sender = sender;
@@ -38,50 +39,16 @@ public class ReservationResponse {
     public static ReservationResponse toDto(Reservation reservation){
         ReservationResponseBuilder builder = ReservationResponse.builder()
                 .id(reservation.getId())
-//                .gift_id(reservation.getgift_id())
+//              .gift_id(reservation.getgift_id())
                 .persons(reservation.getPersons())
                 .date(reservation.getDate())
-                .sender(reservation.getSender())
+                .sender(reservation.getUser().getName())
                 .receiver(reservation.getReceiver())
                 .invitation_img(reservation.getInvitation_img())
                 .invitation_comment(reservation.getInvitation_comment())
                 .reservation_status(reservation.getReservation_status());
+
                 return builder.build();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getPersons() {
-        return persons;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public String getInvitation_img() {
-        return invitation_img;
-    }
-
-    public String getInvitation_comment() {
-        return invitation_comment;
-    }
-
-    public Reservation_status getReservation_status() {
-        return reservation_status;
-    }
 }

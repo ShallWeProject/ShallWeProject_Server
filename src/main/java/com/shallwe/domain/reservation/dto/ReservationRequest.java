@@ -2,20 +2,23 @@ package com.shallwe.domain.reservation.dto;
 
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.Reservation_status;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.shallwe.domain.user.domain.User;
+import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import static com.shallwe.domain.reservation.domain.Reservation_status.BOOKED;
+
 
 @Getter
-
+@Setter
+@Data
+@ToString
 public class ReservationRequest {
-    private Long id;
     //private Long gift_id;
+
     private Long persons;
-    private LocalDate date;
+    private LocalDateTime date;
     private String sender;
     private String receiver;
     private String phone_number;
@@ -23,31 +26,26 @@ public class ReservationRequest {
     private String invitation_comment;
     private Reservation_status reservation_status;
 
-    @Builder
-    public ReservationRequest(Long id, /*Long gift_id*/ Long persons, LocalDate date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status){
-        this.id = id;
-//        this.gift_id = gift_id;
-        this.persons=persons;
-        this.date  = date;
-        this.sender = sender;
-        this.receiver =receiver;
-        this.phone_number = phone_number;
-        this.invitation_img= invitation_img;
-        this.invitation_comment=invitation_comment;
-        this.reservation_status=reservation_status;
-    }
+    public static Reservation toEntity(final ReservationRequest reservationRequest, final User user){
+        try {
+            Reservation toEntity = Reservation.builder()
+                    .user(user)
+                    .persons(reservationRequest.getPersons())
+                    .date(reservationRequest.getDate())
+                    .sender(user.getName())
+                    .receiver(reservationRequest.getReceiver())
+                    .phone_number(reservationRequest.getPhone_number())
+                    .invitation_img(reservationRequest.getInvitation_img())
+                    .invitation_comment(reservationRequest.getInvitation_comment())
+                    .reservation_status(BOOKED)
+                    .build();
+            return toEntity;
+        } catch (Exception e) {
+            System.err.println("예외 발생: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
 
-    public static Reservation toEntity(ReservationRequest reservationRequest,String username){
-        return Reservation.builder()
-                .id(reservationRequest.getId())
-                .persons(reservationRequest.getPersons())
-                .date(reservationRequest.getDate())
-                .sender(username)
-                .receiver(reservationRequest.getReceiver())
-                .phone_number(reservationRequest.getPhone_number())
-                .invitation_img(reservationRequest.getInvitation_img())
-                .invitation_comment(reservationRequest.getInvitation_comment())
-                .reservation_status(reservationRequest.getReservation_status())
-                .build();
+
     }
 }
