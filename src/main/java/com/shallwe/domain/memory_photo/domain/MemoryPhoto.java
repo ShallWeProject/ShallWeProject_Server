@@ -6,10 +6,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Entity
+@Getter
+@Where(clause = "status = 'ACTIVE'")
 public class MemoryPhoto extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
