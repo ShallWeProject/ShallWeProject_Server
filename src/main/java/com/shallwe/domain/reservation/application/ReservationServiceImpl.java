@@ -10,8 +10,8 @@ import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.reservation.exception.InvalidUserException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
+import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +41,6 @@ public class ReservationServiceImpl {
         Reservation reservation = ReservationRequest.toEntity(reservationRequest, user);
         Reservation savedReservation = reservationRepository.save(reservation);
         return ReservationResponse.toDto(savedReservation);
-
 
     }
     public List<ReservationResponse> findUserReservation(Long userId){
