@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ExperienceGift extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ExperienceGiftId;
+    private Long experienceGiftId;
 
     private String title;
 
@@ -36,8 +36,8 @@ public class ExperienceGift extends BaseEntity {
     private String description;
 
     @Builder
-    public ExperienceGift(Long ExperienceGiftId, String title, String thumbnail, Long price, String description){
-        this.ExperienceGiftId=ExperienceGiftId;
+    public ExperienceGift(Long experienceGiftId, String title, String thumbnail, Long price, String description){
+        this.experienceGiftId=experienceGiftId;
         this.title=title;
         this.thumbnail=thumbnail;
         this.price=price;

@@ -5,10 +5,9 @@ import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 
-import com.shallwe.domain.reservation.exception.DefaultException;
-import com.shallwe.domain.reservation.exception.InvalidParameterException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
+import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 
@@ -39,7 +38,7 @@ public class ReservationServiceImpl {
     @Transactional
     public Reservation addReservation(Long userId, ReservationRequest reservationRequest){
 
-        User user = userRepository.findById(userId).orElseThrow(DefaultException::new);
+        User user = userRepository.findById(userId).orElseThrow(InvalidUserException::new);
         Reservation reservation = ReservationRequest.toEntity(reservationRequest,user);
 
         
