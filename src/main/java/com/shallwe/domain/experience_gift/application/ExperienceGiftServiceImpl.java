@@ -1,11 +1,12 @@
 package com.shallwe.domain.experience_gift.application;
 
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
-import com.shallwe.domain.experience_gift.dto.ExperienceDetailRes;
-import com.shallwe.domain.experience_gift.dto.ExperienceRes;
+import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
+import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
+import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
+import com.shallwe.domain.experience_gift.dto.response.ExperienceSttCategoryRes;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
-import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -36,6 +37,20 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         ExperienceGift experienceGift=experienceGiftRepository.findByExperienceGiftId(ExperienceGiftId).orElseThrow(ExperienceGiftNotFoundException::new);
         return ExperienceDetailRes.toDto(experienceGift);
 
+    }
+
+    @Override
+    public List<ExperienceExpCategoryRes> getExpCategory(UserPrincipal userPrincipal, Long ExpCategoryId) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        return experienceGiftRepository.findByExpCategoryId(ExpCategoryId)
+                .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ExperienceSttCategoryRes> getSttCategory(UserPrincipal userPrincipal, Long SttCategoryId) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        return experienceGiftRepository.findBySttCategoryId(SttCategoryId)
+                .stream().map(ExperienceSttCategoryRes::toDto).collect(Collectors.toList());
     }
 
 
