@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 import static com.shallwe.domain.reservation.domain.Reservation_status.BOOKED;
 
 
-@Getter
-@Setter
+
 @Data
 public class ReservationRequest {
     //private Long gift_id;
