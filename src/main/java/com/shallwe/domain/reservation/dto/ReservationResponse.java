@@ -61,7 +61,7 @@ public class ReservationResponse {
         reservationResponse.setUserId(reservationResponse.getUserId());
         reservationResponse.setPersons(reservation.getPersons());
         reservationResponse.setDate(reservation.getDate());
-        reservationResponse.setSender(reservation.getSender());
+        reservationResponse.setSender(reservation.getUser().getName());
         reservationResponse.setReceiver(reservation.getReceiver());
         reservationResponse.setPhone_number(reservation.getPhone_number());
         reservationResponse.setInvitation_img(reservation.getInvitation_img());

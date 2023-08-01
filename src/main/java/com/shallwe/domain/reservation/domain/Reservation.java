@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table
 @Getter
 public class Reservation {
 
@@ -38,8 +37,6 @@ public class Reservation {
 
     private String phone_number;
 
-    private String sender;
-
     private String invitation_img;
 
     private String invitation_comment;
@@ -54,7 +51,6 @@ public class Reservation {
         this.user = user;
         this.persons = persons;
         this.date = date;
-        this.sender = sender;
         this.receiver = receiver;
         this.phone_number = phone_number;
         this.invitation_img = invitation_img;
