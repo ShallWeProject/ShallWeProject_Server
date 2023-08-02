@@ -22,7 +22,9 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public static final QReservation reservation = new QReservation("reservation");
 
-    public final DatePath<java.time.LocalDate> date = createDate("date", java.time.LocalDate.class);
+    public final DateTimePath<java.time.LocalDateTime> date = createDateTime("date", java.time.LocalDateTime.class);
+
+    public final com.shallwe.domain.experience_gift.domain.QExperienceGift experienceGift;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -60,6 +62,7 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public QReservation(Class<? extends Reservation> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.experienceGift = inits.isInitialized("experienceGift") ? new com.shallwe.domain.experience_gift.domain.QExperienceGift(forProperty("experienceGift"), inits.get("experienceGift")) : null;
         this.user = inits.isInitialized("user") ? new com.shallwe.domain.user.domain.QUser(forProperty("user")) : null;
     }
 

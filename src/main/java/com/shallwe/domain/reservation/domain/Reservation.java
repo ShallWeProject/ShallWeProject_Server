@@ -1,5 +1,6 @@
 package com.shallwe.domain.reservation.domain;
 
+import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.user.domain.User;
 import jakarta.persistence.*;
@@ -22,9 +23,9 @@ public class Reservation {
 
     private Long id;
 
-//    @OneToOne
-//    @JoinColumn(name = "gift_id")
-//    private Long gift_id;
+    @OneToOne
+    @JoinColumn(name = "experienceGiftId", nullable = false)
+    private ExperienceGift experienceGift;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -49,8 +50,9 @@ public class Reservation {
 
 
     @Builder
-    public Reservation(Long id, Long gift_id, User user, Long persons, LocalDateTime date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status) {
+    public Reservation(Long id, ExperienceGift experienceGift, User user, Long persons, LocalDateTime date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status) {
         this.id = id;
+        this.experienceGift=experienceGift;
         this.user = user;
         this.persons = persons;
         this.date = date;

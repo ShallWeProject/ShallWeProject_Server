@@ -2,6 +2,7 @@ package com.shallwe.domain.experience_gift.domain;
 
 
 import com.shallwe.domain.common.BaseEntity;
+import com.shallwe.domain.reservation.domain.Reservation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,10 +34,11 @@ public class ExperienceGift extends BaseEntity {
     @JoinColumn(name = "SttCategoryId")
     private SttCategory sttCategory;
 
+
     private String description;
 
     @Builder
-    public ExperienceGift(Long experienceGiftId, String title, String thumbnail, Long price, String description){
+    public ExperienceGift(Long experienceGiftId,String title, String thumbnail, Long price, String description){
         this.experienceGiftId=experienceGiftId;
         this.title=title;
         this.thumbnail=thumbnail;

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ReservationResponse {
     private Long id;
     private Long userId;
-    //private Long gift_id;
+    private Long experienceGiftId;
     private Long persons;
     private LocalDateTime date;
     private String sender;
@@ -24,8 +24,8 @@ public class ReservationResponse {
     private Reservation_status reservation_status;
 
     @Builder
-    public ReservationResponse(Long id, /*Long gift_id*/ Long userId, Long persons, LocalDateTime date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status) {
-//      this.gift_id = gift_id;
+    public ReservationResponse(Long id, Long experienceGiftId, Long userId, Long persons, LocalDateTime date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status) {
+        this.experienceGiftId = experienceGiftId;
         this.id = id;
         this.userId = userId;
         this.persons = persons;
@@ -41,7 +41,7 @@ public class ReservationResponse {
     public static ReservationResponse toDto(Reservation reservation) {
         ReservationResponseBuilder builder = ReservationResponse.builder()
                 .id(reservation.getId())
-//              .gift_id(reservation.getgift_id())
+                .experienceGiftId(reservation.getExperienceGift().getExperienceGiftId())
                 .userId(reservation.getUser().getId())
                 .persons(reservation.getPersons())
                 .date(reservation.getDate())

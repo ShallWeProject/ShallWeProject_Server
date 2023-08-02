@@ -1,5 +1,6 @@
 package com.shallwe.domain.reservation.dto;
 
+import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.Reservation_status;
 import com.shallwe.domain.user.domain.User;
@@ -15,7 +16,7 @@ import static com.shallwe.domain.reservation.domain.Reservation_status.BOOKED;
 @Setter
 @Data
 public class ReservationRequest {
-    //private Long gift_id;
+    private Long experienceGiftId;
     private Long userid;
     private Long persons;
     private LocalDateTime date;
