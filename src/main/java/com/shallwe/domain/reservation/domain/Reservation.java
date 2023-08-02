@@ -1,5 +1,7 @@
 package com.shallwe.domain.reservation.domain;
 
+
+import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.user.domain.User;
 import jakarta.persistence.*;
@@ -21,9 +23,11 @@ public class Reservation {
 
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "gift_id")
-//    private Long gift_id;
+
+
+    @OneToOne
+    @JoinColumn(name = "experienceGiftId", nullable = false)
+    private ExperienceGift experienceGift;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -36,6 +40,8 @@ public class Reservation {
     private String receiver;
 
     private String phone_number;
+
+    private String sender;
 
     private String invitation_img;
 
@@ -66,4 +72,5 @@ public class Reservation {
         this.invitation_img = Optional.ofNullable(updateReq.getInvitation_img()).orElse(this.invitation_img);
         this.invitation_comment = Optional.ofNullable(updateReq.getInvitation_comment()).orElse(this.invitation_comment);
     }
+
 }

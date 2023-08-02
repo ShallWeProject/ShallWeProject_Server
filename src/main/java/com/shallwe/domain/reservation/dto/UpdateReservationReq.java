@@ -2,7 +2,6 @@ package com.shallwe.domain.reservation.dto;
 
 import com.shallwe.domain.user.domain.User;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 
