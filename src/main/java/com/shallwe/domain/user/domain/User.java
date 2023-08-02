@@ -16,7 +16,6 @@ import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.Where;
 
-import java.time.LocalDate;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -40,6 +39,7 @@ public class User extends BaseEntity {
 
     private String profileImgUrl;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private Boolean marketingConsent;
@@ -74,6 +74,18 @@ public class User extends BaseEntity {
 
     public void updateProfileImage(String imageUrl){
         this.profileImgUrl = imageUrl;
+    }
+
+    public void updateMarketingConsent(boolean status) {
+        this.marketingConsent = status;
+    }
+
+    public void updateGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public void updateAge(Integer age) {
+        this.age = age;
     }
 
 }

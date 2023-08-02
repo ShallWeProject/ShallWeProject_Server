@@ -2,19 +2,21 @@ package com.shallwe.domain.reservation.dto;
 
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.Reservation_status;
+import com.shallwe.domain.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
-@Data
+import java.time.LocalDateTime;
 @RequiredArgsConstructor
+@Data
 public class ReservationResponse {
     private Long id;
-    //private Long gift_id;
+    private Long userId;
+    private String user;
     private Long persons;
-    private LocalDate date;
-    private String sender;
+    private LocalDateTime date;
+    private Long experienceGiftId;
     private String receiver;
     private String phone_number;
     private String invitation_img;
@@ -22,66 +24,50 @@ public class ReservationResponse {
     private Reservation_status reservation_status;
 
     @Builder
-    public ReservationResponse(Long id, /*Long gift_id*/ Long persons, LocalDate date, String sender, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status){
+    public ReservationResponse(Long id, Long userId, String user, Long persons, LocalDateTime date,Long experienceGiftId, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status) {
         this.id = id;
-//        this.gift_id = gift_id;
-        this.persons=persons;
-        this.date  = date;
-        this.sender = sender;
-        this.receiver =receiver;
+        this.userId = userId;
+        this.persons = persons;
+        this.date = date;
+        this.experienceGiftId = experienceGiftId;
+        this.receiver = receiver;
         this.phone_number = phone_number;
-        this.invitation_img= invitation_img;
-        this.invitation_comment=invitation_comment;
-        this.reservation_status=reservation_status;
+        this.invitation_img = invitation_img;
+        this.invitation_comment = invitation_comment;
+        this.reservation_status = reservation_status;
     }
 
-    public static ReservationResponse toDto(Reservation reservation){
+    public static ReservationResponse toDto(Reservation reservation) {
         ReservationResponseBuilder builder = ReservationResponse.builder()
                 .id(reservation.getId())
-//                .gift_id(reservation.getgift_id())
+                .experienceGiftId(reservation.getExperienceGift().getExperienceGiftId())
+                .userId(reservation.getUser().getId())
+                .user(reservation.getUser().getName())
                 .persons(reservation.getPersons())
                 .date(reservation.getDate())
-                .sender(reservation.getSender())
+                .phone_number(reservation.getPhone_number())
                 .receiver(reservation.getReceiver())
                 .invitation_img(reservation.getInvitation_img())
                 .invitation_comment(reservation.getInvitation_comment())
                 .reservation_status(reservation.getReservation_status());
-                return builder.build();
+
+        return builder.build();
     }
 
-    public Long getId() {
-        return id;
-    }
+    public static ReservationResponse fromReservation(Reservation reservation) {
+        ReservationResponse reservationResponse = new ReservationResponse();
+        reservationResponse.setId(reservation.getId());
+        reservationResponse.setUserId(reservation.getUser().getId());
+        reservationResponse.setUser(reservation.getUser().getName());
+        reservationResponse.setPersons(reservation.getPersons());
+        reservationResponse.setDate(reservation.getDate());
+        reservationResponse.setExperienceGiftId(reservation.getExperienceGift().getExperienceGiftId());
+        reservationResponse.setReceiver(reservation.getReceiver());
+        reservationResponse.setPhone_number(reservation.getPhone_number());
+        reservationResponse.setInvitation_img(reservation.getInvitation_img());
+        reservationResponse.setInvitation_comment(reservation.getInvitation_comment());
+        reservationResponse.setReservation_status(reservation.getReservation_status());
 
-    public Long getPersons() {
-        return persons;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public String getInvitation_img() {
-        return invitation_img;
-    }
-
-    public String getInvitation_comment() {
-        return invitation_comment;
-    }
-
-    public Reservation_status getReservation_status() {
-        return reservation_status;
+        return reservationResponse;
     }
 }
