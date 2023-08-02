@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-
+@RequiredArgsConstructor
 @Data
 public class ReservationResponse {
     private Long id;
@@ -24,13 +24,12 @@ public class ReservationResponse {
     private Reservation_status reservation_status;
 
     @Builder
-    public ReservationResponse(Long id, Long userId, String user, Long persons, LocalDateTime date, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status) {
+    public ReservationResponse(Long id, Long userId, String user, Long persons, LocalDateTime date,Long experienceGiftId, String receiver, String phone_number, String invitation_img, String invitation_comment, Reservation_status reservation_status) {
         this.id = id;
         this.userId = userId;
         this.persons = persons;
         this.date = date;
         this.experienceGiftId = experienceGiftId;
-        this.sender = sender;
         this.receiver = receiver;
         this.phone_number = phone_number;
         this.invitation_img = invitation_img;
@@ -47,7 +46,6 @@ public class ReservationResponse {
                 .persons(reservation.getPersons())
                 .date(reservation.getDate())
                 .phone_number(reservation.getPhone_number())
-                .sender(reservation.getUser().getName())
                 .receiver(reservation.getReceiver())
                 .invitation_img(reservation.getInvitation_img())
                 .invitation_comment(reservation.getInvitation_comment())
@@ -63,6 +61,7 @@ public class ReservationResponse {
         reservationResponse.setUser(reservation.getUser().getName());
         reservationResponse.setPersons(reservation.getPersons());
         reservationResponse.setDate(reservation.getDate());
+        reservationResponse.setExperienceGiftId(reservation.getExperienceGift().getExperienceGiftId());
         reservationResponse.setReceiver(reservation.getReceiver());
         reservationResponse.setPhone_number(reservation.getPhone_number());
         reservationResponse.setInvitation_img(reservation.getInvitation_img());
