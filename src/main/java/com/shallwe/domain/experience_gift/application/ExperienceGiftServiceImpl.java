@@ -39,20 +39,6 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
 
     }
 
-//    @Override
-//    public List<ExperienceExpCategoryRes> getExpCategory(UserPrincipal userPrincipal, Long ExpCategoryId) {
-//        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-//        return experienceGiftRepository.findByExpCategoryId(ExpCategoryId)
-//                .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public List<ExperienceSttCategoryRes> getSttCategory(UserPrincipal userPrincipal, Long SttCategoryId) {
-//        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-//        return experienceGiftRepository.findBySttCategoryId(SttCategoryId)
-//                .stream().map(ExperienceSttCategoryRes::toDto).collect(Collectors.toList());
-//    }
-
     @Override
     public List<ExperienceSttCategoryRes> highSttCategoryPricedGift(UserPrincipal userPrincipal,Long SttCategoryId) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);

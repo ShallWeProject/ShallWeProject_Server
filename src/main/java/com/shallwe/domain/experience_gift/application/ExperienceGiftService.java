@@ -15,10 +15,6 @@ public interface ExperienceGiftService {
 
     ExperienceDetailRes getExperienceDetails(final UserPrincipal userPrincipal,Long ExperienceGiftId);
 
-//    List<ExperienceExpCategoryRes> getExpCategory(UserPrincipal userPrincipal, Long ExpCategoryId);
-//
-//    List<ExperienceSttCategoryRes> getSttCategory(UserPrincipal userPrincipal, Long SttCategoryId);
-
     List<ExperienceSttCategoryRes> highSttCategoryPricedGift(UserPrincipal userPrincipal,Long SttCategoryId);
 
     List<ExperienceSttCategoryRes> lowSttCategoryPricedGift(UserPrincipal userPrincipal, Long sttCategoryId);
