@@ -36,8 +36,10 @@ public class ReservationServiceImpl {
 
     @Transactional
     public ReservationResponse addReservation(final ReservationRequest reservationRequest, final UserPrincipal userPrincipal) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        Reservation reservation = ReservationRequest.toEntity(reservationRequest, user);
+        User sendUser = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        //#Todo 전화번호로 유저 검색해서, 해당 유저의 전화번호랑 이름을 receiver , phone num 으로 저장해야함.
+        //User receiveUser = userRepository.findby
+        Reservation reservation = ReservationRequest.toEntity(reservationRequest, sendUser);
         Reservation savedReservation = reservationRepository.save(reservation);
         return ReservationResponse.toDto(savedReservation);
 
