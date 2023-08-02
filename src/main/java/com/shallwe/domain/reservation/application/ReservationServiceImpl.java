@@ -28,7 +28,7 @@ public class ReservationServiceImpl {
 //    private final GiftRepository giftRepository;
 
 
-    //Reservation id 로 reservation 가져오기
+    //id 로 reservation 가져오기
     private Reservation getReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow(InvalidReservationException::new);
         return reservation;
@@ -36,32 +36,14 @@ public class ReservationServiceImpl {
 
     @Transactional
     public ReservationResponse addReservation(final ReservationRequest reservationRequest, final UserPrincipal userPrincipal) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        Reservation reservation = ReservationRequest.toEntity(reservationRequest, user);
+        User sendUser = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        //#Todo 전화번호로 유저 검색해서, 해당 유저의 전화번호랑 이름을 receiver , phone num 으로 저장해야함.
+        //User receiveUser = userRepository.findby
+        Reservation reservation = ReservationRequest.toEntity(reservationRequest, sendUser);
         Reservation savedReservation = reservationRepository.save(reservation);
         return ReservationResponse.toDto(savedReservation);
 
     }
-    public List<ReservationResponse> findUserReservation(Long userId){
-        //파라미터로 넘겨받는 것도 좋지만 현재 세션 유저 정보를 받아서 findAllByUserId 하는 것도 괜찮아 보입니다.
-        List<ReservationResponse> reservationRes = new ArrayList<>();
-        List<Reservation> userReservations = reservationRepository.findAllByUserId(userId);
-        for (Reservation userreservation : userReservations) {
-            ReservationResponse reservationResponse= new ReservationResponse();
-            reservationResponse.setId(userreservation.getId());
-            //reservationRes1.setGift_id(userreservation.getGift_id());
-            reservationResponse.setPersons(userreservation.getPersons());
-            reservationResponse.setDate(userreservation.getDate());
-            reservationResponse.setSender(userreservation.getSender());
-            reservationResponse.setPhone_number(userreservation.getPhone_number());
-            reservationResponse.setInvitation_img(userreservation.getInvitation_img());
-            reservationResponse.setInvitation_comment(userreservation.getInvitation_comment());
-            reservationResponse.setReservation_status(userreservation.getReservation_status());
-            reservationRes.add(reservationResponse);
-        }
-        return reservationRes;
-    }
-
 
     public List<ReservationResponse> findUserReservation(UserPrincipal userPrincipal) {
         List<ReservationResponse> reservationRes = new ArrayList<>();
