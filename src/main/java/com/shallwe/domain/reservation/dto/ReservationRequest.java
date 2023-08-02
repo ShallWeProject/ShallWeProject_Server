@@ -6,14 +6,12 @@ import com.shallwe.domain.reservation.domain.Reservation_status;
 import com.shallwe.domain.user.domain.User;
 import lombok.*;
 
-
 import java.time.LocalDateTime;
 
 import static com.shallwe.domain.reservation.domain.Reservation_status.BOOKED;
 
 
-@Getter
-@Setter
+
 @Data
 public class ReservationRequest {
     private Long experienceGiftId;

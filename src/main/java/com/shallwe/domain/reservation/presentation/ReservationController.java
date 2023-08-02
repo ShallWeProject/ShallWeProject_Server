@@ -50,6 +50,7 @@ public class ReservationController {
     public ResponseCustom<List<ReservationResponse>> getUserReservations(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
 
+
     ){
         return ResponseCustom.OK(reservationServiceimpl.findUserReservation(userPrincipal));
     }
