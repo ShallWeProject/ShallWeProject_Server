@@ -6,8 +6,10 @@ import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceSttCategoryRes;
+import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
+import com.shallwe.global.config.Constant;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.ErrorResponse;
@@ -54,30 +56,77 @@ public class ExperienceGiftController {
         return ResponseCustom.OK(experienceGiftService.getExperienceDetails(userPrincipal,ExperienceGiftId));
     }
 
-    @Operation(summary = "카테고리별 경험 조회", description = "카테고리별 경험 조회합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "카테고리별 경험 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceExpCategoryRes.class))}),
-            @ApiResponse(responseCode = "400", description = "카테고리별 경험 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-    })
-    @GetMapping("/exp-category/{ExpCategoryId}")
-    public ResponseCustom<List<ExperienceExpCategoryRes>> getExpCategory(
-            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @PathVariable Long ExpCategoryId
-    ){
-        return ResponseCustom.OK(experienceGiftService.getExpCategory(userPrincipal,ExpCategoryId));
-    }
+//    @Operation(summary = "카테고리별 경험 조회", description = "카테고리별 경험 조회합니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "카테고리별 경험 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceExpCategoryRes.class))}),
+//            @ApiResponse(responseCode = "400", description = "카테고리별 경험 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+//    })
+//    @GetMapping("/exp-category/{ExpCategoryId}")
+//    public ResponseCustom<List<ExperienceExpCategoryRes>> getExpCategory(
+//            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+//            @PathVariable Long ExpCategoryId
+//    ){
+//        return ResponseCustom.OK(experienceGiftService.getExpCategory(userPrincipal,ExpCategoryId));
+//    }
+//
+//    @Operation(summary = "상황별 추천 경험 조회", description = "상황별 추천 경험 조회합니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "상황별 추천 경험 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceSttCategoryRes.class))}),
+//            @ApiResponse(responseCode = "400", description = "상황별 추천 경험 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+//    })
+//    @GetMapping("/stt-category/{SttCategoryId}")
+//    public ResponseCustom<List<ExperienceSttCategoryRes>> getSttCategory(
+//            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+//            @PathVariable Long SttCategoryId
+//    ){
+//        return ResponseCustom.OK(experienceGiftService.getSttCategory(userPrincipal,SttCategoryId));
+//    }
 
-    @Operation(summary = "상황별 추천 경험 조회", description = "상황별 추천 경험 조회합니다.")
+    @Operation(summary = "상황별 카테고리 경험선물 조회", description = "상황별 카테고리 경험선물 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "상황별 추천 경험 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceSttCategoryRes.class))}),
-            @ApiResponse(responseCode = "400", description = "상황별 추천 경험 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "200", description = "상황별 경험선물 카테고리 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceSttCategoryRes.class))}),
+            @ApiResponse(responseCode = "400", description = "상황별 경험선물 카테고리 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/stt-category/{SttCategoryId}")
-    public ResponseCustom<List<ExperienceSttCategoryRes>> getSttCategory(
+    public ResponseCustom<List<ExperienceSttCategoryRes>> getSttCategoryGift(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @PathVariable Long SttCategoryId
-    ){
-        return ResponseCustom.OK(experienceGiftService.getSttCategory(userPrincipal,SttCategoryId));
+            @PathVariable Long SttCategoryId,
+            @RequestParam(name = "category") String category
+            ){
+        if (category.equals(Constant.ExperienceGiftConstant.POPULAR_EXPERIENCE_GIFT)) {
+            return null;
+        } else if(category.equals(Constant.ExperienceGiftConstant.HIGH_PRICED_ORDER)){
+            return ResponseCustom.OK(experienceGiftService.highSttCategoryPricedGift(userPrincipal,SttCategoryId));
+        } else if (category.equals(Constant.ExperienceGiftConstant.LOW_PRICED_ORDER)) {
+            return ResponseCustom.OK(experienceGiftService.lowSttCategoryPricedGift(userPrincipal,SttCategoryId));
+        }else{
+            throw new ExperienceGiftNotFoundException();
+        }
     }
+
+    @Operation(summary = "경험카테고리별 경험선물 조회", description = "경험카테고리별 경험선물 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "경험카테고리별 경험선물 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceExpCategoryRes.class))}),
+            @ApiResponse(responseCode = "400", description = "경험카테고리별 경험선물 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/exp-category/{ExpCategoryId}")
+    public ResponseCustom<List<ExperienceExpCategoryRes>> getExpCategoryGift(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @PathVariable Long ExpCategoryId,
+            @RequestParam(name = "category") String category
+    ){
+        if (category.equals(Constant.ExperienceGiftConstant.POPULAR_EXPERIENCE_GIFT)) {
+            return null;
+        } else if(category.equals(Constant.ExperienceGiftConstant.HIGH_PRICED_ORDER)){
+            return ResponseCustom.OK(experienceGiftService.highExpCategoryPricedGift(userPrincipal,ExpCategoryId));
+        } else if (category.equals(Constant.ExperienceGiftConstant.LOW_PRICED_ORDER)) {
+            return ResponseCustom.OK(experienceGiftService.lowExpCategoryPricedGift(userPrincipal,ExpCategoryId));
+        }else{
+            throw new ExperienceGiftNotFoundException();
+        }
+    }
+
+
+
 
 }

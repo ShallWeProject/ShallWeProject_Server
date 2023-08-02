@@ -39,18 +39,46 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
 
     }
 
+//    @Override
+//    public List<ExperienceExpCategoryRes> getExpCategory(UserPrincipal userPrincipal, Long ExpCategoryId) {
+//        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+//        return experienceGiftRepository.findByExpCategoryId(ExpCategoryId)
+//                .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public List<ExperienceSttCategoryRes> getSttCategory(UserPrincipal userPrincipal, Long SttCategoryId) {
+//        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+//        return experienceGiftRepository.findBySttCategoryId(SttCategoryId)
+//                .stream().map(ExperienceSttCategoryRes::toDto).collect(Collectors.toList());
+//    }
+
     @Override
-    public List<ExperienceExpCategoryRes> getExpCategory(UserPrincipal userPrincipal, Long ExpCategoryId) {
+    public List<ExperienceSttCategoryRes> highSttCategoryPricedGift(UserPrincipal userPrincipal,Long SttCategoryId) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        return experienceGiftRepository.findByExpCategoryId(ExpCategoryId)
+        return experienceGiftRepository.findGiftsBySttCategoryIdOrderByPriceDesc(SttCategoryId)
+                .stream().map(ExperienceSttCategoryRes::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ExperienceSttCategoryRes> lowSttCategoryPricedGift(UserPrincipal userPrincipal, Long SttCategoryId) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        return experienceGiftRepository.findGiftsBySttCategoryIdOrderByPriceAsc(SttCategoryId)
+                .stream().map(ExperienceSttCategoryRes::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ExperienceExpCategoryRes> highExpCategoryPricedGift(UserPrincipal userPrincipal, Long ExpCategoryId) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        return experienceGiftRepository.findGiftsByExpCategoryIdOrderByPriceDesc(ExpCategoryId)
                 .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<ExperienceSttCategoryRes> getSttCategory(UserPrincipal userPrincipal, Long SttCategoryId) {
+    public List<ExperienceExpCategoryRes> lowExpCategoryPricedGift(UserPrincipal userPrincipal, Long ExpCategoryId) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        return experienceGiftRepository.findBySttCategoryId(SttCategoryId)
-                .stream().map(ExperienceSttCategoryRes::toDto).collect(Collectors.toList());
+        return experienceGiftRepository.findGiftsByExpCategoryIdOrderByPriceAsc(ExpCategoryId)
+                .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
     }
 
 

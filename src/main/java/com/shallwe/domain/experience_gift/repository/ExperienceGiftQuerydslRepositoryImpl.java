@@ -15,17 +15,51 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
     private final JPAQueryFactory queryFactory;
 
 
+//    @Override
+//    public List<ExperienceGift> findByExpCategoryId(Long ExpCategoryId) {
+//        return queryFactory.selectFrom(experienceGift)
+//                .where(experienceGift.expCategory.ExpCategoryId.eq(ExpCategoryId))
+//                .fetch();
+//    }
+//
+//    @Override
+//    public List<ExperienceGift> findBySttCategoryId(Long SttCategoryId) {
+//        return queryFactory.selectFrom(experienceGift)
+//                .where(experienceGift.sttCategory.SttCategoryId.eq(SttCategoryId))
+//                .fetch();
+//    }
+
     @Override
-    public List<ExperienceGift> findByExpCategoryId(Long ExpCategoryId) {
+    public List<ExperienceGift> findGiftsBySttCategoryIdOrderByPriceDesc(Long SttCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.expCategory.ExpCategoryId.eq(ExpCategoryId))
+                .where(experienceGift.sttCategory.SttCategoryId.eq(SttCategoryId))
+                .orderBy(experienceGift.price.desc())
                 .fetch();
     }
 
     @Override
-    public List<ExperienceGift> findBySttCategoryId(Long SttCategoryId) {
+    public List<ExperienceGift> findGiftsBySttCategoryIdOrderByPriceAsc(Long SttCategoryId) {
         return queryFactory.selectFrom(experienceGift)
                 .where(experienceGift.sttCategory.SttCategoryId.eq(SttCategoryId))
+                .orderBy(experienceGift.price.asc())
                 .fetch();
     }
+
+    @Override
+    public List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceDesc(Long ExpCategoryId) {
+        return queryFactory.selectFrom(experienceGift)
+                .where(experienceGift.expCategory.ExpCategoryId.eq(ExpCategoryId))
+                .orderBy(experienceGift.price.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceAsc(Long ExpCategoryId) {
+        return queryFactory.selectFrom(experienceGift)
+                .where(experienceGift.expCategory.ExpCategoryId.eq(ExpCategoryId))
+                .orderBy(experienceGift.price.asc())
+                .fetch();
+    }
+
+
 }
