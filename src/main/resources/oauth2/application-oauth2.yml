@@ -2,37 +2,36 @@ spring:
   security:
     oauth2:
       client:
-        registration:
-          kakao:
-            client-id: ENC(CVLGv/Oo6xf5jecX82sCuQ==)
-            client-secret: ENC(Qdyp7reiuCB5Jjzvs8dx9Q==)
-            client-authentication-method: client_secret_post
-            redirect-uri: ENC(CjEPkpGjn5s3bqEOnjREKfp4UzmRVQ7LYpTpaetuwE0UDHUcheJD3bHp+zv1IF/Z9vCRT3GeVcc=)
-            authorization-grant-type: authorization_code
-            scope:
-              - profile_nickname,
-              - profile_image,
-              - account_email
-            client-name: Kakao
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-  profiles:
-    include: key
+        registration:
+          kakao:
+            client-id: ENC(13+qLO9Ek/O3xlToeAOO1x2zO61/WIsYqebJ4voPHNqjweHGBwneBranu3vzZNgl)
+            client-secret: ENC(uajefvIOFDUgV8gxPLqhQeR8wjeP8SJf5evY9nZhNFTcQk9AXInjxTJmDACzcdTs)
+            client-authentication-method: client_secret_post
+            redirect-uri: ENC(un+Q5809gxhtMBJ+fbHBEPk8EV2qdreFsOovob9b2uNp131d/J5ErftgxrBM7JMUHyAScIQCp0c=)
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname,
+              - profile_image,
+              - account_email
+              - birthday
+            client-name: Kakao
 
 #app
 app:
   auth:
-    token-secret: 9742F6BEC9F62596C2FFEFF9FA0B9E39303554C06F94AB9B85C8090E3EE87F3CF0BE4BFA244C625E3F691321F9CFF38C228C4C3C91105C23919B16F7E40BE4EC
+    token-secret: ENC(i0qGvs4KRuy5GwwvNj29XF32XOes9q1CSxKgfHhXBR8FfZdlx1RJtnDQ/7uA7Wv6JKA4AUoMMyG0nA7kfqaI0xe4YnATjZ7BVpz60HyCuFzn2Cjz1NcDHn8C3tmgmHqYVKRaj1QZbjQ9WxlDCezfO4rTjLoHQNiShhgm1OnwxGxVJ2zZ461eVgQ7bqxS/16V)
     access-token-expiration-msec: 3600000
     refresh-token-expiration-msec: 1209600000
   cors:
     allowed-origins: http://localhost:3000, http://localhost:8080
   oauth2:
-    authorized-redirect-uris: http://localhost:3000/oauth2/redirect, myandroidapp://oauth2/redirect, myiosapp://oauth2/redirect
+    authorized-redirect-uris: http://localhost:3000/oauth2/redirect, myandroidapp://oauth2/redirect, myiosapp://oauth2/redirect, http://43.201.110.47/oauth2/redirect
 
 
 jasypt:
