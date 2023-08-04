@@ -13,7 +13,7 @@ spring:
             client-id: ENC(13+qLO9Ek/O3xlToeAOO1x2zO61/WIsYqebJ4voPHNqjweHGBwneBranu3vzZNgl)
             client-secret: ENC(uajefvIOFDUgV8gxPLqhQeR8wjeP8SJf5evY9nZhNFTcQk9AXInjxTJmDACzcdTs)
             client-authentication-method: client_secret_post
-            redirect-uri: ENC(un+Q5809gxhtMBJ+fbHBEPk8EV2qdreFsOovob9b2uNp131d/J5ErftgxrBM7JMUHyAScIQCp0c=)
+            redirect-uri: ENC(tkZNzB++6rpBDbDY9i7Eb4JrxGz8dEd684KbzNBk+HNzwZadZMOaNTB7bHBn2RxguHMbc2XbuwM=)
             authorization-grant-type: authorization_code
             scope:
               - profile_nickname,
