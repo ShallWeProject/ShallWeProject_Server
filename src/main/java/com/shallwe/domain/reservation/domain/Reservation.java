@@ -23,10 +23,9 @@ public class Reservation {
 
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "experienceGiftId")
 
-
-    @OneToOne
-    @JoinColumn(name = "experienceGiftId", nullable = false)
     private ExperienceGift experienceGift;
 
     @OneToOne(fetch = FetchType.LAZY)
