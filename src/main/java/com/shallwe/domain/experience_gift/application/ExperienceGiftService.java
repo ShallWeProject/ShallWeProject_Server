@@ -11,6 +11,7 @@ import com.shallwe.global.config.security.token.UserPrincipal;
 import java.util.List;
 
 public interface ExperienceGiftService {
+
     List<ExperienceRes> searchExperience(final UserPrincipal userPrincipal,String title);
 
     ExperienceDetailRes getExperienceDetails(final UserPrincipal userPrincipal,Long ExperienceGiftId);
@@ -22,4 +23,5 @@ public interface ExperienceGiftService {
     List<ExperienceExpCategoryRes> highExpCategoryPricedGift(UserPrincipal userPrincipal, Long expCategoryId);
 
     List<ExperienceExpCategoryRes> lowExpCategoryPricedGift(UserPrincipal userPrincipal, Long expCategoryId);
+
 }

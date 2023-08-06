@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 public class ExperienceGift extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long experienceGiftId;
@@ -20,20 +21,19 @@ public class ExperienceGift extends BaseEntity {
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SubtitleId")
+    @JoinColumn(name = "subtitle_id")
     private Subtitle subtitle; //fk
 
     private String thumbnail;
     private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ExpCategoryId")
+    @JoinColumn(name = "exp_category_id")
     private ExpCategory expCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SttCategoryId")
+    @JoinColumn(name = "stt_category_id")
     private SttCategory sttCategory;
-
 
     private String description;
 
@@ -45,4 +45,5 @@ public class ExperienceGift extends BaseEntity {
         this.price=price;
         this.description=description;
     }
+
 }

@@ -29,7 +29,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class ExperienceGiftController {
+
     private final ExperienceGiftServiceImpl experienceGiftService;
+
     @Operation(summary = "경험 검색 조회", description = "경험 검색을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "경험 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceRes.class))}),
@@ -99,8 +101,5 @@ public class ExperienceGiftController {
             throw new ExperienceGiftNotFoundException();
         }
     }
-
-
-
 
 }

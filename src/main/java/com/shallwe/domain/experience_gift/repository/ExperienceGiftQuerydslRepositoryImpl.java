@@ -12,12 +12,13 @@ import static com.shallwe.domain.experience_gift.domain.QExperienceGift.experien
 @RequiredArgsConstructor
 @Repository
 public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuerydslRepository {
+
     private final JPAQueryFactory queryFactory;
 
     @Override
     public List<ExperienceGift> findGiftsBySttCategoryIdOrderByPriceDesc(Long SttCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.sttCategory.SttCategoryId.eq(SttCategoryId))
+                .where(experienceGift.sttCategory.sttCategoryId.eq(SttCategoryId))
                 .orderBy(experienceGift.price.desc())
                 .fetch();
     }
@@ -25,7 +26,7 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
     @Override
     public List<ExperienceGift> findGiftsBySttCategoryIdOrderByPriceAsc(Long SttCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.sttCategory.SttCategoryId.eq(SttCategoryId))
+                .where(experienceGift.sttCategory.sttCategoryId.eq(SttCategoryId))
                 .orderBy(experienceGift.price.asc())
                 .fetch();
     }
@@ -33,7 +34,7 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
     @Override
     public List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceDesc(Long ExpCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.expCategory.ExpCategoryId.eq(ExpCategoryId))
+                .where(experienceGift.expCategory.expCategoryId.eq(ExpCategoryId))
                 .orderBy(experienceGift.price.desc())
                 .fetch();
     }
@@ -41,10 +42,9 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
     @Override
     public List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceAsc(Long ExpCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.expCategory.ExpCategoryId.eq(ExpCategoryId))
+                .where(experienceGift.expCategory.expCategoryId.eq(ExpCategoryId))
                 .orderBy(experienceGift.price.asc())
                 .fetch();
     }
-
 
 }
