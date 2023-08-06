@@ -20,7 +20,7 @@ public class ReservationRequest {
     private LocalDateTime date;
     private String sender;
     private String receiver;
-    private String phone_number;
+    private String phoneNumber;
     private String invitationImg;
     private String invitationComment;
     private ReservationStatus reservationStatus;
@@ -32,7 +32,7 @@ public class ReservationRequest {
                     .persons(reservationRequest.getPersons())
                     .date(reservationRequest.getDate())
                     .receiver(reservationRequest.getReceiver())
-                    .phone_number(reservationRequest.getPhone_number())
+                    .phoneNumber(reservationRequest.getPhoneNumber())
                     .invitationImg(reservationRequest.getInvitationImg())
                     .invitationComment(reservationRequest.getInvitationComment())
                     .reservationStatus(BOOKED)

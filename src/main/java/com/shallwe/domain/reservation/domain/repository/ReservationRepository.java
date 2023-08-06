@@ -5,6 +5,7 @@ import com.shallwe.domain.reservation.domain.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,5 +16,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllByUserId(Long userId);
     Optional<Reservation> findByUserIdAndId(Long userId, Long reservationId);
+    List<Reservation> findAllByDateAndPhoneNumber(LocalDateTime date, String phoneNumber);
 
 }

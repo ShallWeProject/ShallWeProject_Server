@@ -29,7 +29,7 @@ public class QMemoryPhoto extends EntityPathBase<MemoryPhoto> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath memoryImg = createString("memoryImg");
+    public final StringPath memoryImgUrl = createString("memoryImgUrl");
 
     public final com.shallwe.domain.reservation.domain.QReservation reservation;
 

@@ -18,20 +18,20 @@ public class ReservationResponse {
     private LocalDateTime date;
     private Long experienceGiftId;
     private String receiver;
-    private String phone_number;
+    private String phoneNumber;
     private String invitationImg;
     private String invitationComment;
     private ReservationStatus reservationStatus;
 
     @Builder
-    public ReservationResponse(Long id, Long userId, String user, Long persons, LocalDateTime date, Long experienceGiftId, String receiver, String phone_number, String invitationImg, String invitationComment, ReservationStatus reservationStatus) {
+    public ReservationResponse(Long id, Long userId, String user, Long persons, LocalDateTime date, Long experienceGiftId, String receiver, String phoneNumber, String invitationImg, String invitationComment, ReservationStatus reservationStatus) {
         this.id = id;
         this.userId = userId;
         this.persons = persons;
         this.date = date;
         this.experienceGiftId = experienceGiftId;
         this.receiver = receiver;
-        this.phone_number = phone_number;
+        this.phoneNumber = phoneNumber;
         this.invitationImg = invitationImg;
         this.invitationComment = invitationComment;
         this.reservationStatus = reservationStatus;
@@ -45,7 +45,7 @@ public class ReservationResponse {
                 .user(reservation.getUser().getName())
                 .persons(reservation.getPersons())
                 .date(reservation.getDate())
-                .phone_number(reservation.getPhone_number())
+                .phoneNumber(reservation.getPhoneNumber())
                 .receiver(reservation.getReceiver())
                 .invitationImg(reservation.getInvitationImg())
                 .invitationComment(reservation.getInvitationComment())
@@ -63,7 +63,7 @@ public class ReservationResponse {
         reservationResponse.setDate(reservation.getDate());
         reservationResponse.setExperienceGiftId(reservation.getExperienceGift().getExperienceGiftId());
         reservationResponse.setReceiver(reservation.getReceiver());
-        reservationResponse.setPhone_number(reservation.getPhone_number());
+        reservationResponse.setPhoneNumber(reservation.getPhoneNumber());
         reservationResponse.setInvitationImg(reservation.getInvitationImg());
         reservationResponse.setInvitationComment(reservation.getInvitationComment());
         reservationResponse.setReservationStatus(reservation.getReservationStatus());
