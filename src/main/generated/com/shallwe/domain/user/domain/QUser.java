@@ -40,6 +40,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
+    public final StringPath phoneNumber = createString("phoneNumber");
+
     public final StringPath profileImgUrl = createString("profileImgUrl");
 
     public final EnumPath<Provider> provider = createEnum("provider", Provider.class);

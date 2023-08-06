@@ -37,9 +37,11 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public final StringPath invitationImg = createString("invitationImg");
 
+    public final ListPath<com.shallwe.domain.memory_photo.domain.MemoryPhoto, com.shallwe.domain.memory_photo.domain.QMemoryPhoto> memoryPhotos = this.<com.shallwe.domain.memory_photo.domain.MemoryPhoto, com.shallwe.domain.memory_photo.domain.QMemoryPhoto>createList("memoryPhotos", com.shallwe.domain.memory_photo.domain.MemoryPhoto.class, com.shallwe.domain.memory_photo.domain.QMemoryPhoto.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> persons = createNumber("persons", Long.class);
 
-    public final StringPath phone_number = createString("phone_number");
+    public final StringPath phoneNumber = createString("phoneNumber");
 
     public final StringPath receiver = createString("receiver");
 

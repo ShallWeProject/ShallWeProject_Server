@@ -32,6 +32,8 @@ public class User extends BaseEntity {
 
     private Integer age;
 
+    private String phoneNumber;
+
     @Email
     private String email;
 
@@ -53,11 +55,12 @@ public class User extends BaseEntity {
     private Role role;
 
     @Builder
-    public User(Long id, String name, String birthDay, Integer age, String email, String password, String profileImgUrl, Gender gender, Boolean marketingConsent, Provider provider, String providerId, Role role) {
+    public User(Long id, String name, String birthDay, Integer age, String phoneNumber, String email, String password, String profileImgUrl, Gender gender, Boolean marketingConsent, Provider provider, String providerId, Role role) {
         this.id = id;
         this.name = name;
         this.birthDay = birthDay;
         this.age = age;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
         this.profileImgUrl = profileImgUrl;
@@ -65,7 +68,7 @@ public class User extends BaseEntity {
         this.marketingConsent = marketingConsent;
         this.provider = provider;
         this.providerId = providerId;
-        this.role = role;
+        this.role = Role.USER;
     }
 
     public void updateName(String name){
@@ -86,6 +89,10 @@ public class User extends BaseEntity {
 
     public void updateAge(Integer age) {
         this.age = age;
+    }
+
+    public void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
 }
