@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class ExperienceExpCategoryRes {
+
     private Long expCategoryId;
     private Long ExperienceGiftId;
     private String thumbnail;
@@ -29,4 +30,5 @@ public class ExperienceExpCategoryRes {
                 .price(experienceGift.getPrice())
                 .build();
     }
+
 }

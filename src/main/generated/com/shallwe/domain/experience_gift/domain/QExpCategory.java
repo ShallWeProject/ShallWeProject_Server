@@ -26,7 +26,7 @@ public class QExpCategory extends EntityPathBase<ExpCategory> {
 
     public final StringPath expCategory = createString("expCategory");
 
-    public final NumberPath<Long> ExpCategoryId = createNumber("ExpCategoryId", Long.class);
+    public final NumberPath<Long> expCategoryId = createNumber("expCategoryId", Long.class);
 
     //inherited
     public final EnumPath<com.shallwe.domain.common.Status> status = _super.status;

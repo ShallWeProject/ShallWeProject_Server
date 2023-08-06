@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 public class Subtitle extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long SubtitleId;
+    private Long subtitleId;
 
     private String title;
 
     @Builder
     public Subtitle(Long SubtitleId, String title){
-        this.SubtitleId=SubtitleId;
+        this.subtitleId =SubtitleId;
         this.title=title;
     }
+
 }

@@ -7,6 +7,7 @@ import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
+import com.shallwe.domain.reservation.exception.InvalidUserException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class ReservationServiceImpl {
+
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
 //    private final GiftRepository giftRepository;
@@ -95,6 +97,5 @@ public class ReservationServiceImpl {
         foundReservation.orElseThrow(InvalidReservationException::new);
         return DeleteReservationRes.toDTO();
     }
-
 
 }

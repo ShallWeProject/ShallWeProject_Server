@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class ExperienceDetailRes {
+
     private Long ExperienceGiftId;
     private String thumbnail;
     private String title;
@@ -29,4 +30,5 @@ public class ExperienceDetailRes {
                 .subtitle(experienceGift.getSubtitle())
                 .build();
     }
+
 }

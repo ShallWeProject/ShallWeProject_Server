@@ -27,7 +27,7 @@ public class QSubtitle extends EntityPathBase<Subtitle> {
     //inherited
     public final EnumPath<com.shallwe.domain.common.Status> status = _super.status;
 
-    public final NumberPath<Long> SubtitleId = createNumber("SubtitleId", Long.class);
+    public final NumberPath<Long> subtitleId = createNumber("subtitleId", Long.class);
 
     public final StringPath title = createString("title");
 

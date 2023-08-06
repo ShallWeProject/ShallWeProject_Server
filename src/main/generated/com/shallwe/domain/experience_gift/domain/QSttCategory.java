@@ -29,7 +29,7 @@ public class QSttCategory extends EntityPathBase<SttCategory> {
 
     public final StringPath sttCategory = createString("sttCategory");
 
-    public final NumberPath<Long> SttCategoryId = createNumber("SttCategoryId", Long.class);
+    public final NumberPath<Long> sttCategoryId = createNumber("sttCategoryId", Long.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;

@@ -22,15 +22,20 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public static final QReservation reservation = new QReservation("reservation");
 
+    public final com.shallwe.domain.common.QBaseEntity _super = new com.shallwe.domain.common.QBaseEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
     public final DateTimePath<java.time.LocalDateTime> date = createDateTime("date", java.time.LocalDateTime.class);
 
     public final com.shallwe.domain.experience_gift.domain.QExperienceGift experienceGift;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath invitation_comment = createString("invitation_comment");
+    public final StringPath invitationComment = createString("invitationComment");
 
-    public final StringPath invitation_img = createString("invitation_img");
+    public final StringPath invitationImg = createString("invitationImg");
 
     public final NumberPath<Long> persons = createNumber("persons", Long.class);
 
@@ -38,9 +43,13 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public final StringPath receiver = createString("receiver");
 
-    public final EnumPath<Reservation_status> reservation_status = createEnum("reservation_status", Reservation_status.class);
+    public final EnumPath<ReservationStatus> reservationStatus = createEnum("reservationStatus", ReservationStatus.class);
 
-    public final StringPath sender = createString("sender");
+    //inherited
+    public final EnumPath<com.shallwe.domain.common.Status> status = _super.status;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final com.shallwe.domain.user.domain.QUser user;
 

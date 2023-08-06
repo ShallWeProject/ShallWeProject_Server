@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class ExperienceGiftServiceImpl implements ExperienceGiftService{
+
     private final UserRepository userRepository;
     private final ExperienceGiftRepository experienceGiftRepository;
 
@@ -66,6 +67,5 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         return experienceGiftRepository.findGiftsByExpCategoryIdOrderByPriceAsc(ExpCategoryId)
                 .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
     }
-
 
 }
