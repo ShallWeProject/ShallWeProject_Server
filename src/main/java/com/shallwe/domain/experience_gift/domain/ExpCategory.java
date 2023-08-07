@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 public class ExpCategory extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ExpCategoryId;
+    private Long expCategoryId;
 
     private String expCategory;
 
     @Builder
     public ExpCategory(Long ExpCategoryId, String expCategory){
-        this.ExpCategoryId=ExpCategoryId;
+        this.expCategoryId =ExpCategoryId;
         this.expCategory=expCategory;
     }
+
 }
