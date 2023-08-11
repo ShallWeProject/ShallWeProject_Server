@@ -26,9 +26,7 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+
 
 ### NetBeans ###
 /nbproject/private/
@@ -39,7 +37,4 @@ out/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/
-/src/main/resources/application-ebprod.yml
-/src/main/resources/application.yml
-/src/main/resources/cloud/application-s3file.yml
+
