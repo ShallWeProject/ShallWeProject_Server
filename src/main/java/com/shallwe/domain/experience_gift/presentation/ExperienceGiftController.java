@@ -2,10 +2,7 @@ package com.shallwe.domain.experience_gift.presentation;
 
 import com.shallwe.domain.experience_gift.application.ExperienceGiftServiceImpl;
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceSttCategoryRes;
+import com.shallwe.domain.experience_gift.dto.response.*;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
@@ -32,12 +29,24 @@ public class ExperienceGiftController {
 
     private final ExperienceGiftServiceImpl experienceGiftService;
 
+    @Operation(summary = "메인 페이지", description = "메인 페이지을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "메인 페이지 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceMainRes.class))}),
+            @ApiResponse(responseCode = "400", description = "메인 페이지 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping
+    public ResponseCustom<ExperienceMainRes> mainPage(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ){
+        return ResponseCustom.OK(experienceGiftService.mainPage(userPrincipal));
+    }
+
     @Operation(summary = "경험 검색 조회", description = "경험 검색을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "경험 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceRes.class))}),
             @ApiResponse(responseCode = "400", description = "경험 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @GetMapping
+    @GetMapping("/search")
     public ResponseCustom<List<ExperienceRes>> searchExperience(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @RequestParam String title

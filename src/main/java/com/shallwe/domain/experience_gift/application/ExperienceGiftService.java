@@ -1,9 +1,6 @@
 package com.shallwe.domain.experience_gift.application;
 
-import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceSttCategoryRes;
+import com.shallwe.domain.experience_gift.dto.response.*;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -28,4 +25,5 @@ public interface ExperienceGiftService {
 
     List<ExperienceExpCategoryRes> getPopulaExpGift(UserPrincipal userPrincipal, Long expCategoryId);
 
+    ExperienceMainRes mainPage(UserPrincipal userPrincipal);
 }

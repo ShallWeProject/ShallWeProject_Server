@@ -1,12 +1,13 @@
 package com.shallwe.domain.experience_gift.application;
 
+import com.shallwe.domain.experience_gift.domain.ExpCategory;
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceSttCategoryRes;
+import com.shallwe.domain.experience_gift.domain.SttCategory;
+import com.shallwe.domain.experience_gift.dto.response.*;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
+import com.shallwe.domain.experience_gift.repository.ExpCategoryRepository;
 import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
+import com.shallwe.domain.experience_gift.repository.SttCategoryRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -24,6 +25,18 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
 
     private final UserRepository userRepository;
     private final ExperienceGiftRepository experienceGiftRepository;
+    private final ExpCategoryRepository expCategoryRepository;
+    private final SttCategoryRepository sttCategoryRepository;
+
+
+    @Override
+    public ExperienceMainRes mainPage(UserPrincipal userPrincipal) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        List<ExpCategory> expCategories = expCategoryRepository.findAll();
+        List<SttCategory> sttCategories = sttCategoryRepository.findAll();
+        return ExperienceMainRes.toDto(expCategories, sttCategories);
+
+    }
 
     @Override
     public List<ExperienceRes> searchExperience(final UserPrincipal userPrincipal, String title) {
@@ -87,5 +100,6 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
                 .map(ExperienceExpCategoryRes::toDto)
                 .collect(Collectors.toList());
     }
+
 
 }
