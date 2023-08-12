@@ -10,5 +10,8 @@ public interface ExperienceGiftQuerydslRepository {
     List<ExperienceGift> findGiftsBySttCategoryIdOrderByPriceAsc(Long SttCategoryId);
     List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceDesc(Long ExpCategoryId);
     List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceAsc(Long ExpCategoryId);
+    List<ExperienceGift> findPopularGiftsBySttCategoryId(Long sttCategoryId);
+    List<ExperienceGift> findPopularGiftsByExpCategoryId(Long ExpCategoryId);
+
 
 }

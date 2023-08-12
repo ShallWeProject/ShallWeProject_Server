@@ -68,4 +68,24 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
                 .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
     }
 
+    @Override
+    public List<ExperienceSttCategoryRes> getPopularSttGift(UserPrincipal userPrincipal, Long sttCategoryId) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+
+        List<ExperienceGift> popularGifts = experienceGiftRepository.findPopularGiftsBySttCategoryId(sttCategoryId);
+        return popularGifts.stream()
+                .map(ExperienceSttCategoryRes::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ExperienceExpCategoryRes> getPopulaExpGift(UserPrincipal userPrincipal, Long expCategoryId) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+
+        List<ExperienceGift> popularGifts = experienceGiftRepository.findPopularGiftsByExpCategoryId(expCategoryId);
+        return popularGifts.stream()
+                .map(ExperienceExpCategoryRes::toDto)
+                .collect(Collectors.toList());
+    }
+
 }
