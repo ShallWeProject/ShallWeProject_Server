@@ -18,9 +18,12 @@ public class ExperienceDetailRes {
     private String title;
     private String subtitle;
     private Long price;
+    private String giftImgUrl;
     private String description;
     private String expCategory;
     private String sttCategory;
+
+
 
     public static ExperienceDetailRes toDto(ExperienceGift experienceGift){
         return ExperienceDetailRes.builder()
@@ -32,6 +35,7 @@ public class ExperienceDetailRes {
                 .subtitle(experienceGift.getSubtitle().getTitle())
                 .expCategory(experienceGift.getExpCategory().getExpCategory())
                 .sttCategory(experienceGift.getSttCategory().getSttCategory())
+                .giftImgUrl(experienceGift.getGiftImgKey())
                 .build();
     }
 

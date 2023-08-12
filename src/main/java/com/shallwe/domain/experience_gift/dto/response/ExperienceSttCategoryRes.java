@@ -19,6 +19,7 @@ public class ExperienceSttCategoryRes {
     private Subtitle subtitle;
     private String title;
     private Long price;
+    private String giftImgUrl;
 
     public static ExperienceSttCategoryRes toDto(ExperienceGift experienceGift){
         return ExperienceSttCategoryRes.builder()
@@ -28,6 +29,7 @@ public class ExperienceSttCategoryRes {
                 .subtitle(experienceGift.getSubtitle())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
+                .giftImgUrl(experienceGift.getGiftImgKey())
                 .build();
     }
 
