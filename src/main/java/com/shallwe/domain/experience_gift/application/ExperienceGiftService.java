@@ -1,5 +1,6 @@
 package com.shallwe.domain.experience_gift.application;
 
+import com.shallwe.domain.experience_gift.dto.request.ExperienceReq;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
@@ -11,6 +12,8 @@ import com.shallwe.global.config.security.token.UserPrincipal;
 import java.util.List;
 
 public interface ExperienceGiftService {
+
+    ExperienceDetailRes createExperience(final UserPrincipal userPrincipal,final ExperienceReq experienceReq);
 
     List<ExperienceRes> searchExperience(final UserPrincipal userPrincipal,String title);
 
