@@ -2,39 +2,33 @@ spring:
   security:
     oauth2:
       client:
-        registration:
-          kakao:
-            client-id: ENC(CVLGv/Oo6xf5jecX82sCuQ==)
-            client-secret: ENC(Qdyp7reiuCB5Jjzvs8dx9Q==)
-            client-authentication-method: client_secret_post
-            redirect-uri: ENC(CjEPkpGjn5s3bqEOnjREKfp4UzmRVQ7LYpTpaetuwE0UDHUcheJD3bHp+zv1IF/Z9vCRT3GeVcc=)
-            authorization-grant-type: authorization_code
-            scope:
-              - profile_nickname,
-              - profile_image,
-              - account_email
-            client-name: Kakao
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-  profiles:
-    include: key
+        registration:
+          kakao:
+            client-id: 604ec5bbcd0045898e4f7f256c00bae5
+            client-secret: OyKWsRMnHiKvFza6RU0np25111LAdG09
+            client-authentication-method: client_secret_post
+            redirect-uri: http://localhost:8080/oauth2/callback/kakao
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname,
+              - profile_image,
+              - account_email
+              - birthday
+            client-name: Kakao
 
 #app
 app:
   auth:
-    token-secret: 9742F6BEC9F62596C2FFEFF9FA0B9E39303554C06F94AB9B85C8090E3EE87F3CF0BE4BFA244C625E3F691321F9CFF38C228C4C3C91105C23919B16F7E40BE4EC
+    token-secret: 8742F6BEC9F62596C2FFEFF9FA0B9E39303554C06F94AB9B85C8090E3EE87F3CF0BE4BFA244C625E3F691321F9CFF38C228C4C3C91105C23919B16F7E40BE4EC
     access-token-expiration-msec: 3600000
     refresh-token-expiration-msec: 1209600000
   cors:
     allowed-origins: http://localhost:3000, http://localhost:8080
   oauth2:
-    authorized-redirect-uris: http://localhost:3000/oauth2/redirect, myandroidapp://oauth2/redirect, myiosapp://oauth2/redirect
-
-
-jasypt:
-  encryptor:
-    bean : jasyptStringEncryptor
+    authorized-redirect-uris: http://localhost:3000/oauth2/redirect, myandroidapp://oauth2/redirect, myiosapp://oauth2/redirect, http://43.201.110.47/oauth2/redirect

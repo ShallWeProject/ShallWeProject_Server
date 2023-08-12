@@ -67,16 +67,18 @@ public class ExperienceGiftController {
     })
     @GetMapping("/stt-category/{SttCategoryId}")
     public ResponseCustom<List<ExperienceSttCategoryRes>> getSttCategoryGift(
-            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true)
+            @CurrentUser UserPrincipal userPrincipal,
             @PathVariable Long SttCategoryId,
             @RequestParam(name = "category") String category
             ){
         if (category.equals(Constant.ExperienceGiftConstant.POPULAR_EXPERIENCE_GIFT)) {
-            return null;
+            return ResponseCustom.OK(experienceGiftService.getPopularSttGift(userPrincipal,SttCategoryId));
         } else if(category.equals(Constant.ExperienceGiftConstant.HIGH_PRICED_ORDER)){
             return ResponseCustom.OK(experienceGiftService.highSttCategoryPricedGift(userPrincipal,SttCategoryId));
         } else if (category.equals(Constant.ExperienceGiftConstant.LOW_PRICED_ORDER)) {
             return ResponseCustom.OK(experienceGiftService.lowSttCategoryPricedGift(userPrincipal,SttCategoryId));
+
         }else{
             throw new ExperienceGiftNotFoundException();
         }
@@ -94,7 +96,7 @@ public class ExperienceGiftController {
             @RequestParam(name = "category") String category
     ){
         if (category.equals(Constant.ExperienceGiftConstant.POPULAR_EXPERIENCE_GIFT)) {
-            return null;
+            return ResponseCustom.OK(experienceGiftService.getPopulaExpGift(userPrincipal,ExpCategoryId));
         } else if(category.equals(Constant.ExperienceGiftConstant.HIGH_PRICED_ORDER)){
             return ResponseCustom.OK(experienceGiftService.highExpCategoryPricedGift(userPrincipal,ExpCategoryId));
         } else if (category.equals(Constant.ExperienceGiftConstant.LOW_PRICED_ORDER)) {
@@ -116,6 +118,7 @@ public class ExperienceGiftController {
     ){
        return ResponseCustom.OK(experienceGiftService.createExperience(userPrincipal,reservationRequest));
         }
+
 
 
 }
