@@ -8,6 +8,14 @@ import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundExcept
 import com.shallwe.domain.experience_gift.repository.ExpCategoryRepository;
 import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
 import com.shallwe.domain.experience_gift.repository.SttCategoryRepository;
+import com.shallwe.domain.experience_gift.domain.Subtitle;
+import com.shallwe.domain.experience_gift.dto.request.ExperienceReq;
+import com.shallwe.domain.experience_gift.dto.response.*;
+import com.shallwe.domain.experience_gift.exception.*;
+import com.shallwe.domain.experience_gift.repository.ExpCategoryRepository;
+import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
+import com.shallwe.domain.experience_gift.repository.SttCategoryRepository;
+import com.shallwe.domain.experience_gift.repository.SubtitleRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -28,7 +36,6 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
     private final ExpCategoryRepository expCategoryRepository;
     private final SttCategoryRepository sttCategoryRepository;
 
-
     @Override
     public ExperienceMainRes mainPage(UserPrincipal userPrincipal) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
@@ -36,6 +43,17 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         List<SttCategory> sttCategories = sttCategoryRepository.findAll();
         return ExperienceMainRes.toDto(expCategories, sttCategories);
 
+    @Override
+    @Transactional
+    public ExperienceDetailRes createExperience(UserPrincipal userPrincipal,ExperienceReq experienceReq ) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        ExperienceGift experienceGift = ExperienceReq.toEntity(experienceReq,
+                subtitleRepository.findBySubtitleId(experienceReq.getSubtitleId()).orElseThrow(SubtitleNotFoundException::new),
+                expCategoryRepository.findByExpCategoryId(experienceReq.getExpCategoryId()).orElseThrow(ExpCategoryNotFoundException::new),
+                sttCategoryRepository.findBySttCategoryId(experienceReq.getSttCategoryId()).orElseThrow(SttCategoryNotFoundException::new)
+        );
+        ExperienceGift savedGift = experienceGiftRepository.save(experienceGift);
+        return ExperienceDetailRes.toDto(savedGift);
     }
 
     @Override

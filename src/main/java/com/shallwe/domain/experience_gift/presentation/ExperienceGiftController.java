@@ -3,6 +3,11 @@ package com.shallwe.domain.experience_gift.presentation;
 import com.shallwe.domain.experience_gift.application.ExperienceGiftServiceImpl;
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.experience_gift.dto.response.*;
+import com.shallwe.domain.experience_gift.dto.request.ExperienceReq;
+import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
+import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
+import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
+import com.shallwe.domain.experience_gift.dto.response.ExperienceSttCategoryRes;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
@@ -18,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -113,7 +119,18 @@ public class ExperienceGiftController {
         }
     }
 
-
+    @Operation(summary = "경험 선물 추가", description = "경험 선물을 추가합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "경험 선물 추가 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceDetailRes.class))}),
+            @ApiResponse(responseCode = "400", description = "경험 선물 추가 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @PostMapping
+    public ResponseCustom<ExperienceDetailRes> CreateExpGift(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ExperienceReq reservationRequest
+    ){
+       return ResponseCustom.OK(experienceGiftService.createExperience(userPrincipal,reservationRequest));
+        }
 
 
 
