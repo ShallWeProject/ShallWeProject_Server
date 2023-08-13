@@ -1,5 +1,6 @@
 package com.shallwe.domain.experience_gift.application;
 
+import com.shallwe.domain.experience_gift.dto.response.*;
 import com.shallwe.domain.experience_gift.dto.request.ExperienceReq;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
@@ -31,4 +32,5 @@ public interface ExperienceGiftService {
 
     List<ExperienceExpCategoryRes> getPopulaExpGift(UserPrincipal userPrincipal, Long expCategoryId);
 
+    ExperienceMainRes mainPage(UserPrincipal userPrincipal);
 }
