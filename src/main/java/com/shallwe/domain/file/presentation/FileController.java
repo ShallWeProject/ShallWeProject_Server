@@ -25,11 +25,6 @@ import java.net.URL;
 public class FileController {
     private final S3Service s3Service;
 
-    /*@PostMapping
-    public ResponseCustom<String> uploadFile(
-            @RequestParam("images") MultipartFile multipartFile)throws IOException {
-        return ResponseCustom.OK(s3Service.upload(multipartFile));
-    }*/
     @Operation(summary = "PresignedURL 생성", description = "파일 업로드를 위한 PresignedURL을 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Presigned URl 생성 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserDetailRes.class))}),
