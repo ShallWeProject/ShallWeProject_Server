@@ -11,8 +11,8 @@ public class UpdateReservationReq {
     private Long id;
     private Long persons;
     private LocalDateTime date;
-    private User user;
-    private String receiver;
+    private User sender;
+    private User receiver;
     private String phone_number;
     private String invitation_img;
     private String invitation_comment;
