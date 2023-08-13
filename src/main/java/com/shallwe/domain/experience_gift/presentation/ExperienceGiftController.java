@@ -1,16 +1,12 @@
 package com.shallwe.domain.experience_gift.presentation;
 
 import com.shallwe.domain.experience_gift.application.ExperienceGiftServiceImpl;
-import com.shallwe.domain.experience_gift.domain.ExperienceGift;
-import com.shallwe.domain.experience_gift.dto.response.*;
 import com.shallwe.domain.experience_gift.dto.request.ExperienceReq;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
 import com.shallwe.domain.experience_gift.dto.response.ExperienceSttCategoryRes;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
-import com.shallwe.domain.reservation.dto.ReservationRequest;
-import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.global.config.Constant;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -23,7 +19,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,7 +61,7 @@ public class ExperienceGiftController {
             @ApiResponse(responseCode = "400", description = "경험 상세 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/details/{ExperienceGiftId}")
-    public ResponseCustom<?> getExperienceDetails(
+    public ResponseCustom<ExperienceDetailRes> getExperienceDetails(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @PathVariable Long ExperienceGiftId
     ){
@@ -86,7 +81,9 @@ public class ExperienceGiftController {
             @RequestParam(name = "category") String category
             ){
         if (category.equals(Constant.ExperienceGiftConstant.POPULAR_EXPERIENCE_GIFT)) {
-            return ResponseCustom.OK(experienceGiftService.getPopularSttGift(userPrincipal,SttCategoryId));
+            return ResponseCustom.OK(experienceGiftService.getPopularSttGift(userPrincipal, SttCategoryId));
+        }else if(category.equals(Constant.ExperienceGiftConstant.RECOMMEND_EXPERIENCE_GIFT)) {
+                return ResponseCustom.OK(experienceGiftService.getPopularSttGift(userPrincipal, SttCategoryId));
         } else if(category.equals(Constant.ExperienceGiftConstant.HIGH_PRICED_ORDER)){
             return ResponseCustom.OK(experienceGiftService.highSttCategoryPricedGift(userPrincipal,SttCategoryId));
         } else if (category.equals(Constant.ExperienceGiftConstant.LOW_PRICED_ORDER)) {
@@ -109,7 +106,9 @@ public class ExperienceGiftController {
             @RequestParam(name = "category") String category
     ){
         if (category.equals(Constant.ExperienceGiftConstant.POPULAR_EXPERIENCE_GIFT)) {
-            return ResponseCustom.OK(experienceGiftService.getPopulaExpGift(userPrincipal,ExpCategoryId));
+            return ResponseCustom.OK(experienceGiftService.getPopulaExpGift(userPrincipal, ExpCategoryId));
+        }else if(category.equals(Constant.ExperienceGiftConstant.RECOMMEND_EXPERIENCE_GIFT)) {
+            return ResponseCustom.OK(experienceGiftService.getPopulaExpGift(userPrincipal, ExpCategoryId));
         } else if(category.equals(Constant.ExperienceGiftConstant.HIGH_PRICED_ORDER)){
             return ResponseCustom.OK(experienceGiftService.highExpCategoryPricedGift(userPrincipal,ExpCategoryId));
         } else if (category.equals(Constant.ExperienceGiftConstant.LOW_PRICED_ORDER)) {
