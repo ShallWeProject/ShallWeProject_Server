@@ -2,10 +2,7 @@ package com.shallwe.domain.experience_gift.presentation;
 
 import com.shallwe.domain.experience_gift.application.ExperienceGiftServiceImpl;
 import com.shallwe.domain.experience_gift.dto.request.ExperienceReq;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceSttCategoryRes;
+import com.shallwe.domain.experience_gift.dto.response.*;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.global.config.Constant;
 import com.shallwe.global.config.security.token.CurrentUser;
