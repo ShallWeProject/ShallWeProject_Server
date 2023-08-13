@@ -80,6 +80,10 @@ public class ReservationServiceImpl {
         }).orElseThrow(InvalidReservationException::new);
         // DTO로 변환 후 반환
         return ReservationResponse.toDto(updatedReservation);
+    //추가
+    public List<ReservationResponse> getCurrentGiftReservation(ExperienceGift experienceGiftId){
+        experienceGiftRepository.findById(experienceGiftId.getExperienceGiftId()).orElseThrow(ExperienceGiftNotFoundException::new);
+        return reservationRepository.findByExperienceGift(experienceGiftId).stream().map(ReservationResponse::toDto).collect(Collectors.toList());
     }
 
 

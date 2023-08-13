@@ -56,6 +56,19 @@ public class ReservationController {
     ){
         return ResponseCustom.OK(reservationServiceimpl.findUserReservation(userPrincipal));
     }
+    @Operation(summary = "해당 경험 선물에 생성된 예약 조회 ", description = "경험 ID로 검색")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "예약 정보 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Reservation.class)))}),
+            @ApiResponse(responseCode = "400", description = "예약 정보 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+
+    })
+    @GetMapping("/giftId")
+    public ResponseCustom<List<ReservationResponse>> getCurrentGiftReservation(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @RequestHeader ExperienceGift experienceGiftId
+
+    ){
+        return ResponseCustom.OK(reservationServiceimpl.getCurrentGiftReservation(experienceGiftId));
+    }
 
     @Operation(summary ="예약 추가하기", description = "현재 유저, 경험을 가져와 예약을 추가합니다.")
     @ApiResponses(value = {
