@@ -22,7 +22,6 @@ bin/
 *.iws
 *.iml
 *.ipr
-*.yml
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
@@ -40,6 +39,5 @@ out/
 /src/main/resources/
 /src/main/resources/application-ebprod.yml
 /src/main/resources/application.yml
-/src/main/resources/cloud/application-s3file.yml
 /src/main/resources/oauth2/application-oauth2.yml
 
