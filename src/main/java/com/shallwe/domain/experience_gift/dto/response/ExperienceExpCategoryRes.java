@@ -12,11 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class ExperienceExpCategoryRes {
+
     private Long expCategoryId;
     private Long ExperienceGiftId;
     private String thumbnail;
     private Subtitle subtitle;
     private String title;
+    private Long price;
+    private String giftImgUrl;
 
     public static ExperienceExpCategoryRes toDto(ExperienceGift experienceGift){
         return ExperienceExpCategoryRes.builder()
@@ -25,6 +28,9 @@ public class ExperienceExpCategoryRes {
                 .thumbnail(experienceGift.getThumbnail())
                 .subtitle(experienceGift.getSubtitle())
                 .title(experienceGift.getTitle())
+                .price(experienceGift.getPrice())
+                .giftImgUrl(experienceGift.getGiftImgKey())
                 .build();
     }
+
 }

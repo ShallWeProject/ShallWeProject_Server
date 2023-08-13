@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 public class SttCategory extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long SttCategoryId;
+    private Long sttCategoryId;
 
     private String sttCategory;
 
     @Builder
     public SttCategory(Long SttCategoryId, String sttCategory){
-        this.SttCategoryId=SttCategoryId;
+        this.sttCategoryId =SttCategoryId;
         this.sttCategory=sttCategory;
     }
+
 }

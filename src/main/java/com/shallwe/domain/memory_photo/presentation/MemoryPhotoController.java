@@ -1,6 +1,7 @@
 package com.shallwe.domain.memory_photo.presentation;
 
 import com.shallwe.domain.memory_photo.application.MemoryPhotoServiceImpl;
+import com.shallwe.domain.memory_photo.dto.MemoryPhotoDetailRes;
 import com.shallwe.domain.user.dto.UserDetailRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,17 +26,17 @@ public class MemoryPhotoController {
 
     private final MemoryPhotoServiceImpl memoryPhotoService;
 
-//    @Operation(summary = "날짜에 해당하는 MemoryPhoto 조회", description = "날짜에 해당하는 MemoryPhoto 조회")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "MemoryPhoto 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserDetailRes.class))}),
-//            @ApiResponse(responseCode = "400", description = "MemoryPhoto 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-//    })
-//    @GetMapping("/{date}")
-//    public ResponseCustom<?> getMemoryPhotoByDate(
-//            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-//            @Parameter(description = "날짜를 입력해주세요.", required = true) @PathVariable LocalDate date
-//    ) {
-//        return ResponseCustom.OK(memoryPhotoService.getMemoryPhotoByDate(userPrincipal, date));
-//    }
+    @Operation(summary = "날짜에 해당하는 MemoryPhoto 조회", description = "날짜에 해당하는 MemoryPhoto 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "MemoryPhoto 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MemoryPhotoDetailRes.class))}),
+            @ApiResponse(responseCode = "400", description = "MemoryPhoto 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/{date}")
+    public ResponseCustom<?> getMemoryPhotoByDate(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "날짜를 입력해주세요.", required = true) @PathVariable LocalDateTime date
+    ) {
+        return ResponseCustom.OK(memoryPhotoService.getMemoryPhotoByDate(userPrincipal, date));
+    }
 
 }

@@ -2,6 +2,7 @@ package com.shallwe.domain.experience_gift.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
+import com.shallwe.domain.reservation.domain.QReservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,20 +13,64 @@ import static com.shallwe.domain.experience_gift.domain.QExperienceGift.experien
 @RequiredArgsConstructor
 @Repository
 public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuerydslRepository {
+
     private final JPAQueryFactory queryFactory;
 
-
     @Override
-    public List<ExperienceGift> findByExpCategoryId(Long ExpCategoryId) {
+    public List<ExperienceGift> findGiftsBySttCategoryIdOrderByPriceDesc(Long SttCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.expCategory.ExpCategoryId.eq(ExpCategoryId))
+                .where(experienceGift.sttCategory.sttCategoryId.eq(SttCategoryId))
+                .orderBy(experienceGift.price.desc())
                 .fetch();
     }
 
     @Override
-    public List<ExperienceGift> findBySttCategoryId(Long SttCategoryId) {
+    public List<ExperienceGift> findGiftsBySttCategoryIdOrderByPriceAsc(Long SttCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.sttCategory.SttCategoryId.eq(SttCategoryId))
+                .where(experienceGift.sttCategory.sttCategoryId.eq(SttCategoryId))
+                .orderBy(experienceGift.price.asc())
                 .fetch();
     }
+
+    @Override
+    public List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceDesc(Long ExpCategoryId) {
+        return queryFactory.selectFrom(experienceGift)
+                .where(experienceGift.expCategory.expCategoryId.eq(ExpCategoryId))
+                .orderBy(experienceGift.price.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceAsc(Long ExpCategoryId) {
+        return queryFactory.selectFrom(experienceGift)
+                .where(experienceGift.expCategory.expCategoryId.eq(ExpCategoryId))
+                .orderBy(experienceGift.price.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<ExperienceGift> findPopularGiftsBySttCategoryId(Long sttCategoryId) {
+        QReservation reservation = QReservation.reservation;
+
+        return queryFactory.selectFrom(experienceGift)
+                .leftJoin(reservation).on(experienceGift.experienceGiftId.eq(reservation.experienceGift.experienceGiftId))
+                .where(experienceGift.sttCategory.sttCategoryId.eq(sttCategoryId))
+                .groupBy(experienceGift.experienceGiftId)
+                .orderBy(reservation.id.count().desc())
+                .fetch();
+    }
+
+    @Override
+    public List<ExperienceGift> findPopularGiftsByExpCategoryId(Long ExpCategoryId) {
+        QReservation reservation = QReservation.reservation;
+
+        return queryFactory.selectFrom(experienceGift)
+                .leftJoin(reservation).on(experienceGift.experienceGiftId.eq(reservation.experienceGift.experienceGiftId))
+                .where(experienceGift.expCategory.expCategoryId.eq(ExpCategoryId))
+                .groupBy(experienceGift.experienceGiftId)
+                .orderBy(reservation.id.count().desc())
+                .fetch();
+    }
+
+
 }
