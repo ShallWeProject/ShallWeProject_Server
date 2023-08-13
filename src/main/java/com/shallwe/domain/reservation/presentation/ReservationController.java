@@ -1,5 +1,6 @@
 package com.shallwe.domain.reservation.presentation;
 
+import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.application.ReservationService;
 import com.shallwe.domain.reservation.application.ReservationServiceImpl;
 import com.shallwe.domain.reservation.domain.Reservation;
@@ -80,7 +81,7 @@ public class ReservationController {
             @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationRequest reservationRequest,
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ){
-        return ResponseCustom.OK(reservationServiceimpl.addReservation(reservationRequest,userPrincipal));
+        return ResponseCustom.CREATED(reservationServiceimpl.addReservation(reservationRequest,userPrincipal));
     }
 
     @Operation(summary ="예약 수정하기", description = "예약을 수정합니다")
