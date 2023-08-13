@@ -78,6 +78,22 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(apiResponse, HttpStatus.resolve(errorCode.getStatus()));
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<?> handleDefaultException(RuntimeException e) {
+
+        ErrorCode errorCode = ErrorCode.INVALID_AUTHENTICATION;
+
+        ErrorResponse response = ErrorResponse
+                .builder()
+                .status(errorCode.getStatus())
+                .code(errorCode.getCode())
+                .message(e.toString())
+                .build();
+
+        ApiResponse apiResponse = ApiResponse.builder().check(false).information(response).build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.resolve(errorCode.getStatus()));
+    }
+
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> handleException(Exception e) {
 
