@@ -3,6 +3,11 @@ package com.shallwe.domain.experience_gift.application;
 import com.shallwe.domain.experience_gift.domain.ExpCategory;
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.experience_gift.domain.SttCategory;
+import com.shallwe.domain.experience_gift.dto.response.*;
+import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
+import com.shallwe.domain.experience_gift.repository.ExpCategoryRepository;
+import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
+import com.shallwe.domain.experience_gift.repository.SttCategoryRepository;
 import com.shallwe.domain.experience_gift.domain.Subtitle;
 import com.shallwe.domain.experience_gift.dto.request.ExperienceReq;
 import com.shallwe.domain.experience_gift.dto.response.*;
@@ -30,7 +35,14 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
     private final ExperienceGiftRepository experienceGiftRepository;
     private final ExpCategoryRepository expCategoryRepository;
     private final SttCategoryRepository sttCategoryRepository;
-    private final SubtitleRepository subtitleRepository;
+
+    @Override
+    public ExperienceMainRes mainPage(UserPrincipal userPrincipal) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        List<ExpCategory> expCategories = expCategoryRepository.findAll();
+        List<SttCategory> sttCategories = sttCategoryRepository.findAll();
+        return ExperienceMainRes.toDto(expCategories, sttCategories);
+
     @Override
     @Transactional
     public ExperienceDetailRes createExperience(UserPrincipal userPrincipal,ExperienceReq experienceReq ) {
@@ -106,5 +118,6 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
                 .map(ExperienceExpCategoryRes::toDto)
                 .collect(Collectors.toList());
     }
+
 
 }
