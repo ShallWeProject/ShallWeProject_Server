@@ -16,7 +16,7 @@ public interface ExperienceGiftService {
 
     ExperienceDetailRes createExperience(final UserPrincipal userPrincipal,final ExperienceReq experienceReq);
 
-    List<ExperienceRes> searchExperience(final UserPrincipal userPrincipal,String title);
+    List<ExperienceRes> searchExperience(UserPrincipal userPrincipal,String title);
 
     ExperienceDetailRes getExperienceDetails(final UserPrincipal userPrincipal,Long ExperienceGiftId);
 
