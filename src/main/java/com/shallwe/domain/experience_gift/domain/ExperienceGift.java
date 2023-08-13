@@ -36,14 +36,19 @@ public class ExperienceGift extends BaseEntity {
     private SttCategory sttCategory;
 
     private String description;
+    private String giftImgKey;
 
     @Builder
-    public ExperienceGift(Long experienceGiftId,String title, String thumbnail, Long price, String description){
+    public ExperienceGift(Long experienceGiftId,String title, String thumbnail, Long price, String description,Subtitle subtitle,ExpCategory expCategory, SttCategory sttCategory, String giftImgKey){
         this.experienceGiftId=experienceGiftId;
         this.title=title;
         this.thumbnail=thumbnail;
         this.price=price;
         this.description=description;
+        this.subtitle = subtitle;
+        this.expCategory = expCategory;
+        this.sttCategory = sttCategory;
+        this.giftImgKey=giftImgKey;
     }
 
 }

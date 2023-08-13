@@ -1,12 +1,21 @@
 package com.shallwe.domain.experience_gift.application;
 
+import com.shallwe.domain.experience_gift.domain.ExpCategory;
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceRes;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceSttCategoryRes;
+import com.shallwe.domain.experience_gift.domain.SttCategory;
+import com.shallwe.domain.experience_gift.dto.response.*;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
+import com.shallwe.domain.experience_gift.repository.ExpCategoryRepository;
 import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
+import com.shallwe.domain.experience_gift.repository.SttCategoryRepository;
+import com.shallwe.domain.experience_gift.domain.Subtitle;
+import com.shallwe.domain.experience_gift.dto.request.ExperienceReq;
+import com.shallwe.domain.experience_gift.dto.response.*;
+import com.shallwe.domain.experience_gift.exception.*;
+import com.shallwe.domain.experience_gift.repository.ExpCategoryRepository;
+import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
+import com.shallwe.domain.experience_gift.repository.SttCategoryRepository;
+import com.shallwe.domain.experience_gift.repository.SubtitleRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -24,6 +33,28 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
 
     private final UserRepository userRepository;
     private final ExperienceGiftRepository experienceGiftRepository;
+    private final ExpCategoryRepository expCategoryRepository;
+    private final SttCategoryRepository sttCategoryRepository;
+
+    @Override
+    public ExperienceMainRes mainPage(UserPrincipal userPrincipal) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        List<ExpCategory> expCategories = expCategoryRepository.findAll();
+        List<SttCategory> sttCategories = sttCategoryRepository.findAll();
+        return ExperienceMainRes.toDto(expCategories, sttCategories);
+
+    @Override
+    @Transactional
+    public ExperienceDetailRes createExperience(UserPrincipal userPrincipal,ExperienceReq experienceReq ) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+        ExperienceGift experienceGift = ExperienceReq.toEntity(experienceReq,
+                subtitleRepository.findBySubtitleId(experienceReq.getSubtitleId()).orElseThrow(SubtitleNotFoundException::new),
+                expCategoryRepository.findByExpCategoryId(experienceReq.getExpCategoryId()).orElseThrow(ExpCategoryNotFoundException::new),
+                sttCategoryRepository.findBySttCategoryId(experienceReq.getSttCategoryId()).orElseThrow(SttCategoryNotFoundException::new)
+        );
+        ExperienceGift savedGift = experienceGiftRepository.save(experienceGift);
+        return ExperienceDetailRes.toDto(savedGift);
+    }
 
     @Override
     public List<ExperienceRes> searchExperience(final UserPrincipal userPrincipal, String title) {
@@ -67,5 +98,26 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         return experienceGiftRepository.findGiftsByExpCategoryIdOrderByPriceAsc(ExpCategoryId)
                 .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ExperienceSttCategoryRes> getPopularSttGift(UserPrincipal userPrincipal, Long sttCategoryId) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+
+        List<ExperienceGift> popularGifts = experienceGiftRepository.findPopularGiftsBySttCategoryId(sttCategoryId);
+        return popularGifts.stream()
+                .map(ExperienceSttCategoryRes::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ExperienceExpCategoryRes> getPopulaExpGift(UserPrincipal userPrincipal, Long expCategoryId) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+
+        List<ExperienceGift> popularGifts = experienceGiftRepository.findPopularGiftsByExpCategoryId(expCategoryId);
+        return popularGifts.stream()
+                .map(ExperienceExpCategoryRes::toDto)
+                .collect(Collectors.toList());
+    }
+
 
 }
