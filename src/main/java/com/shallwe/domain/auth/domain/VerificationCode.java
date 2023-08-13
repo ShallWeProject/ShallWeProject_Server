@@ -17,9 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 public class VerificationCode extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @Id
     private String phoneNumber;
 
     private String code;
@@ -27,8 +25,7 @@ public class VerificationCode extends BaseEntity {
     private LocalDateTime expiryDate;
 
     @Builder
-    public VerificationCode(Long id, String phoneNumber, String code, LocalDateTime expiryDate) {
-        this.id = id;
+    public VerificationCode(String phoneNumber, String code, LocalDateTime expiryDate) {
         this.phoneNumber = phoneNumber;
         this.code = code;
         this.expiryDate = expiryDate;
