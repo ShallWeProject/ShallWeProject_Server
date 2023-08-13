@@ -21,14 +21,6 @@ public class S3Service {
     private String bucket;
     private final AmazonS3Client amazonS3Client;
 
-    /*public String upload(MultipartFile multipartFile) throws IOException{
-        String s3FileName = UUID.randomUUID() + "-" +
-                multipartFile.getOriginalFilename();
-        ObjectMetadata objMeta = new ObjectMetadata();
-        objMeta.setContentLength(multipartFile.getSize());
-        amazonS3Client.putObject(bucket, s3FileName,
-                multipartFile.getInputStream(),objMeta);
-        return amazonS3Client.getUrl(bucket,s3FileName).toString();*/
     public URL generatePresignedUrl(String objectKey, int expirationMinutes){
         Date expiration= new Date();
         long expTimeMillis = expiration.getTime();
