@@ -7,7 +7,9 @@ import com.shallwe.domain.user.dto.UserDetailRes;
 import com.shallwe.global.config.security.token.UserPrincipal;
 
 public interface UserService {
+
     UserDetailRes getCurrentUser(UserPrincipal userPrincipal);
     DeleteUserRes deleteCurrentUser(UserPrincipal userPrincipal);
     SignUpUserRes signUpCurrentUser(UserPrincipal userPrincipal, SignUpUserReq signUpUserReq);
+
 }

@@ -1,10 +1,7 @@
 package com.shallwe.domain.user.presentation;
 
 import com.shallwe.domain.user.application.UserServiceImpl;
-import com.shallwe.domain.user.dto.DeleteUserRes;
-import com.shallwe.domain.user.dto.SignUpUserReq;
-import com.shallwe.domain.user.dto.SignUpUserRes;
-import com.shallwe.domain.user.dto.UserDetailRes;
+import com.shallwe.domain.user.dto.*;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.ResponseCustom;
@@ -61,6 +58,18 @@ public class UserController {
             @Parameter(description = "SignUpUserReq 를 확인해주세요.", required = true) @RequestBody SignUpUserReq signUpUserReq
             ) {
         return ResponseCustom.OK(userServiceImpl.signUpCurrentUser(userPrincipal, signUpUserReq));
+    }
+
+    @Operation(summary = "유저가 보낸 선물 조회", description = "유저가 보낸 선물들을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저가 선물한 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SignUpUserRes.class))}),
+            @ApiResponse(responseCode = "400", description = "유저가 선물한 리스트 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/gift/send")
+    public ResponseCustom<SendAndReceiveGiftListRes> findSendGiftsByUser(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ) {
+        return ResponseCustom.OK(userServiceImpl.findSendGiftsByUser(userPrincipal));
     }
 
 }
