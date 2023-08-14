@@ -29,4 +29,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     "experienceGift.expCategory", "experienceGift.sttCategory"})
     List<Reservation> findReservationBySenderAndReservationStatus(User user, ReservationStatus reservationStatus);
 
+    @EntityGraph(attributePaths = {"experienceGift", "sender", "receiver", "experienceGift.subtitle",
+            "experienceGift.expCategory", "experienceGift.sttCategory"})
+    List<Reservation> findReservationByReceiverAndReservationStatus(User user, ReservationStatus reservationStatus);
+
 }
