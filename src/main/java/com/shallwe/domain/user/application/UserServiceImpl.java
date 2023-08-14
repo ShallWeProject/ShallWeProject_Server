@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
-                .findReservationByReceiverAndReservationStatus(user, ReservationStatus.COMPLETED);
+                .findReservationByPhoneNumberAndReservationStatus(user.getPhoneNumber(), ReservationStatus.COMPLETED);
 
         List<SendAndReceiveGiftDetailRes> gifts = reservations.stream()
                 .map(SendAndReceiveGiftDetailRes::toDto)
