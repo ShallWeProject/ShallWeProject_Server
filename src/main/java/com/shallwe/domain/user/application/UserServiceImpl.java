@@ -6,7 +6,6 @@ import com.shallwe.domain.common.Status;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
-import com.shallwe.domain.user.domain.Gender;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 
@@ -54,6 +53,7 @@ public class UserServiceImpl implements UserService {
     public SignUpUserRes signUpCurrentUser(final UserPrincipal userPrincipal, final SignUpUserReq signUpUserReq) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
+        user.updatePhoneNumber(signUpUserReq.getPhoneNumber());
         user.updateMarketingConsent(signUpUserReq.getMarketingConsent());
         user.updateAge(signUpUserReq.getAge());
         user.updateGender(signUpUserReq.getGender());
@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
         return SignUpUserRes.toDto();
     }
 
+    @Override
     public SendAndReceiveGiftListRes findSendGiftsByUser(UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
@@ -76,6 +77,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
     public SendAndReceiveGiftListRes findReceiveGitsByUser(UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 

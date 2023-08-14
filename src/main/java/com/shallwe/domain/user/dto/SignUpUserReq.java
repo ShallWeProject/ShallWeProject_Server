@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class SignUpUserReq {
 
+    @Schema(type = "string", example = "01012345678", description = "전화번호")
+    private String phoneNumber;
     @Schema(type = "boolean", example = "true / false", description = "마켓팅 수신 동의 여부")
     private Boolean marketingConsent;
     @Schema(type = "int", example = "25", description = "나이")
