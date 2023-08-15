@@ -3,6 +3,8 @@ package com.shallwe.domain.reservation.domain.repository;
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.domain.Reservation;
 
+import com.shallwe.domain.reservation.domain.ReservationStatus;
+import com.shallwe.domain.user.domain.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -22,5 +24,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @EntityGraph(attributePaths = {"memoryPhotos"})
     List<Reservation> findAllByDateAndPhoneNumber(LocalDateTime date, String phoneNumber);
+
+    @EntityGraph(attributePaths = {"experienceGift", "sender", "receiver", "experienceGift.subtitle",
+    "experienceGift.expCategory", "experienceGift.sttCategory"})
+    List<Reservation> findReservationBySenderAndReservationStatus(User user, ReservationStatus reservationStatus);
+
+    @EntityGraph(attributePaths = {"experienceGift", "sender", "receiver", "experienceGift.subtitle",
+            "experienceGift.expCategory", "experienceGift.sttCategory"})
+    List<Reservation> findReservationByPhoneNumberAndReservationStatus(String phoneNUmber, ReservationStatus reservationStatus);
 
 }

@@ -18,6 +18,8 @@ public class UserDetailRes {
 
     private Integer age;
 
+    private String phoneNumber;
+
     private String email;
 
     private String profileImgUrl;
@@ -25,12 +27,13 @@ public class UserDetailRes {
     private Gender gender;
 
     @Builder
-    public UserDetailRes(Long id, String name, String birthDay, Integer age, String email, String profileImgUrl, Gender gender){
+    public UserDetailRes(Long id, String name, String birthDay, Integer age, String email, String phoneNumber, String profileImgUrl, Gender gender){
         this.id=id;
         this.name=name;
         this.birthDay=birthDay;
         this.age=age;
         this.email=email;
+        this.phoneNumber = phoneNumber;
         this.profileImgUrl=profileImgUrl;
         this.gender=gender;
     }
@@ -42,6 +45,7 @@ public class UserDetailRes {
                 .birthDay(user.getBirthDay())
                 .age(user.getAge())
                 .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
                 .profileImgUrl(user.getProfileImgUrl())
                 .gender(user.getGender());
         return builder.build();
