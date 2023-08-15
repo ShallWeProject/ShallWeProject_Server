@@ -16,7 +16,7 @@ public class ExperienceSttCategoryRes {
     private Long sttCategoryId;
     private Long ExperienceGiftId;
     private String thumbnail;
-    private String subtitleTitle;
+    private String subtitle;
     private String title;
     private Long price;
     private String giftImgUrl;
@@ -26,7 +26,7 @@ public class ExperienceSttCategoryRes {
                 .ExperienceGiftId(experienceGift.getSttCategory().getSttCategoryId())
                 .ExperienceGiftId(experienceGift.getExperienceGiftId())
                 .thumbnail(experienceGift.getThumbnail())
-                .subtitleTitle(experienceGift.getSubtitle().getTitle())
+                .subtitle(experienceGift.getSubtitle().getTitle())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
                 .giftImgUrl(experienceGift.getGiftImgKey())
