@@ -16,7 +16,7 @@ public class ExperienceExpCategoryRes {
     private Long expCategoryId;
     private Long ExperienceGiftId;
     private String thumbnail;
-    private Subtitle subtitle;
+    private String subtitleTitle;
     private String title;
     private Long price;
     private String giftImgUrl;
@@ -26,7 +26,7 @@ public class ExperienceExpCategoryRes {
                 .expCategoryId(experienceGift.getExpCategory().getExpCategoryId())
                 .ExperienceGiftId(experienceGift.getExperienceGiftId())
                 .thumbnail(experienceGift.getThumbnail())
-                .subtitle(experienceGift.getSubtitle())
+                .subtitleTitle(experienceGift.getSubtitle().getTitle())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
                 .giftImgUrl(experienceGift.getGiftImgKey())
