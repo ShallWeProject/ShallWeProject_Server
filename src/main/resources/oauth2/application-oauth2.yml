@@ -13,7 +13,7 @@ spring:
             client-id: 604ec5bbcd0045898e4f7f256c00bae5
             client-secret: OyKWsRMnHiKvFza6RU0np25111LAdG09
             client-authentication-method: client_secret_post
-            redirect-uri: http://43.201.110.47/oauth2/callback/kakao
+            redirect-uri: http://localhost:8080/oauth2/callback/kakao
             authorization-grant-type: authorization_code
             scope:
               - profile_nickname,
