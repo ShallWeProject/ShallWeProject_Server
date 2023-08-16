@@ -41,6 +41,16 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
     }
 
     @Override
+    public List<ExperienceRes> getAllPopularGift(UserPrincipal userPrincipal) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+
+        List<ExperienceGift> popularGifts = experienceGiftRepository.findAllPopularGifts();
+        return popularGifts.stream()
+                .map(ExperienceRes::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public ExperienceDetailRes createExperience(UserPrincipal userPrincipal,ExperienceReq experienceReq ) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);

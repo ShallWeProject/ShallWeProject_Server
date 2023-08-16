@@ -33,4 +33,6 @@ public interface ExperienceGiftService {
     List<ExperienceExpCategoryRes> getPopulaExpGift(UserPrincipal userPrincipal, Long expCategoryId);
 
     ExperienceMainRes mainPage(UserPrincipal userPrincipal);
+
+    List<ExperienceRes> getAllPopularGift(UserPrincipal userPrincipal);
 }
