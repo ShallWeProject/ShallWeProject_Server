@@ -15,7 +15,7 @@ public class ExperienceRes {
 
     private Long ExperienceGiftId;
     private String thumbnail;
-    private Subtitle subtitle;
+    private String subtitle;
     private String title;
     private Long price;
     private String giftImgUrl;
@@ -24,7 +24,7 @@ public class ExperienceRes {
         return ExperienceRes.builder()
                 .ExperienceGiftId(experienceGift.getExperienceGiftId())
                 .thumbnail(experienceGift.getThumbnail())
-                .subtitle(experienceGift.getSubtitle())
+                .subtitle(experienceGift.getSubtitle().getTitle())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
                 .giftImgUrl(experienceGift.getGiftImgKey())
