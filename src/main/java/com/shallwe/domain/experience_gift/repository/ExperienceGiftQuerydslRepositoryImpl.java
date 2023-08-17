@@ -72,5 +72,16 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
                 .fetch();
     }
 
+    @Override
+    public List<ExperienceGift> findAllPopularGifts() {
+        QReservation reservation = QReservation.reservation;
+
+        return queryFactory.selectFrom(experienceGift)
+                .leftJoin(reservation).on(experienceGift.experienceGiftId.eq(reservation.experienceGift.experienceGiftId))
+                .groupBy(experienceGift.experienceGiftId)
+                .orderBy(reservation.id.count().desc())
+                .fetch();
+    }
+
 
 }

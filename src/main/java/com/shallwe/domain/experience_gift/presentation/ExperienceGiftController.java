@@ -39,6 +39,19 @@ public class ExperienceGiftController {
         return ResponseCustom.OK(experienceGiftService.mainPage(userPrincipal));
     }
 
+    @Operation(summary = "인기별 전체 경험선물 조회", description = "인기별 전체 경험선물 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인기별 전체 경험선물 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceRes.class))}),
+            @ApiResponse(responseCode = "400", description = "인기별 전체 경험선물 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/popular")
+    public ResponseCustom<List<ExperienceRes>> getAllPopularGift(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ){
+        return ResponseCustom.OK(experienceGiftService.getAllPopularGift(userPrincipal));
+
+    }
+
     @Operation(summary = "경험 검색 조회", description = "경험 검색을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "경험 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceRes.class))}),
@@ -127,6 +140,8 @@ public class ExperienceGiftController {
     ){
        return ResponseCustom.OK(experienceGiftService.createExperience(userPrincipal,reservationRequest));
         }
+
+
 
 
 
