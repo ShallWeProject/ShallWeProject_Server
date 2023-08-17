@@ -2,6 +2,7 @@ package com.shallwe.domain.experience_gift.dto.response;
 
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.experience_gift.domain.Subtitle;
+import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class ExperienceSttCategoryRes {
                 .subtitle(experienceGift.getSubtitle().getTitle())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
-                .giftImgUrl(experienceGift.getGiftImgKey())
+                .giftImgUrl(AwsS3ImageUrlUtil.toUrl(experienceGift.getGiftImgKey()))
                 .build();
     }
 
