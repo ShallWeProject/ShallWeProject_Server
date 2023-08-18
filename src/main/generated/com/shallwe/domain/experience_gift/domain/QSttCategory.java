@@ -24,6 +24,8 @@ public class QSttCategory extends EntityPathBase<SttCategory> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
+    public final StringPath imageKey = createString("imageKey");
+
     //inherited
     public final EnumPath<com.shallwe.domain.common.Status> status = _super.status;
 

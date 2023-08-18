@@ -28,6 +28,8 @@ public class QExpCategory extends EntityPathBase<ExpCategory> {
 
     public final NumberPath<Long> expCategoryId = createNumber("expCategoryId", Long.class);
 
+    public final StringPath imageKey = createString("imageKey");
+
     //inherited
     public final EnumPath<com.shallwe.domain.common.Status> status = _super.status;
 
