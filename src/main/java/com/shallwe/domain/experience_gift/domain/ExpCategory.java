@@ -17,11 +17,13 @@ public class ExpCategory extends BaseEntity {
     private Long expCategoryId;
 
     private String expCategory;
+    private String imageKey;
 
     @Builder
-    public ExpCategory(Long ExpCategoryId, String expCategory){
+    public ExpCategory(Long ExpCategoryId, String expCategory,String imageKey){
         this.expCategoryId =ExpCategoryId;
         this.expCategory=expCategory;
+        this.imageKey=imageKey;
     }
 
 }
