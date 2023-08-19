@@ -5,6 +5,7 @@ import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.user.domain.User;
+import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class ReservationRequest {
     private LocalDateTime date;
     private String receiverName;
     private String phoneNumber;
-    private String invitationImg;
+    private String imageKey;
     private String invitationComment;
     private ReservationStatus reservationStatus;
 
@@ -35,7 +36,7 @@ public class ReservationRequest {
                     .date(reservationRequest.getDate())
                     .receiver(receiver)
                     .phoneNumber(reservationRequest.getPhoneNumber())
-                    .invitationImg(reservationRequest.getInvitationImg())
+                    .invitationImg(reservationRequest.getImageKey())
                     .invitationComment(reservationRequest.getInvitationComment())
                     .reservationStatus(BOOKED)
                     .build();
@@ -46,5 +47,5 @@ public class ReservationRequest {
             return null;
         }
     }
-
 }
+

@@ -2,6 +2,7 @@ package com.shallwe.domain.reservation.dto;
 
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
+import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,12 @@ public class ReservationResponse {
     private Long experienceGiftId;
     private String receiver;
     private String phoneNumber;
-    private String invitationImg;
+    private String invitationImageURL;
     private String invitationComment;
     private ReservationStatus reservationStatus;
 
     @Builder
-    public ReservationResponse(Long id, Long senderId, String sender, Long persons, LocalDateTime date, Long experienceGiftId, String receiver, String phoneNumber, String invitationImg, String invitationComment, ReservationStatus reservationStatus) {
+    public ReservationResponse(Long id, Long senderId, String sender, Long persons, LocalDateTime date, Long experienceGiftId, String receiver, String phoneNumber, String invitationImageURL, String invitationComment, ReservationStatus reservationStatus) {
         this.id = id;
         this.senderId = senderId;
         this.sender = sender;
@@ -33,7 +34,7 @@ public class ReservationResponse {
         this.experienceGiftId = experienceGiftId;
         this.receiver = receiver;
         this.phoneNumber = phoneNumber;
-        this.invitationImg = invitationImg;
+        this.invitationImageURL = invitationImageURL;
         this.invitationComment = invitationComment;
         this.reservationStatus = reservationStatus;
     }
@@ -48,7 +49,7 @@ public class ReservationResponse {
                 .date(reservation.getDate())
                 .phoneNumber(reservation.getPhoneNumber())
                 .receiver(reservation.getReceiver().getName())
-                .invitationImg(reservation.getInvitationImg())
+                .invitationImageURL(AwsS3ImageUrlUtil.toUrl(reservation.getInvitationImg()))
                 .invitationComment(reservation.getInvitationComment())
                 .reservationStatus(reservation.getReservationStatus());
 
@@ -65,7 +66,7 @@ public class ReservationResponse {
         reservationResponse.setExperienceGiftId(reservation.getExperienceGift().getExperienceGiftId());
         reservationResponse.setReceiver(reservation.getReceiver().getName());
         reservationResponse.setPhoneNumber(reservation.getPhoneNumber());
-        reservationResponse.setInvitationImg(reservation.getInvitationImg());
+        reservationResponse.setInvitationImageURL(AwsS3ImageUrlUtil.toUrl(reservation.getInvitationImg()));
         reservationResponse.setInvitationComment(reservation.getInvitationComment());
         reservationResponse.setReservationStatus(reservation.getReservationStatus());
 
