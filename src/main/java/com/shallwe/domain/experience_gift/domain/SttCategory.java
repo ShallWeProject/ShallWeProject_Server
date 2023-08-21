@@ -17,11 +17,13 @@ public class SttCategory extends BaseEntity {
     private Long sttCategoryId;
 
     private String sttCategory;
+    private String imageKey;
 
     @Builder
-    public SttCategory(Long SttCategoryId, String sttCategory){
+    public SttCategory(Long SttCategoryId, String sttCategory,String imageKey){
         this.sttCategoryId =SttCategoryId;
         this.sttCategory=sttCategory;
+        this.imageKey=imageKey;
     }
 
 }

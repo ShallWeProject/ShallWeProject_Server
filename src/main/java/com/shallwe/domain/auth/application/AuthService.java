@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import com.shallwe.domain.auth.dto.*;
+import com.shallwe.domain.auth.exception.AlreadyExistEmailException;
 import com.shallwe.global.DefaultAssert;
 import com.shallwe.global.config.security.token.UserPrincipal;
 
@@ -26,10 +27,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
-
 
 
 @RequiredArgsConstructor
@@ -37,10 +38,76 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
     private final CustomTokenProviderService customTokenProviderService;
-    
-    private final TokenRepository tokenRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-    public ResponseEntity<?> refresh(RefreshTokenReq tokenRefreshRequest){
+    private final TokenRepository tokenRepository;
+    private final UserRepository userRepository;
+
+    @Transactional
+    public AuthRes signUp(SignUpReq signUpReq) {
+        if (userRepository.existsByEmail(signUpReq.getEmail()))
+            throw new AlreadyExistEmailException();
+
+        User newUser = User.builder()
+                .providerId(signUpReq.getProviderId())
+                .provider(Provider.kakao)
+                .name(signUpReq.getNickname())
+                .email(signUpReq.getEmail())
+                .profileImgUrl(signUpReq.getProfileImgUrl())
+                .password(passwordEncoder.encode(signUpReq.getProviderId()))
+                .role(Role.USER)
+                .build();
+
+        userRepository.save(newUser);
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        signUpReq.getEmail(),
+                        signUpReq.getProviderId()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
+                .build();
+        tokenRepository.save(token);
+
+        return AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(tokenMapping.getRefreshToken())
+                .build();
+    }
+
+    @Transactional
+    public AuthRes signIn(SignInReq signInReq) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        signInReq.getEmail(),
+                        signInReq.getProviderId()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
+                .build();
+        tokenRepository.save(token);
+
+        return AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(token.getRefreshToken())
+                .build();
+    }
+
+    public ResponseEntity<?> refresh(RefreshTokenReq tokenRefreshRequest) {
         //1차 검증
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
         DefaultAssert.isAuthentication(checkValid);
@@ -54,9 +121,9 @@ public class AuthService {
         TokenMapping tokenMapping;
 
         Long expirationTime = customTokenProviderService.getExpiration(tokenRefreshRequest.getRefreshToken());
-        if(expirationTime > 0){
+        if (expirationTime > 0) {
             tokenMapping = customTokenProviderService.refreshToken(authentication, token.getRefreshToken());
-        }else{
+        } else {
             tokenMapping = customTokenProviderService.createToken(authentication);
         }
 
@@ -68,7 +135,7 @@ public class AuthService {
         return ResponseEntity.ok(authResponse);
     }
 
-    public ResponseEntity<?> signOut(RefreshTokenReq tokenRefreshRequest){
+    public ResponseEntity<?> signOut(RefreshTokenReq tokenRefreshRequest) {
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
         DefaultAssert.isAuthentication(checkValid);
 
@@ -81,7 +148,7 @@ public class AuthService {
         return ResponseEntity.ok(apiResponse);
     }
 
-    private boolean valid(String refreshToken){
+    private boolean valid(String refreshToken) {
         //1. 토큰 형식 물리적 검증
         boolean validateCheck = customTokenProviderService.validateToken(refreshToken);
         DefaultAssert.isTrue(validateCheck, "Token 검증에 실패하였습니다.");

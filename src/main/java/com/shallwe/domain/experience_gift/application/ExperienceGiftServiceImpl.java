@@ -2,15 +2,13 @@ package com.shallwe.domain.experience_gift.application;
 
 import com.shallwe.domain.experience_gift.domain.ExpCategory;
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
+import com.shallwe.domain.experience_gift.domain.Explanation;
 import com.shallwe.domain.experience_gift.domain.SttCategory;
 import com.shallwe.domain.experience_gift.dto.response.*;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
-import com.shallwe.domain.experience_gift.repository.ExpCategoryRepository;
-import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
-import com.shallwe.domain.experience_gift.repository.SttCategoryRepository;
+import com.shallwe.domain.experience_gift.repository.*;
 import com.shallwe.domain.experience_gift.dto.request.ExperienceReq;
 import com.shallwe.domain.experience_gift.exception.*;
-import com.shallwe.domain.experience_gift.repository.SubtitleRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -31,6 +29,8 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
     private final ExpCategoryRepository expCategoryRepository;
     private final SttCategoryRepository sttCategoryRepository;
     private final SubtitleRepository subtitleRepository;
+    private final ExplanationRepository explanationRepository;
+
 
     @Override
     public ExperienceMainRes mainPage(UserPrincipal userPrincipal) {
@@ -38,6 +38,16 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         List<ExpCategory> expCategories = expCategoryRepository.findAll();
         List<SttCategory> sttCategories = sttCategoryRepository.findAll();
         return ExperienceMainRes.toDto(expCategories, sttCategories);
+    }
+
+    @Override
+    public List<ExperienceRes> getAllPopularGift(UserPrincipal userPrincipal) {
+        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+
+        List<ExperienceGift> popularGifts = experienceGiftRepository.findAllPopularGifts();
+        return popularGifts.stream()
+                .map(ExperienceRes::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -64,7 +74,8 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
     public ExperienceDetailRes getExperienceDetails(final UserPrincipal userPrincipal,Long ExperienceGiftId) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
         ExperienceGift experienceGift=experienceGiftRepository.findByExperienceGiftId(ExperienceGiftId).orElseThrow(ExperienceGiftNotFoundException::new);
-        return ExperienceDetailRes.toDto(experienceGift);
+        List<Explanation> explanations=explanationRepository.findByExperienceGift(experienceGift);
+        return ExperienceDetailRes.toDetailDto(experienceGift,explanations);
 
     }
 
