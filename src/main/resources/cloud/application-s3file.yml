@@ -1,0 +1,5 @@
+aws:
+  s3:
+    region: ap-northeast-2
+    bucket: shallwebucket
+    profile: uploads/
