@@ -2,7 +2,7 @@ package com.shallwe.domain.experience_gift.dto.response;
 
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.experience_gift.domain.Explanation;
-import com.shallwe.domain.experience_gift.domain.Subtitle;
+import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,7 +45,7 @@ public class ExperienceDetailRes {
     public static ExperienceDetailRes toDetailDto(ExperienceGift experienceGift, List<Explanation> explanations){
         ExperienceDetailRes experienceDetailRes=new ExperienceDetailRes();
         experienceDetailRes.ExperienceGiftId=experienceGift.getExperienceGiftId();
-        experienceDetailRes.giftImgUrl=AwsS3ImageUrlUtil.toUrl(experienceGift.getGiftImgKey());
+        experienceDetailRes.giftImgUrl= AwsS3ImageUrlUtil.toUrl(experienceGift.getGiftImgKey());
         experienceDetailRes.thumbnail=experienceGift.getThumbnail();
         experienceDetailRes.title=experienceGift.getTitle();
         experienceDetailRes.subtitle=experienceGift.getSubtitle().getTitle();
