@@ -41,6 +41,30 @@ public class AuthController {
     private final AuthService authService;
     private final SmsService smsService;
 
+    @Operation(summary = "유저 회원가입", description = "유저 회원가입을 수행합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원가입 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRes.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "회원가입 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @PostMapping(value="/sign-up")
+    public ResponseCustom<AuthRes> signUp(
+            @Parameter(description = "SignUpReq Schema를 확인해주세요.", required = true) @RequestBody SignUpReq signUpReq
+    ) {
+        return ResponseCustom.OK(authService.signUp(signUpReq));
+    }
+
+    @Operation(summary = "유저 로그인", description = "유저 로그인을 수행합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRes.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "로그인 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @PostMapping(value="/sign-in")
+    public ResponseCustom<AuthRes> signIn(
+            @Parameter(description = "SignInReq Schema를 확인해주세요.", required = true) @RequestBody SignInReq signInReq
+    ) {
+        return ResponseCustom.OK(authService.signIn(signInReq));
+    }
+
     @Operation(summary = "토큰 갱신", description = "신규 토큰 갱신을 수행합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "토큰 갱신 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRes.class) ) } ),
