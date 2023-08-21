@@ -16,7 +16,7 @@ public class ExperienceRes {
 
     private Long ExperienceGiftId;
     private String thumbnail;
-    private String subtitle;
+    private Subtitle subtitle;
     private String title;
     private Long price;
     private String giftImgUrl;
@@ -25,7 +25,7 @@ public class ExperienceRes {
         return ExperienceRes.builder()
                 .ExperienceGiftId(experienceGift.getExperienceGiftId())
                 .thumbnail(experienceGift.getThumbnail())
-                .subtitle(experienceGift.getSubtitle().getTitle())
+                .subtitle(experienceGift.getSubtitle())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
                 .giftImgUrl(AwsS3ImageUrlUtil.toUrl(experienceGift.getGiftImgKey()))

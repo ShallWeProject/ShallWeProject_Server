@@ -62,7 +62,7 @@ public class UserController {
 
     @Operation(summary = "유저가 보낸 선물 조회", description = "유저가 보낸 선물들을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저가 선물한 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SignUpUserRes.class))}),
+            @ApiResponse(responseCode = "200", description = "유저가 선물한 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SendAndReceiveGiftListRes.class))}),
             @ApiResponse(responseCode = "400", description = "유저가 선물한 리스트 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/gift/send")
@@ -74,7 +74,7 @@ public class UserController {
 
     @Operation(summary = "유저가 받은 선물 조회", description = "유저가 받은 선물들을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저가 선물받은 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SignUpUserRes.class))}),
+            @ApiResponse(responseCode = "200", description = "유저가 선물받은 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SendAndReceiveGiftListRes.class))}),
             @ApiResponse(responseCode = "400", description = "유저가 선물받은 리스트 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/gift/receive")
