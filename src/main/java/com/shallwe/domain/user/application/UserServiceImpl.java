@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
-                .findReservationBySenderAndReservationStatus(user, ReservationStatus.COMPLETED);
+                .findReservationBySenderAndReservationStatusIn(user, Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
 
         List<SendAndReceiveGiftDetailRes> gifts = reservations.stream()
                 .map(SendAndReceiveGiftDetailRes::toDto)
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
-                .findReservationByPhoneNumberAndReservationStatus(user.getPhoneNumber(), ReservationStatus.COMPLETED);
+                .findReservationByPhoneNumberAndReservationStatusIn(user.getPhoneNumber(), Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
 
         List<SendAndReceiveGiftDetailRes> gifts = reservations.stream()
                 .map(SendAndReceiveGiftDetailRes::toDto)
