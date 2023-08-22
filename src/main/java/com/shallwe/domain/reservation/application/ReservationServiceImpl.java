@@ -66,10 +66,15 @@ public class ReservationServiceImpl {
 
     @Transactional
     public ReservationResponse updateReservation(UpdateReservationReq updateReq, UserPrincipal userPrincipal) {
-        Reservation updateReservation= reservationRepository.findBySenderIdAndId(userPrincipal.getId(),updateReq.getId()).map(
+        Reservation updateReservation= reservationRepository.findByReceiverIdAndId(userPrincipal.getId(),updateReq.getId()).map(
+                reservation -> {reservation.updateReservation(updateReq);
+                    return reservationRepository.save(reservation);}
+        ).orElseThrow(InvalidReservationException::new);
+        //보낸이가 예약 수정
+       /* Reservation updateReservation= reservationRepository.findBySenderIdAndId(userPrincipal.getId(),updateReq.getId()).map(
                 reservation -> {reservation.updateReservation(updateReq);
                 return reservationRepository.save(reservation);}
-        ).orElseThrow(InvalidReservationException::new);
+        ).orElseThrow(InvalidReservationException::new);*/
         return ReservationResponse.toDto(updateReservation);
     }
 

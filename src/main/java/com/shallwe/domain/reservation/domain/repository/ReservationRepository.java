@@ -22,6 +22,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllBySenderId(Long userId);
     Optional<Reservation> findBySenderIdAndId(Long userId, Long reservationId);
+
+    Optional<Reservation> findByReceiverIdAndId(Long userId, Long reservationId);
     @Query("SELECT r FROM Reservation r WHERE r.experienceGift.experienceGiftId = :giftId")
     List<Reservation> findByExperienceGift_Id(@Param("giftId")Long giftId);
 
