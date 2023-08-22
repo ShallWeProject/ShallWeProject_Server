@@ -58,7 +58,7 @@ public class MemoryPhotoServiceImpl implements MemoryPhotoService{
                 .orElseThrow(InvalidReservationException::new);
 
         MemoryPhoto memoryPhoto = MemoryPhoto.builder()
-                .memoryImgUrl(AwsS3ImageUrlUtil.toUrl(uploadMemoryPhotoReq.getMemoryPhotoUrl()))
+                .memoryImgUrl(AwsS3ImageUrlUtil.toUrl(uploadMemoryPhotoReq.getMemoryPhotoImgKey()))
                 .reservation(reservation)
                 .build();
 
