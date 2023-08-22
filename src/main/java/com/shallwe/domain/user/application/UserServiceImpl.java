@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
         Token token = tokenRepository.findByUserEmail(user.getEmail())
                 .orElseThrow(InvalidTokenException::new);
-        user.updateStatus(Status.DELETE);
+        userRepository.delete(user);
         tokenRepository.delete(token);
 
         return DeleteUserRes.toDto();
