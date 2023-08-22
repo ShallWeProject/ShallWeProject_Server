@@ -1,7 +1,6 @@
 package com.shallwe.domain.reservation.application;
 
-import com.shallwe.domain.experience_gift.domain.ExperienceGift;
-import com.shallwe.domain.experience_gift.dto.response.ExperienceExpCategoryRes;
+import com.shallwe.domain.common.Status;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
 import com.shallwe.domain.reservation.domain.Reservation;
@@ -12,7 +11,6 @@ import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.reservation.exception.InvalidUserException;
-import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidPhoneNumberException;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -20,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,9 +59,9 @@ public class ReservationServiceImpl {
         return reservationRepository.findAll().stream().map(ReservationResponse::toDto).collect(Collectors.toList());
     }
     //추가
-    public List<ReservationResponse> getCurrentGiftReservation(ExperienceGift experienceGiftId){
-        experienceGiftRepository.findById(experienceGiftId.getExperienceGiftId()).orElseThrow(ExperienceGiftNotFoundException::new);
-        return reservationRepository.findByExperienceGift(experienceGiftId).stream().map(ReservationResponse::toDto).collect(Collectors.toList());
+    public List<ReservationResponse> getCurrentGiftReservation(Long giftId){
+        experienceGiftRepository.findById(giftId).orElseThrow(ExperienceGiftNotFoundException::new);
+        return reservationRepository.findByExperienceGift_Id(giftId).stream().map(ReservationResponse::toDto).collect(Collectors.toList());
     }
 
     @Transactional
@@ -77,10 +74,12 @@ public class ReservationServiceImpl {
     }
 
     @Transactional
-    public DeleteReservationRes deleteReservation(UserPrincipal userPrincipal, Long id) {
-        Optional<Reservation> foundReservation = reservationRepository.findBySenderIdAndId(userPrincipal.getId(), id);
-        foundReservation.ifPresentOrElse(reservationRepository::delete,
-                () -> {throw new InvalidReservationException();});
+    public DeleteReservationRes deleteReservation(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(InvalidReservationException::new);
+
+        reservation.updateStatus(Status.DELETE);
+
         return DeleteReservationRes.toDTO();
     }
 

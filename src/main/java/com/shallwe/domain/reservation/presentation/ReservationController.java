@@ -65,10 +65,10 @@ public class ReservationController {
     })
     @GetMapping("/giftId")
     public ResponseCustom<List<ReservationResponse>> getCurrentGiftReservation(
-            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @RequestHeader ExperienceGift experienceGiftId
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @RequestHeader Long giftId
 
     ){
-        return ResponseCustom.OK(reservationServiceimpl.getCurrentGiftReservation(experienceGiftId));
+        return ResponseCustom.OK(reservationServiceimpl.getCurrentGiftReservation(giftId));
     }
 
     @Operation(summary ="예약 추가하기", description = "현재 유저, 경험을 가져와 예약을 추가합니다.")
@@ -104,10 +104,9 @@ public class ReservationController {
     })
     @DeleteMapping
     public ResponseCustom<DeleteReservationRes> deleteReservation(
-            @Parameter(description = "예약 ID를 확인해주세요.", required = true) @RequestHeader Long id,
-            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+            @Parameter(description = "예약 ID를 확인해주세요.", required = true) @RequestHeader Long id
     ){
-        return ResponseCustom.OK(reservationServiceimpl.deleteReservation(userPrincipal,id));
+        return ResponseCustom.OK(reservationServiceimpl.deleteReservation(id));
     }
 
 }

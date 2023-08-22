@@ -7,6 +7,8 @@ import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.user.domain.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -20,17 +22,19 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllBySenderId(Long userId);
     Optional<Reservation> findBySenderIdAndId(Long userId, Long reservationId);
-    List<Reservation> findByExperienceGift(ExperienceGift experienceGift);
+    @Query("SELECT r FROM Reservation r WHERE r.experienceGift.experienceGiftId = :giftId")
+    List<Reservation> findByExperienceGift_Id(@Param("giftId")Long giftId);
+
 
     @EntityGraph(attributePaths = {"memoryPhotos"})
     List<Reservation> findAllByDateAndPhoneNumber(LocalDateTime date, String phoneNumber);
 
     @EntityGraph(attributePaths = {"experienceGift", "sender", "receiver", "experienceGift.subtitle",
     "experienceGift.expCategory", "experienceGift.sttCategory"})
-    List<Reservation> findReservationBySenderAndReservationStatus(User user, ReservationStatus reservationStatus);
+    List<Reservation> findReservationBySenderAndReservationStatusIn(User user, List<ReservationStatus> reservationStatusList);
 
     @EntityGraph(attributePaths = {"experienceGift", "sender", "receiver", "experienceGift.subtitle",
             "experienceGift.expCategory", "experienceGift.sttCategory"})
-    List<Reservation> findReservationByPhoneNumberAndReservationStatus(String phoneNUmber, ReservationStatus reservationStatus);
+    List<Reservation> findReservationByPhoneNumberAndReservationStatusIn(String phoneNUmber, List<ReservationStatus> reservationStatusList);
 
 }
