@@ -1,5 +1,6 @@
 package com.shallwe.domain.reservation.application;
 
+import com.shallwe.domain.common.Status;
 import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
 import com.shallwe.domain.reservation.domain.Reservation;
@@ -73,10 +74,12 @@ public class ReservationServiceImpl {
     }
 
     @Transactional
-    public DeleteReservationRes deleteReservation(UserPrincipal userPrincipal, Long id) {
-        Optional<Reservation> foundReservation = reservationRepository.findBySenderIdAndId(userPrincipal.getId(), id);
-        foundReservation.ifPresentOrElse(reservationRepository::delete,
-                () -> {throw new InvalidReservationException();});
+    public DeleteReservationRes deleteReservation(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(InvalidReservationException::new);
+
+        reservation.updateStatus(Status.DELETE);
+
         return DeleteReservationRes.toDTO();
     }
 

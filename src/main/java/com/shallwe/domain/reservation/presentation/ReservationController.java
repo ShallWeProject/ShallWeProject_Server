@@ -104,10 +104,9 @@ public class ReservationController {
     })
     @DeleteMapping
     public ResponseCustom<DeleteReservationRes> deleteReservation(
-            @Parameter(description = "예약 ID를 확인해주세요.", required = true) @RequestHeader Long id,
-            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+            @Parameter(description = "예약 ID를 확인해주세요.", required = true) @RequestHeader Long id
     ){
-        return ResponseCustom.OK(reservationServiceimpl.deleteReservation(userPrincipal,id));
+        return ResponseCustom.OK(reservationServiceimpl.deleteReservation(id));
     }
 
 }
