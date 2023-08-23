@@ -11,6 +11,7 @@ import com.shallwe.global.payload.Message;
 import com.shallwe.global.payload.ResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,7 +31,7 @@ public class MemoryPhotoController {
 
     @Operation(summary = "날짜에 해당하는 MemoryPhoto 조회", description = "날짜에 해당하는 MemoryPhoto 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "MemoryPhoto 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MemoryPhotoDetailRes.class))}),
+            @ApiResponse(responseCode = "200", description = "MemoryPhoto 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = MemoryPhotoDetailRes.class)))}),
             @ApiResponse(responseCode = "400", description = "MemoryPhoto 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/{date}")

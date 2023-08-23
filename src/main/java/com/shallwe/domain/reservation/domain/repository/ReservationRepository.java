@@ -1,6 +1,7 @@
 package com.shallwe.domain.reservation.domain.repository;
 
 import com.shallwe.domain.experience_gift.domain.ExperienceGift;
+import com.shallwe.domain.memory_photo.domain.MemoryPhoto;
 import com.shallwe.domain.reservation.domain.Reservation;
 
 import com.shallwe.domain.reservation.domain.ReservationStatus;
@@ -38,5 +39,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @EntityGraph(attributePaths = {"experienceGift", "sender", "receiver", "experienceGift.subtitle",
             "experienceGift.expCategory", "experienceGift.sttCategory"})
     List<Reservation> findReservationByPhoneNumberAndReservationStatusIn(String phoneNUmber, List<ReservationStatus> reservationStatusList);
+
+    @EntityGraph(attributePaths = {"memoryPhotos"})
+    List<Reservation> findAllByDateBetweenAndPhoneNumber(LocalDateTime startDateTime, LocalDateTime endDateTime, String phoneNumber);
 
 }
