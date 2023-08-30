@@ -10,9 +10,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8??
-    url : jdbc:mysql://shallwe.cakvufpd6nku.ap-northeast-2.rds.amazonaws.com:3306/shallWe?serverTimezone=Asia/Seoul
-    username: admin
-    password: shallweshallwe!
+    url : ENC(K1DUB3hj10eljLqEO2oRFkSIQeusgiRc1hm7cevOWORl8y5VuyO9bNrZHXoy9b5ooY2yGtzaCsi2xzQiz1I1ghhIGaowkxE7JjOE9My0lmOPVnLBRDP4KIeMuF19bEFF57xhkMifOJYxefzYt2ToQLtO45559S6D)
+    username: ENC(I+gwAkB18q8l2HRj0xWWwQ==)
+    password: ENC(//7ayw20T+GUO/TQ2m7YKgDLzx1PpoWu)
   sql:
     init:
       platform: mysql
