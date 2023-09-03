@@ -1,6 +1,5 @@
 package com.shallwe.domain.reservation.domain.repository;
 
-import com.shallwe.domain.experience_gift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.domain.Reservation;
 
 import com.shallwe.domain.reservation.domain.ReservationStatus;

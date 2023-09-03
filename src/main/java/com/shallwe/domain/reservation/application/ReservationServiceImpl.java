@@ -1,8 +1,8 @@
 package com.shallwe.domain.reservation.application;
 
 import com.shallwe.domain.common.Status;
-import com.shallwe.domain.experience_gift.exception.ExperienceGiftNotFoundException;
-import com.shallwe.domain.experience_gift.repository.ExperienceGiftRepository;
+import com.shallwe.domain.experienceGift.exception.ExperienceGiftNotFoundException;
+import com.shallwe.domain.experienceGift.repository.ExperienceGiftRepository;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.DeleteReservationRes;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor

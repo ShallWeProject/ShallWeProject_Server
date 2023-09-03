@@ -1,14 +1,11 @@
 package com.shallwe.domain.reservation.presentation;
 
-import com.shallwe.domain.experience_gift.domain.ExperienceGift;
-import com.shallwe.domain.reservation.application.ReservationService;
 import com.shallwe.domain.reservation.application.ReservationServiceImpl;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.dto.DeleteReservationRes;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
-import com.shallwe.domain.user.dto.SignUpUserReq;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.ErrorResponse;
