@@ -74,5 +74,5 @@
 |[이승학](https://github.com/leeseunghakhello)|[박세진](https://github.com/sejineer)|[강현욱](https://github.com/hyunw9)|
 |:---:|:---:|:---:|
 |<img src="https://github.com/leeseunghakhello.png" width="180" height="180" >|<img src="https://github.com/sejineer.png" width="180" height="180" >|<img src="https://github.com/hyunw9.png" width="180" height="180" >|
-| **Server Leader & <br> Backend Developer & <br> Architect** | ** & <br> Backend Developer**| **DB & <br> Backend Developer** |
+| **Server Leader & <br> Backend Developer & <br> Architect** | **DB Developer & <br> Backend Developer**| **DB Developer& <br> Backend Developer** |
 
