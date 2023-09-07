@@ -1,11 +1,9 @@
 package com.shallwe.domain.reservation.dto;
 
-import com.shallwe.domain.experience_gift.domain.ExpCategory;
-import com.shallwe.domain.experience_gift.domain.ExperienceGift;
+import com.shallwe.domain.experienceGift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.user.domain.User;
-import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.*;
 
 import java.time.LocalDateTime;

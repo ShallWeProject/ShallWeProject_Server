@@ -5,14 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Getter
 @Entity
 public class VerificationCode extends BaseEntity {
@@ -23,12 +22,5 @@ public class VerificationCode extends BaseEntity {
     private String code;
 
     private LocalDateTime expiryDate;
-
-    @Builder
-    public VerificationCode(String phoneNumber, String code, LocalDateTime expiryDate) {
-        this.phoneNumber = phoneNumber;
-        this.code = code;
-        this.expiryDate = expiryDate;
-    }
 
 }

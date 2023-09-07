@@ -9,15 +9,14 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 
 import com.shallwe.domain.common.BaseEntity;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import lombok.Builder;
-import lombok.Getter;
 import org.hibernate.annotations.Where;
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Entity
 @Getter
 @Where(clause = "status = 'ACTIVE'")
@@ -53,23 +52,6 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @Builder
-    public User(Long id, String name, String birthDay, Integer age, String phoneNumber, String email, String password, String profileImgUrl, Gender gender, Boolean marketingConsent, Provider provider, String providerId, Role role) {
-        this.id = id;
-        this.name = name;
-        this.birthDay = birthDay;
-        this.age = age;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.password = password;
-        this.profileImgUrl = profileImgUrl;
-        this.gender = gender;
-        this.marketingConsent = marketingConsent;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.role = Role.USER;
-    }
 
     public void updateName(String name){
         this.name = name;

@@ -1,6 +1,6 @@
 package com.shallwe.domain.user.dto;
 
-import com.shallwe.domain.experience_gift.dto.response.ExperienceDetailRes;
+import com.shallwe.domain.experienceGift.dto.response.ExperienceDetailRes;
 import com.shallwe.domain.reservation.domain.Reservation;
 import lombok.Builder;
 import lombok.Data;
