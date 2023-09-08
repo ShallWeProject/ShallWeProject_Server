@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -31,10 +32,12 @@ public class MemoryPhotoController {
             @ApiResponse(responseCode = "200", description = "MemoryPhoto 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = MemoryPhotoDetailRes.class))}),
             @ApiResponse(responseCode = "400", description = "MemoryPhoto 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @GetMapping("/{date}")
+    @GetMapping
     public ResponseCustom<?> getMemoryPhotoByDate(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "날짜를 입력해주세요.", required = true) @PathVariable LocalDateTime date
+            @Parameter(description = "날짜를 입력해주세요.[YYYY-MM-DD HH:mm] 형식입니다.", required = true)
+            @RequestParam(value = "date")
+            @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")LocalDateTime date
     ) {
         return ResponseCustom.OK(memoryPhotoService.getMemoryPhotoByDate(userPrincipal, date));
     }
