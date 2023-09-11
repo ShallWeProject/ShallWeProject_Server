@@ -6,12 +6,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Entity
 @Getter
 public class Token extends BaseEntity {
@@ -25,12 +24,6 @@ public class Token extends BaseEntity {
     public Token updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;
-    }
-
-    @Builder
-    public Token(String userEmail, String refreshToken) {
-        this.userEmail = userEmail;
-        this.refreshToken = refreshToken;
     }
 
 }

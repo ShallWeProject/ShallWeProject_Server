@@ -2,15 +2,12 @@ package com.shallwe.domain.reservation.domain;
 
 
 import com.shallwe.domain.common.BaseEntity;
-import com.shallwe.domain.experience_gift.domain.ExperienceGift;
-import com.shallwe.domain.memory_photo.domain.MemoryPhoto;
+import com.shallwe.domain.experienceGift.domain.ExperienceGift;
+import com.shallwe.domain.memoryPhoto.domain.MemoryPhoto;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
@@ -18,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Entity
 @Getter
 @Where(clause = "status = 'ACTIVE'")
@@ -55,20 +54,6 @@ public class Reservation extends BaseEntity {
 
     @OneToMany(mappedBy = "reservation")
     List<MemoryPhoto> memoryPhotos = new ArrayList<>();
-
-    @Builder
-    public Reservation(Long id, ExperienceGift experienceGift, User sender, Long persons, LocalDateTime date, User receiver, String phoneNumber, String invitationImg, String invitationComment, ReservationStatus reservationStatus) {
-        this.id = id;
-        this.experienceGift = experienceGift;
-        this.sender = sender;
-        this.persons = persons;
-        this.date = date;
-        this.receiver = receiver;
-        this.phoneNumber = phoneNumber;
-        this.invitationImg = invitationImg;
-        this.invitationComment = invitationComment;
-        this.reservationStatus = reservationStatus;
-    }
 
     public void updateReservation(UpdateReservationReq updateReq) {
         this.persons = Optional.ofNullable(updateReq.getPersons()).orElse(this.persons);
