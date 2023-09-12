@@ -1,4 +1,4 @@
-package com.shallwe.domain.experienceGift.repository;
+package com.shallwe.domain.experienceGift.domain.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shallwe.domain.experienceGift.domain.ExperienceGift;
