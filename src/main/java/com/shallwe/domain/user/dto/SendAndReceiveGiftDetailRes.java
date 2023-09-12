@@ -1,42 +1,32 @@
 package com.shallwe.domain.user.dto;
 
+import com.shallwe.domain.experienceGift.domain.Subtitle;
 import com.shallwe.domain.experienceGift.dto.response.ExperienceDetailRes;
 import com.shallwe.domain.reservation.domain.Reservation;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
+@Builder
 public class SendAndReceiveGiftDetailRes {
 
     private Long reservationId;
-    private ExperienceDetailRes experienceGift;
-    private UserDetailRes sender;
-    private Long persons;
+    private String experienceTitle;
+    private String experienceSubTitle;
     private LocalDateTime dateTime;
     private UserDetailRes receiver;
     private String invitationImg;
     private String invitationComment;
 
-    @Builder
-    public SendAndReceiveGiftDetailRes(Long reservationId, ExperienceDetailRes experienceGift, UserDetailRes sender, Long persons, LocalDateTime dateTime, UserDetailRes receiver, String invitationImg, String invitationComment) {
-        this.reservationId = reservationId;
-        this.experienceGift = experienceGift;
-        this.sender = sender;
-        this.persons = persons;
-        this.dateTime = dateTime;
-        this.receiver = receiver;
-        this.invitationImg = invitationImg;
-        this.invitationComment = invitationComment;
-    }
-
     public static SendAndReceiveGiftDetailRes toDto(Reservation reservation) {
         return SendAndReceiveGiftDetailRes.builder()
                 .reservationId(reservation.getId())
-                .experienceGift(ExperienceDetailRes.toDto(reservation.getExperienceGift()))
-                .sender(UserDetailRes.toDto(reservation.getSender()))
-                .persons(reservation.getPersons())
+                .experienceTitle(reservation.getExperienceGift().getTitle())
+                .experienceSubTitle(reservation.getExperienceGift().getSubtitle().getTitle())
                 .dateTime(reservation.getDate())
                 .receiver(UserDetailRes.toDto(reservation.getReceiver()))
                 .invitationImg(reservation.getInvitationImg())

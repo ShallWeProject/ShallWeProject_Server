@@ -63,35 +63,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SendAndReceiveGiftListRes findSendGiftsByUser(UserPrincipal userPrincipal) {
+    public List<SendAndReceiveGiftDetailRes> findSendGiftsByUser(UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
                 .findReservationBySenderAndReservationStatusIn(user, Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
 
-        List<SendAndReceiveGiftDetailRes> gifts = reservations.stream()
+        return reservations.stream()
                 .map(SendAndReceiveGiftDetailRes::toDto)
                 .toList();
-
-        return SendAndReceiveGiftListRes.builder()
-                .gifts(gifts)
-                .build();
     }
 
     @Override
-    public SendAndReceiveGiftListRes findReceiveGitsByUser(UserPrincipal userPrincipal) {
+    public List<SendAndReceiveGiftDetailRes> findReceiveGiftsByUser(UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
                 .findReservationByPhoneNumberAndReservationStatusIn(user.getPhoneNumber(), Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
 
-        List<SendAndReceiveGiftDetailRes> gifts = reservations.stream()
+        return reservations.stream()
                 .map(SendAndReceiveGiftDetailRes::toDto)
                 .toList();
-
-        return SendAndReceiveGiftListRes.builder()
-                .gifts(gifts)
-                .build();
     }
 
 }

@@ -8,6 +8,7 @@ import com.shallwe.global.payload.ResponseCustom;
 import com.shallwe.global.payload.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,17 +59,17 @@ public class UserController {
     public ResponseCustom<SignUpUserRes> signUpCurrentUser(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @Parameter(description = "SignUpUserReq 를 확인해주세요.", required = true) @RequestBody SignUpUserReq signUpUserReq
-            ) {
+    ) {
         return ResponseCustom.OK(userServiceImpl.signUpCurrentUser(userPrincipal, signUpUserReq));
     }
 
     @Operation(summary = "유저가 보낸 선물 조회", description = "유저가 보낸 선물들을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저가 선물한 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SendAndReceiveGiftListRes.class))}),
+            @ApiResponse(responseCode = "200", description = "유저가 선물한 리스트 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SendAndReceiveGiftDetailRes.class)))}),
             @ApiResponse(responseCode = "400", description = "유저가 선물한 리스트 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/gift/send")
-    public ResponseCustom<SendAndReceiveGiftListRes> findSendGiftsByUser(
+    public ResponseCustom<List<SendAndReceiveGiftDetailRes>> findSendGiftsByUser(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
         return ResponseCustom.OK(userServiceImpl.findSendGiftsByUser(userPrincipal));
@@ -74,14 +77,14 @@ public class UserController {
 
     @Operation(summary = "유저가 받은 선물 조회", description = "유저가 받은 선물들을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저가 선물받은 리스트 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SendAndReceiveGiftListRes.class))}),
+            @ApiResponse(responseCode = "200", description = "유저가 선물받은 리스트 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SendAndReceiveGiftDetailRes.class)))}),
             @ApiResponse(responseCode = "400", description = "유저가 선물받은 리스트 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/gift/receive")
-    public ResponseCustom<SendAndReceiveGiftListRes> findReceiveGiftsByUser(
+    public ResponseCustom<List<SendAndReceiveGiftDetailRes>> findReceiveGiftsByUser(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
-        return ResponseCustom.OK(userServiceImpl.findReceiveGitsByUser(userPrincipal));
+        return ResponseCustom.OK(userServiceImpl.findReceiveGiftsByUser(userPrincipal));
     }
 
 }
