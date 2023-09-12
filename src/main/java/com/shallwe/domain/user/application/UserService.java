@@ -10,7 +10,7 @@ public interface UserService {
     UserDetailRes getCurrentUser(UserPrincipal userPrincipal);
     DeleteUserRes deleteCurrentUser(UserPrincipal userPrincipal);
     SignUpUserRes signUpCurrentUser(UserPrincipal userPrincipal, SignUpUserReq signUpUserReq);
-    List<SendAndReceiveGiftDetailRes> findSendGiftsByUser(UserPrincipal userPrincipal);
-    List<SendAndReceiveGiftDetailRes> findReceiveGiftsByUser(UserPrincipal userPrincipal);
+    List<SendGiftDetailRes> findSendGiftsByUser(UserPrincipal userPrincipal);
+    List<ReceiveGiftDetailRes> findReceiveGiftsByUser(UserPrincipal userPrincipal);
 
 }

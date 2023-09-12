@@ -2,7 +2,6 @@ package com.shallwe.domain.user.application;
 
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
-import com.shallwe.domain.common.Status;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
@@ -63,26 +62,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<SendAndReceiveGiftDetailRes> findSendGiftsByUser(UserPrincipal userPrincipal) {
+    public List<SendGiftDetailRes> findSendGiftsByUser(UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
                 .findReservationBySenderAndReservationStatusIn(user, Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
 
         return reservations.stream()
-                .map(SendAndReceiveGiftDetailRes::toDto)
+                .map(SendGiftDetailRes::toDto)
                 .toList();
     }
 
     @Override
-    public List<SendAndReceiveGiftDetailRes> findReceiveGiftsByUser(UserPrincipal userPrincipal) {
+    public List<ReceiveGiftDetailRes> findReceiveGiftsByUser(UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
                 .findReservationByPhoneNumberAndReservationStatusIn(user.getPhoneNumber(), Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
 
         return reservations.stream()
-                .map(SendAndReceiveGiftDetailRes::toDto)
+                .map(ReceiveGiftDetailRes::toDto)
                 .toList();
     }
 
