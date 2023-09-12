@@ -2,8 +2,8 @@ package com.shallwe.domain.reservation.domain;
 
 
 import com.shallwe.domain.common.BaseEntity;
-import com.shallwe.domain.experienceGift.domain.ExperienceGift;
-import com.shallwe.domain.memoryPhoto.domain.MemoryPhoto;
+import com.shallwe.domain.experiencegift.domain.ExperienceGift;
+import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.user.domain.User;
 import jakarta.persistence.*;

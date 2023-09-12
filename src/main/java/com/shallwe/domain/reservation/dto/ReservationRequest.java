@@ -1,6 +1,6 @@
 package com.shallwe.domain.reservation.dto;
 
-import com.shallwe.domain.experienceGift.domain.ExperienceGift;
+import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.user.domain.User;
