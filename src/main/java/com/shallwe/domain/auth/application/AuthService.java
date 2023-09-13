@@ -107,7 +107,7 @@ public class AuthService {
                 .build();
     }
 
-    public ResponseEntity<?> refresh(RefreshTokenReq tokenRefreshRequest) {
+    public AuthRes refresh(RefreshTokenReq tokenRefreshRequest) {
         //1차 검증
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
         DefaultAssert.isAuthentication(checkValid);
@@ -132,10 +132,10 @@ public class AuthService {
 
         AuthRes authResponse = AuthRes.builder().accessToken(tokenMapping.getAccessToken()).refreshToken(updateToken.getRefreshToken()).build();
 
-        return ResponseEntity.ok(authResponse);
+        return authResponse;
     }
 
-    public ResponseEntity<?> signOut(RefreshTokenReq tokenRefreshRequest) {
+    public Message signOut(RefreshTokenReq tokenRefreshRequest) {
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
         DefaultAssert.isAuthentication(checkValid);
 
@@ -143,9 +143,10 @@ public class AuthService {
         Token token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken())
                 .orElseThrow(() -> new DefaultAuthenticationException(ErrorCode.INVALID_AUTHENTICATION));
         tokenRepository.delete(token);
-        ApiResponse apiResponse = ApiResponse.builder().check(true).information(Message.builder().message("로그아웃 하였습니다.").build()).build();
 
-        return ResponseEntity.ok(apiResponse);
+        return Message.builder()
+                .message("로그아웃 하였습니다.")
+                .build();
     }
 
     private boolean valid(String refreshToken) {

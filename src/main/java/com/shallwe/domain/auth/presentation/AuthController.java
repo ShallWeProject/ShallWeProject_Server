@@ -71,10 +71,10 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "토큰 갱신 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping(value = "/refresh")
-    public ResponseEntity<?> refresh(
+    public ResponseCustom<AuthRes> refresh(
             @Parameter(description = "Schemas의 RefreshTokenRequest를 참고해주세요.", required = true) @Valid @RequestBody RefreshTokenReq tokenRefreshRequest
     ) {
-        return authService.refresh(tokenRefreshRequest);
+        return ResponseCustom.OK(authService.refresh(tokenRefreshRequest));
     }
 
     @Operation(summary = "유저 로그아웃", description = "유저 로그아웃을 수행합니다.")
@@ -83,11 +83,11 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "로그아웃 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping(value="/sign-out")
-    public ResponseEntity<?> signOut(
+    public ResponseCustom<Message> signOut(
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @Parameter(description = "Schemas의 RefreshTokenRequest를 참고해주세요.", required = true) @Valid @RequestBody RefreshTokenReq tokenRefreshRequest
     ) {
-        return authService.signOut(tokenRefreshRequest);
+        return ResponseCustom.OK(authService.signOut(tokenRefreshRequest));
     }
 
     @Operation(summary = "문자 전송", description = "입력한 번호로 인증번호를 전송합니다.")
@@ -96,7 +96,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "문자 전송 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping("/send-one")
-    public ResponseCustom<?> sendOne(
+    public ResponseCustom<SmsResponseDto> sendOne(
             @Parameter(description = "SmsReq Schema를 참고해주세요", required = true) @RequestBody SmsReq smsReq
     ) throws Exception {
         return ResponseCustom.OK(smsService.sendOne(smsReq.getPhoneNumber()));
@@ -108,7 +108,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "인증 번호 검증 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @PostMapping("/valid-verification-code")
-    public ResponseCustom<?> validVerificationCode(
+    public ResponseCustom<Message> validVerificationCode(
             @Parameter(description = "ValidVerificationCodeReq Schema를 참고해주세요") @RequestBody ValidVerificationCodeReq validVerificationCodeReq
     ) {
         return ResponseCustom.OK(smsService.validVerificationCode(validVerificationCodeReq));

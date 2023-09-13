@@ -1,8 +1,8 @@
 package com.shallwe.domain.reservation.application;
 
 import com.shallwe.domain.common.Status;
-import com.shallwe.domain.experienceGift.exception.ExperienceGiftNotFoundException;
-import com.shallwe.domain.experienceGift.repository.ExperienceGiftRepository;
+import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
+import com.shallwe.domain.experiencegift.domain.repository.ExperienceGiftRepository;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.DeleteReservationRes;
