@@ -1,5 +1,6 @@
 package com.shallwe.domain.reservation.domain.repository;
 
+
 import com.shallwe.domain.reservation.domain.Reservation;
 
 import com.shallwe.domain.reservation.domain.ReservationStatus;
@@ -21,6 +22,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllBySenderId(Long userId);
     Optional<Reservation> findBySenderIdAndId(Long userId, Long reservationId);
+
+    Optional<Reservation> findByReceiverIdAndId(Long userId, Long reservationId);
     @Query("SELECT r FROM Reservation r WHERE r.experienceGift.experienceGiftId = :giftId")
     List<Reservation> findByExperienceGift_Id(@Param("giftId")Long giftId);
 
@@ -35,5 +38,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @EntityGraph(attributePaths = {"experienceGift", "sender", "receiver", "experienceGift.subtitle",
             "experienceGift.expCategory", "experienceGift.sttCategory"})
     List<Reservation> findReservationByPhoneNumberAndReservationStatusIn(String phoneNUmber, List<ReservationStatus> reservationStatusList);
+
+    @EntityGraph(attributePaths = {"memoryPhotos"})
+    List<Reservation> findAllByDateBetweenAndPhoneNumber(LocalDateTime startDateTime, LocalDateTime endDateTime, String phoneNumber);
 
 }

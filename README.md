@@ -40,15 +40,13 @@
 
 <br>
 
-## DB 
+## DB
 <details>
 <summary>MAIN_SERVER</summary>
     <img width="621" alt="스크린샷 2023-09-09 오전 2 40 23" src="https://github.com/ShallWeProject/ShallWeProject_Server/assets/90025978/3e67884e-2380-409f-abe7-f59c034c0203">
 <br>
 </details>
 <br>
-
-
 
 
 ## Commit/PR Convention
