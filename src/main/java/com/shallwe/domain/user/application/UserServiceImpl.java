@@ -31,8 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetailRes getCurrentUser(final UserPrincipal userPrincipal) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        return UserDetailRes.toDto(user);
+        return UserDetailRes.toDto(userPrincipal.getUser());
     }
 
     @Override
