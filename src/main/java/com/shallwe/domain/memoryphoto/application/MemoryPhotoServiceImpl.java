@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,24 +31,16 @@ public class MemoryPhotoServiceImpl implements MemoryPhotoService{
     private final MemoryPhotoRepository memoryPhotoRepository;
 
     @Override
-    public List<MemoryPhotoDetailRes> getMemoryPhotoByDate(UserPrincipal userPrincipal, LocalDateTime date) {
+    public List<MemoryPhotoDetailRes> getMemoryPhotoByDate(final UserPrincipal userPrincipal, final LocalDate date) {
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(InvalidUserException::new);
-        LocalDateTime startDateTime = date.toLocalDate().atStartOfDay(); // 시작 시간 지정
-        LocalDateTime endDateTime = date.toLocalDate().plusDays(1).atStartOfDay(); // 끝 시간 지정
+        LocalDateTime startDateTime = date.atStartOfDay(); // 시작 시간 지정
+        LocalDateTime endDateTime = (startDateTime.plusDays(1)).toLocalDate().atStartOfDay(); // 끝 시간 지정
         List<Reservation> reservations = reservationRepository.findAllByDateBetweenAndPhoneNumber(startDateTime, endDateTime, user.getPhoneNumber());
 
-        List<MemoryPhotoDetailRes> memoryPhotoDetailRes = reservations.stream()
-                .map(reservation -> MemoryPhotoDetailRes.builder()
-                        .reservationId(reservation.getId())
-                        .date(reservation.getDate())
-                        .memoryPhotoImages(reservation.getMemoryPhotos().stream()
-                                .map(MemoryPhoto::getMemoryImgUrl)
-                                .toList())
-                        .build())
+        return reservations.stream()
+                .map(MemoryPhotoDetailRes::toDto)
                 .toList();
-
-        return memoryPhotoDetailRes;
     }
 
     @Transactional

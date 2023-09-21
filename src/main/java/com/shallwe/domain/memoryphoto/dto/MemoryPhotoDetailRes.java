@@ -1,25 +1,37 @@
 package com.shallwe.domain.memoryphoto.dto;
 
+import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
+import com.shallwe.domain.reservation.domain.Reservation;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@Builder
 public class MemoryPhotoDetailRes {
-
-    private Long reservationId;
 
     private LocalDateTime date;
 
+    private String experienceGiftTitle;
+
+    private String experienceGiftSubTitle;
+
     private List<String> memoryPhotoImages;
 
-    @Builder
-    public MemoryPhotoDetailRes(Long reservationId, LocalDateTime date, List<String> memoryPhotoImages) {
-        this.reservationId = reservationId;
-        this.date = date;
-        this.memoryPhotoImages = memoryPhotoImages;
+    public static MemoryPhotoDetailRes toDto(Reservation reservation) {
+        return MemoryPhotoDetailRes.builder()
+                .date(reservation.getDate())
+                .experienceGiftTitle(reservation.getExperienceGift().getTitle())
+                .experienceGiftSubTitle(reservation.getExperienceGift().getSubtitle().getTitle())
+                .memoryPhotoImages(reservation.getMemoryPhotos().stream()
+                        .map(MemoryPhoto::getMemoryImgUrl)
+                        .toList())
+                .build();
     }
 
 }

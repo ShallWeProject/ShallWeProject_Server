@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,9 +40,8 @@ public class MemoryPhotoController {
     @GetMapping
     public ResponseCustom<List<MemoryPhotoDetailRes>> getMemoryPhotoByDate(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "날짜를 입력해주세요.[YYYY-MM-DD HH:mm] 형식입니다.", required = true)
-            @RequestParam(value = "date")
-            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime date
+            @Parameter(description = "날짜를 입력해주세요.[YYYY-MM-DD] 형식입니다.", required = true)
+            @RequestParam(value = "date") LocalDate date
     ) {
         return ResponseCustom.OK(memoryPhotoService.getMemoryPhotoByDate(userPrincipal, date));
     }
