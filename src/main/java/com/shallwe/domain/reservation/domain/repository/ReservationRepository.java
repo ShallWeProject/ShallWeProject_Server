@@ -39,7 +39,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "experienceGift.expCategory", "experienceGift.sttCategory"})
     List<Reservation> findReservationByPhoneNumberAndReservationStatusIn(String phoneNUmber, List<ReservationStatus> reservationStatusList);
 
-    @EntityGraph(attributePaths = {"memoryPhotos"})
+    @EntityGraph(attributePaths = {"memoryPhotos", "experienceGift", "experienceGift.subtitle"})
     List<Reservation> findAllByDateBetweenAndPhoneNumber(LocalDateTime startDateTime, LocalDateTime endDateTime, String phoneNumber);
 
 }
