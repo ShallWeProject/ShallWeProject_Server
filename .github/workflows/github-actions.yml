@@ -15,6 +15,7 @@ jobs:
   CI-CD:
     runs-on: ubuntu-latest
 
+    ## jdk setting
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -22,7 +23,70 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+
+      ## gradle caching
+    - name: Gradle Caching
+      uses: actions/cache@v3
       with:
-        arguments: build
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    ## create application-dev.yml
+    - name: make application-database.yml
+      if: contains(github.ref, 'develop')
+      run: |
+        cd ./src/main/resources
+        touch ./application-databaase.yml
+        echo "${{ secrets.PROPERTIES_DEV }}" > ./application-database.yml
+      shell: bash
+
+    ## gradle build
+    - name: Build with Gradle
+      run: ./gradlew build -x test
+
+      ## docker build & push to production
+    - name: Docker build & push to prod
+      if: contains(github.ref, 'develop')
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/shallwe-dev .
+        docker push ${{ secrets.DOCKER_REPO }}/shallwe-dev
+
+        ## docker build & push to develop
+
+      ## deploy to develop
+    - name: Deploy to dev
+      uses: appleboy/ssh-action@master
+      id: deploy-dev
+      if: contains(github.ref, 'dev')
+      with:
+        host: ${{ secrets.HOST_DEV }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: 22
+        #key: ${{ secrets.PRIVATE_KEY }}
+        script: |
+          sudo docker rm -f $(docker ps -qa)
+          sudo docker pull ${{ secrets.DOCKER_REPO }}/shallwe-dev
+          docker-compose up -d
+          docker image prune -f
+
+    ## time
+  current-time:
+    needs: CI-CD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Current Time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DDTHH:mm:ss
+          utcOffset: "+09:00" # 기준이 UTC이기 때문에 한국시간인 KST를 맞추기 위해 +9시간 추가
+
+      - name: Print Current Time
+        run: echo "Current Time=${{steps.current-time.outputs.formattedTime}}" # current-time 에서 지정한 포맷대로 현재 시간 출력
+        shell: bash
