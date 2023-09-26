@@ -10,6 +10,9 @@ import java.util.List;
 
 import static com.shallwe.domain.experiencegift.domain.QExperienceGift.experienceGift;
 
+//import com.shallwe.domain.experiencegift.domain.QExperienceGift.ExperienceGift;
+
+
 @RequiredArgsConstructor
 @Repository
 public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuerydslRepository {
