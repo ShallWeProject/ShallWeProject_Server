@@ -13,7 +13,7 @@ spring:
             client-id: ENC(PGYNBOrfBQr1T7j2iGq1K0Ma7QNeHcBwdl1TKOecL4RdMiRtpH+XSiq4QhIVW15q)
             client-secret: ENC(QunVEWT7UJK3Yv1U8GkPSOZsXC5Oo072Tf8Myfl4O4/TmZ1P3AQqfOVy+bVvnsNw)
             client-authentication-method: client_secret_post
-            redirect-uri: http://localhost:8080/oauth2/callback/kakao
+            redirect-uri: ENC(+Hr/tPudGQ0YY8lfbP6bC8CrUYIGb1ZQ8XKS05PqUbXwBhypP7tTeEgd12Vct56YZQbDIMl1KhU=)
             authorization-grant-type: authorization_code
             scope:
               - profile_nickname,
