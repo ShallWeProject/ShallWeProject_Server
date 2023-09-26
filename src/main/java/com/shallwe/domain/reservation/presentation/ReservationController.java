@@ -41,7 +41,7 @@ public class ReservationController {
     public ResponseCustom<List<ReservationResponse>> getAllReservations(){
         return ResponseCustom.OK(reservationServiceimpl.getAllReservation());
     }
-    
+
     @Operation(summary ="예약 추가하기", description = "현재 유저, 경험을 가져와 예약을 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "예약 생성 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ReservationResponse.class))}),
