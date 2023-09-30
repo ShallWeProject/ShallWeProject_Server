@@ -74,7 +74,7 @@ jobs:
           docker-compose up -d
           docker image prune -f
 
-    ## time
+    ## time ##
   current-time:
     needs: CI-CD
     runs-on: ubuntu-latest
