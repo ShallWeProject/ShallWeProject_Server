@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: ShallWe
   config:
     activate:
       on-profile: dev
