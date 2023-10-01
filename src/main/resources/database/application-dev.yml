@@ -3,6 +3,9 @@ spring:
     name: ShallWe
   profiles:
     include: key
+  config:
+    activate:
+      on-profile: dev
 
   mvc:
     pathmatch:
@@ -28,3 +31,6 @@ spring:
 
 logging.level:
   org.hibernate.SQL: debug
+
+server:
+  port: 8080
