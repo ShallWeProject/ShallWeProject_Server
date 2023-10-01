@@ -1,8 +1,6 @@
 spring:
   application:
     name: ShallWe
-  profiles:
-    include: key
   config:
     activate:
       on-profile: dev
