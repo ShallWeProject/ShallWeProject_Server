@@ -2,6 +2,7 @@ package com.shallwe.domain.experiencegift.domain;
 
 
 import com.shallwe.domain.common.BaseEntity;
+import com.shallwe.domain.shopowner.domain.ShopOwner;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,5 +36,9 @@ public class ExperienceGift extends BaseEntity {
 
     private String description;
     private String giftImgKey;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shopOwner_id")
+    private ShopOwner shopOwner;
 
 }
