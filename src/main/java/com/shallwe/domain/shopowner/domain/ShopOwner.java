@@ -1,5 +1,6 @@
 package com.shallwe.domain.shopowner.domain;
 
+import com.shallwe.domain.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,10 +14,10 @@ import org.hibernate.annotations.Where;
 @Entity
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-public class ShopOwner {
+public class ShopOwner extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     private String name;
 
