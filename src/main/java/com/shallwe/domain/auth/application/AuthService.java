@@ -165,4 +165,7 @@ public class AuthService {
         return true;
     }
 
+    public AuthRes shopOwnerSignUp(ShopOwnerSignUpReq shopOwnerSignUpReq) {
+        return null;
+    }
 }
