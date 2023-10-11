@@ -29,4 +29,6 @@ public class AvailableTime {
 
     private TimeSlot timeSlot;
 
+    private TimeStatus timeStatus;
+
 }
