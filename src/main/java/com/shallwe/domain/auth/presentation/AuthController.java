@@ -116,11 +116,11 @@ public class AuthController {
 
     @Operation(summary = "사장 회원가입", description = "사장 회원가입을 수행합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "사장 회원가입 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRes.class) ) } ),
+            @ApiResponse(responseCode = "200", description = "사장 회원가입 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
             @ApiResponse(responseCode = "400", description = "사장 회원가입 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping(value="/shop-owner/sign-up")
-    public ResponseCustom<AuthRes> shopOwnerSignUp(
+    public ResponseCustom<Message> shopOwnerSignUp(
             @Parameter(description = "SignUpReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerSignUpReq shopOwnerSignUpReq
     ) {
         return ResponseCustom.OK(authService.shopOwnerSignUp(shopOwnerSignUpReq));
