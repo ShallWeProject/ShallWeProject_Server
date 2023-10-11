@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import com.shallwe.domain.auth.dto.*;
 import com.shallwe.domain.auth.exception.AlreadyExistEmailException;
+import com.shallwe.domain.shopowner.domain.ShopOwner;
+import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
+import com.shallwe.domain.shopowner.exception.AlreadyExistPhoneNumberException;
 import com.shallwe.global.DefaultAssert;
 import com.shallwe.global.config.security.token.UserPrincipal;
 
@@ -43,6 +46,7 @@ public class AuthService {
 
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
+    private final ShopOwnerRepository shopOwnerRepository;
 
     @Transactional
     public AuthRes signUp(SignUpReq signUpReq) {
@@ -165,7 +169,23 @@ public class AuthService {
         return true;
     }
 
-    public AuthRes shopOwnerSignUp(ShopOwnerSignUpReq shopOwnerSignUpReq) {
-        return null;
+    public Message shopOwnerSignUp(ShopOwnerSignUpReq shopOwnerSignUpReq) {
+        if (shopOwnerRepository.existsByPhoneNumber(shopOwnerSignUpReq.getPhoneNumber())) {
+            throw new AlreadyExistPhoneNumberException();
+        }
+
+        ShopOwner shopOwner = ShopOwner.builder()
+                .name(shopOwnerSignUpReq.getName())
+                .phoneNumber(shopOwnerSignUpReq.getPhoneNumber())
+                .password(passwordEncoder.encode(shopOwnerSignUpReq.getPassword()))
+                .marketingConsent(shopOwnerSignUpReq.getMarketingConsent())
+                .build();
+
+        shopOwnerRepository.save(shopOwner);
+
+        return Message.builder()
+                .message("회원가입 되었습니다.")
+                .build();
     }
+
 }

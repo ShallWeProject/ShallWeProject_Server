@@ -15,4 +15,7 @@ public class ShopOwnerSignUpReq {
     @Schema( type = "string", example = "asdfqwer1234!@#$", description="비밀번호입니다.")
     private String password;
 
+    @Schema( type = "boolean", example = "true", description="마켓팅 수신 동의 여부입니다.")
+    private Boolean marketingConsent;
+
 }
