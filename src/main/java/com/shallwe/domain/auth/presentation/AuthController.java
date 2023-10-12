@@ -120,7 +120,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "사장 회원가입 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping(value="/shop-owner/sign-up")
-    public ResponseCustom<Message> shopOwnerSignUp(
+    public ResponseCustom<AuthRes> shopOwnerSignUp(
             @Parameter(description = "SignUpReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerSignUpReq shopOwnerSignUpReq
     ) {
         return ResponseCustom.OK(authService.shopOwnerSignUp(shopOwnerSignUpReq));

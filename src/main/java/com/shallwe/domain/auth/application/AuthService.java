@@ -170,7 +170,7 @@ public class AuthService {
         return true;
     }
 
-    public Message shopOwnerSignUp(final ShopOwnerSignUpReq shopOwnerSignUpReq) {
+    public AuthRes shopOwnerSignUp(final ShopOwnerSignUpReq shopOwnerSignUpReq) {
         if (shopOwnerRepository.existsByPhoneNumber(shopOwnerSignUpReq.getPhoneNumber())) {
             throw new AlreadyExistPhoneNumberException();
         }
@@ -184,9 +184,27 @@ public class AuthService {
 
         shopOwnerRepository.save(shopOwner);
 
-        return Message.builder()
-                .message("회원가입 되었습니다.")
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        shopOwnerSignUpReq.getPhoneNumber(),
+                        shopOwnerSignUpReq.getPassword()
+                )
+        );
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
                 .build();
+        tokenRepository.save(token);
+
+        AuthRes authRes = AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(token.getRefreshToken())
+                .build();
+
+        return authRes;
     }
 
     public AuthRes shopOwnerSignIn(final ShopOwnerSignInReq shopOwnerSignInReq) {
