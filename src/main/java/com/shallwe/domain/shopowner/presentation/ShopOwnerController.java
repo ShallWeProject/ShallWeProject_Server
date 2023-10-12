@@ -26,7 +26,7 @@ public class ShopOwnerController {
 
     private final ShopOwnerServiceImpl shopOwnerService;
 
-    @Operation(summary = "사장 비밀번호 변경", description = "사장 비밀번호 변경을 수행합니다.")
+    @Operation(summary = "사장 비밀번호 변경(토큰 필요)", description = "사장 비밀번호 변경을 수행합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사장 비밀번호 변경 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
             @ApiResponse(responseCode = "400", description = "사장 비밀번호 변경 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
