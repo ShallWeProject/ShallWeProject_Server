@@ -1,9 +1,6 @@
 package com.shallwe.domain.shopowner.presentation;
 
 
-import com.shallwe.domain.auth.dto.AuthRes;
-import com.shallwe.domain.auth.dto.SignUpReq;
-import com.shallwe.domain.shopowner.application.ShopOwnerService;
 import com.shallwe.domain.shopowner.application.ShopOwnerServiceImpl;
 import com.shallwe.domain.shopowner.dto.ShopOwnerChangePasswordReq;
 import com.shallwe.global.config.security.token.CurrentUser;
@@ -29,10 +26,10 @@ public class ShopOwnerController {
 
     private final ShopOwnerServiceImpl shopOwnerService;
 
-    @Operation(summary = "유저 회원가입", description = "유저 회원가입을 수행합니다.")
+    @Operation(summary = "사장 비밀번호 변경", description = "사장 비밀번호 변경을 수행합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRes.class) ) } ),
-            @ApiResponse(responseCode = "400", description = "회원가입 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+            @ApiResponse(responseCode = "200", description = "사장 비밀번호 변경 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "사장 비밀번호 변경 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PatchMapping(value="/change-password")
     public ResponseCustom<Message> shopOwnerChangePassword(
