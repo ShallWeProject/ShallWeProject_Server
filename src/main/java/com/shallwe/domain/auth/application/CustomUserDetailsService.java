@@ -20,14 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class CustomUserDetailsService implements UserDetailsService{
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final ShopOwnerRepository shopOwnerRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        
+
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             return UserPrincipal.createUser(user.get());
@@ -38,15 +38,21 @@ public class CustomUserDetailsService implements UserDetailsService{
             return UserPrincipal.createShopOwner(shopOwner.get());
         }
 
-        throw new DefaultAuthenticationException("유효하지 않는 유저이거나, 사장입니다.");
+        throw new UsernameNotFoundException("유효하지 않는 유저이거나, 사장입니다.");
     }
 
     public UserDetails loadUserById(Long id) {
-        User user = userRepository.findById(id).
-                orElseThrow(() ->
-                        new UsernameNotFoundException("유저 정보를 찾을 수 없습니다."));
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return UserPrincipal.createUser(user.get());
+        }
 
-        return UserPrincipal.createUser(user);
+        Optional<ShopOwner> shopOwner = shopOwnerRepository.findById(id);
+        if (shopOwner.isPresent()) {
+            return UserPrincipal.createShopOwner(shopOwner.get());
+        }
+
+        throw new UsernameNotFoundException("유효하지 않는 유저이거나, 사장입니다.");
     }
-    
+
 }

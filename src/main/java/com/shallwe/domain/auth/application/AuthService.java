@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.shallwe.domain.auth.dto.*;
 import com.shallwe.domain.auth.exception.AlreadyExistEmailException;
+import com.shallwe.domain.auth.exception.InvalidPasswordException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.shopowner.exception.AlreadyExistPhoneNumberException;
@@ -208,8 +209,11 @@ public class AuthService {
     }
 
     public AuthRes shopOwnerSignIn(final ShopOwnerSignInReq shopOwnerSignInReq) {
-        if (!shopOwnerRepository.existsByPhoneNumber(shopOwnerSignInReq.getPhoneNumber())) {
-            throw new InvalidPhoneNumberException();
+        ShopOwner shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumber(shopOwnerSignInReq.getPhoneNumber())
+                .orElseThrow(InvalidPhoneNumberException::new);
+
+        if (!passwordEncoder.matches(shopOwnerSignInReq.getPassword(), shopOwner.getPassword())) {
+            throw new InvalidPasswordException();
         }
 
         Authentication authentication = authenticationManager.authenticate(

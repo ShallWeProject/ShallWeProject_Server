@@ -121,7 +121,7 @@ public class AuthController {
     })
     @PostMapping(value="/shop-owner/sign-up")
     public ResponseCustom<AuthRes> shopOwnerSignUp(
-            @Parameter(description = "SignUpReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerSignUpReq shopOwnerSignUpReq
+            @Parameter(description = "ShopOwnerSignUpReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerSignUpReq shopOwnerSignUpReq
     ) {
         return ResponseCustom.OK(authService.shopOwnerSignUp(shopOwnerSignUpReq));
     }
@@ -133,7 +133,7 @@ public class AuthController {
     })
     @PostMapping(value="/shop-owner/sign-in")
     public ResponseCustom<AuthRes> shopOwnerSignIn(
-            @Parameter(description = "SignUpReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerSignInReq shopOwnerSignInReq
+            @Parameter(description = "ShopOwnerSignInReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerSignInReq shopOwnerSignInReq
     ) {
         return ResponseCustom.OK(authService.shopOwnerSignIn(shopOwnerSignInReq));
     }

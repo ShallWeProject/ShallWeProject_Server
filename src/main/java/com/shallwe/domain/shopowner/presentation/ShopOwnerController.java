@@ -37,7 +37,7 @@ public class ShopOwnerController {
     @PatchMapping(value="/change-password")
     public ResponseCustom<Message> shopOwnerChangePassword(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "SignUpReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerChangePasswordReq shopOwnerChangePasswordReq
+            @Parameter(description = "ShopOwnerChangePasswordReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerChangePasswordReq shopOwnerChangePasswordReq
             ) {
         return ResponseCustom.OK(shopOwnerService.shopOwnerChangePassword(userPrincipal, shopOwnerChangePasswordReq));
     }
