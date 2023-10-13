@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
 
 import lombok.Getter;
@@ -17,6 +18,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public class UserPrincipal implements OAuth2User, UserDetails{
 
     private final User user;
+    private final ShopOwner shopOwner;
     
     private final Long id;
     private final String email;
@@ -26,13 +28,23 @@ public class UserPrincipal implements OAuth2User, UserDetails{
 
     public UserPrincipal(User user, Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.user = user;
+        this.shopOwner = null;
         this.id = id;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
     }
 
-    public static UserPrincipal create(final User user) {
+    public UserPrincipal(ShopOwner shopOwner, Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.user = null;
+        this.shopOwner = shopOwner;
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    public static UserPrincipal createUser(final User user) {
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getValue()));
         return new UserPrincipal(
                 user,
@@ -43,8 +55,18 @@ public class UserPrincipal implements OAuth2User, UserDetails{
         );
     }
 
+    public static UserPrincipal createShopOwner(final ShopOwner shopOwner) {
+        return new UserPrincipal(
+                shopOwner,
+                shopOwner.getId(),
+                shopOwner.getPhoneNumber(),
+                shopOwner.getPassword(),
+                null
+        );
+    }
+
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
+        UserPrincipal userPrincipal = UserPrincipal.createUser(user);
         userPrincipal.setAttributes(attributes);
         return userPrincipal;
     }

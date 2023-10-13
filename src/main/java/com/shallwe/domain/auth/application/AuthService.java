@@ -5,6 +5,11 @@ import java.util.Optional;
 
 import com.shallwe.domain.auth.dto.*;
 import com.shallwe.domain.auth.exception.AlreadyExistEmailException;
+import com.shallwe.domain.auth.exception.InvalidPasswordException;
+import com.shallwe.domain.shopowner.domain.ShopOwner;
+import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
+import com.shallwe.domain.shopowner.exception.AlreadyExistPhoneNumberException;
+import com.shallwe.domain.shopowner.exception.InvalidPhoneNumberException;
 import com.shallwe.global.DefaultAssert;
 import com.shallwe.global.config.security.token.UserPrincipal;
 
@@ -43,9 +48,10 @@ public class AuthService {
 
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
+    private final ShopOwnerRepository shopOwnerRepository;
 
     @Transactional
-    public AuthRes signUp(SignUpReq signUpReq) {
+    public AuthRes signUp(final SignUpReq signUpReq) {
         if (userRepository.existsByEmail(signUpReq.getEmail()))
             throw new AlreadyExistEmailException();
 
@@ -84,7 +90,7 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthRes signIn(SignInReq signInReq) {
+    public AuthRes signIn(final SignInReq signInReq) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         signInReq.getEmail(),
@@ -107,7 +113,7 @@ public class AuthService {
                 .build();
     }
 
-    public AuthRes refresh(RefreshTokenReq tokenRefreshRequest) {
+    public AuthRes refresh(final RefreshTokenReq tokenRefreshRequest) {
         //1차 검증
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
         DefaultAssert.isAuthentication(checkValid);
@@ -135,7 +141,7 @@ public class AuthService {
         return authResponse;
     }
 
-    public Message signOut(RefreshTokenReq tokenRefreshRequest) {
+    public Message signOut(final RefreshTokenReq tokenRefreshRequest) {
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
         DefaultAssert.isAuthentication(checkValid);
 
@@ -149,7 +155,7 @@ public class AuthService {
                 .build();
     }
 
-    private boolean valid(String refreshToken) {
+    private boolean valid(final String refreshToken) {
         //1. 토큰 형식 물리적 검증
         boolean validateCheck = customTokenProviderService.validateToken(refreshToken);
         DefaultAssert.isTrue(validateCheck, "Token 검증에 실패하였습니다.");
@@ -163,6 +169,74 @@ public class AuthService {
         DefaultAssert.isTrue(token.get().getUserEmail().equals(authentication.getName()), "사용자 인증에 실패하였습니다.");
 
         return true;
+    }
+
+    public AuthRes shopOwnerSignUp(final ShopOwnerSignUpReq shopOwnerSignUpReq) {
+        if (shopOwnerRepository.existsByPhoneNumber(shopOwnerSignUpReq.getPhoneNumber())) {
+            throw new AlreadyExistPhoneNumberException();
+        }
+
+        ShopOwner shopOwner = ShopOwner.builder()
+                .name(shopOwnerSignUpReq.getName())
+                .phoneNumber(shopOwnerSignUpReq.getPhoneNumber())
+                .password(passwordEncoder.encode(shopOwnerSignUpReq.getPassword()))
+                .marketingConsent(shopOwnerSignUpReq.getMarketingConsent())
+                .build();
+
+        shopOwnerRepository.save(shopOwner);
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        shopOwnerSignUpReq.getPhoneNumber(),
+                        shopOwnerSignUpReq.getPassword()
+                )
+        );
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
+                .build();
+        tokenRepository.save(token);
+
+        AuthRes authRes = AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(token.getRefreshToken())
+                .build();
+
+        return authRes;
+    }
+
+    public AuthRes shopOwnerSignIn(final ShopOwnerSignInReq shopOwnerSignInReq) {
+        ShopOwner shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumber(shopOwnerSignInReq.getPhoneNumber())
+                .orElseThrow(InvalidPhoneNumberException::new);
+
+        if (!passwordEncoder.matches(shopOwnerSignInReq.getPassword(), shopOwner.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        shopOwnerSignInReq.getPhoneNumber(),
+                        shopOwnerSignInReq.getPassword()
+                )
+        );
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
+                .build();
+        tokenRepository.save(token);
+
+        AuthRes authRes = AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(token.getRefreshToken())
+                .build();
+
+        return authRes;
     }
 
 }
