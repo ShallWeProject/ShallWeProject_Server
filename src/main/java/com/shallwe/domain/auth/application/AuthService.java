@@ -9,6 +9,7 @@ import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.shopowner.exception.AlreadyExistPhoneNumberException;
 import com.shallwe.domain.shopowner.exception.InvalidPhoneNumberException;
+import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.DefaultAssert;
 
 import com.shallwe.domain.user.domain.Provider;
@@ -86,6 +87,12 @@ public class AuthService {
 
     @Transactional
     public AuthRes signIn(final SignInReq signInReq) {
+        User user = userRepository.findByEmail(signInReq.getEmail())
+                .orElseThrow(InvalidUserException::new);
+        if (!user.getProviderId().equals(signInReq.getProviderId())) {
+            throw new InvalidPasswordException();
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         signInReq.getEmail(),
