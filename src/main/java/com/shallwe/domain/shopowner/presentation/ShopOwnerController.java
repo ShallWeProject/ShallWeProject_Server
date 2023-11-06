@@ -3,6 +3,7 @@ package com.shallwe.domain.shopowner.presentation;
 
 import com.shallwe.domain.shopowner.application.ShopOwnerServiceImpl;
 import com.shallwe.domain.shopowner.dto.ShopOwnerChangePasswordReq;
+import com.shallwe.domain.user.dto.DeleteUserRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.ErrorResponse;
@@ -37,6 +38,18 @@ public class ShopOwnerController {
             @Parameter(description = "ShopOwnerChangePasswordReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerChangePasswordReq shopOwnerChangePasswordReq
             ) {
         return ResponseCustom.OK(shopOwnerService.shopOwnerChangePassword(userPrincipal, shopOwnerChangePasswordReq));
+    }
+
+    @Operation(summary = "사장 탈퇴", description = "사장 탈퇴를 수행합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사장 탈퇴 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+            @ApiResponse(responseCode = "400", description = "사장 탈퇴 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @PatchMapping
+    public ResponseCustom<Message> deleteCurrentShopOwner(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ) {
+        return ResponseCustom.OK(shopOwnerService.deleteCurrentShopOwner(userPrincipal));
     }
 
 }

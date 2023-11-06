@@ -138,4 +138,17 @@ public class AuthController {
         return ResponseCustom.OK(authService.shopOwnerSignIn(shopOwnerSignInReq));
     }
 
+    @Operation(summary = "사장 로그아웃", description = "사장 로그아웃을 수행합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사장 로그아웃 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "사장 로그아웃 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @PostMapping(value="/shop-owner/sign-out")
+    public ResponseCustom<Message> shopOwnerSignOut(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "Schemas의 RefreshTokenRequest를 참고해주세요.", required = true) @Valid @RequestBody RefreshTokenReq tokenRefreshRequest
+    ) {
+        return ResponseCustom.OK(authService.signOut(tokenRefreshRequest));
+    }
+
 }

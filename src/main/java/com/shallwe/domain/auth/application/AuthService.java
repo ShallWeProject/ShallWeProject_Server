@@ -1,6 +1,5 @@
 package com.shallwe.domain.auth.application;
 
-import java.net.URI;
 import java.util.Optional;
 
 import com.shallwe.domain.auth.dto.*;
@@ -10,22 +9,19 @@ import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.shopowner.exception.AlreadyExistPhoneNumberException;
 import com.shallwe.domain.shopowner.exception.InvalidPhoneNumberException;
+import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.DefaultAssert;
-import com.shallwe.global.config.security.token.UserPrincipal;
 
 import com.shallwe.domain.user.domain.Provider;
 import com.shallwe.domain.user.domain.Role;
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.global.error.DefaultAuthenticationException;
-import com.shallwe.global.payload.ApiResponse;
 import com.shallwe.global.payload.ErrorCode;
 import com.shallwe.global.payload.Message;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,13 +29,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final CustomTokenProviderService customTokenProviderService;
@@ -91,6 +87,12 @@ public class AuthService {
 
     @Transactional
     public AuthRes signIn(final SignInReq signInReq) {
+        User user = userRepository.findByEmail(signInReq.getEmail())
+                .orElseThrow(InvalidUserException::new);
+        if (!user.getProviderId().equals(signInReq.getProviderId())) {
+            throw new InvalidPasswordException();
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         signInReq.getEmail(),
@@ -113,6 +115,7 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
     public AuthRes refresh(final RefreshTokenReq tokenRefreshRequest) {
         //1차 검증
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
@@ -141,11 +144,8 @@ public class AuthService {
         return authResponse;
     }
 
+    @Transactional
     public Message signOut(final RefreshTokenReq tokenRefreshRequest) {
-        boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
-        DefaultAssert.isAuthentication(checkValid);
-
-        //4 token 정보를 삭제한다.
         Token token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken())
                 .orElseThrow(() -> new DefaultAuthenticationException(ErrorCode.INVALID_AUTHENTICATION));
         tokenRepository.delete(token);
@@ -155,22 +155,7 @@ public class AuthService {
                 .build();
     }
 
-    private boolean valid(final String refreshToken) {
-        //1. 토큰 형식 물리적 검증
-        boolean validateCheck = customTokenProviderService.validateToken(refreshToken);
-        DefaultAssert.isTrue(validateCheck, "Token 검증에 실패하였습니다.");
-
-        //2. refresh token 값을 불러온다.
-        Optional<Token> token = tokenRepository.findByRefreshToken(refreshToken);
-        DefaultAssert.isTrue(token.isPresent(), "탈퇴 처리된 회원입니다.");
-
-        //3. email 값을 통해 인증값을 불러온다
-        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(token.get().getUserEmail());
-        DefaultAssert.isTrue(token.get().getUserEmail().equals(authentication.getName()), "사용자 인증에 실패하였습니다.");
-
-        return true;
-    }
-
+    @Transactional
     public AuthRes shopOwnerSignUp(final ShopOwnerSignUpReq shopOwnerSignUpReq) {
         if (shopOwnerRepository.existsByPhoneNumber(shopOwnerSignUpReq.getPhoneNumber())) {
             throw new AlreadyExistPhoneNumberException();
@@ -208,6 +193,7 @@ public class AuthService {
         return authRes;
     }
 
+    @Transactional
     public AuthRes shopOwnerSignIn(final ShopOwnerSignInReq shopOwnerSignInReq) {
         ShopOwner shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumber(shopOwnerSignInReq.getPhoneNumber())
                 .orElseThrow(InvalidPhoneNumberException::new);
@@ -237,6 +223,22 @@ public class AuthService {
                 .build();
 
         return authRes;
+    }
+
+    private boolean valid(final String refreshToken) {
+        //1. 토큰 형식 물리적 검증
+        boolean validateCheck = customTokenProviderService.validateToken(refreshToken);
+        DefaultAssert.isTrue(validateCheck, "Token 검증에 실패하였습니다.");
+
+        //2. refresh token 값을 불러온다.
+        Optional<Token> token = tokenRepository.findByRefreshToken(refreshToken);
+        DefaultAssert.isTrue(token.isPresent(), "탈퇴 처리된 회원입니다.");
+
+        //3. email 값을 통해 인증값을 불러온다
+        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(token.get().getUserEmail());
+        DefaultAssert.isTrue(token.get().getUserEmail().equals(authentication.getName()), "사용자 인증에 실패하였습니다.");
+
+        return true;
     }
 
 }
