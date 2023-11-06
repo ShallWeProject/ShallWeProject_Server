@@ -5,6 +5,7 @@ import com.shallwe.domain.common.BaseEntity;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
+import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,22 +29,27 @@ public class Reservation extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "experience_gift_id")
-    private ExperienceGift experienceGift;
+    @JoinColumn(name = "shopOwner_id")
+    private ShopOwner shopOwner;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
     private User sender;
 
-    private Long persons;
-
-    private LocalDateTime date;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     private User receiver;
 
-    private String phoneNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "experience_gift_id")
+    private ExperienceGift experienceGift;
+
+    private Long persons;
+
+    @OneToOne
+    private AvailableTime dateTime; //한 예약엔 한 타임만 가능해야한다.
+
+    private String senderPhoneNumber;
 
     private String invitationImg;
 
@@ -57,9 +63,9 @@ public class Reservation extends BaseEntity {
 
     public void updateReservation(UpdateReservationReq updateReq) {
         this.persons = Optional.ofNullable(updateReq.getPersons()).orElse(this.persons);
-        this.date = Optional.ofNullable(updateReq.getDate()).orElse(this.date);
+        this.dateTime = Optional.ofNullable(updateReq.getDate()).orElse(this.dateTime);
         this.receiver = Optional.ofNullable(updateReq.getReceiver()).orElse(this.getReceiver());
-        this.phoneNumber = Optional.ofNullable(updateReq.getPhone_number()).orElse(this.phoneNumber);
+        this.senderPhoneNumber = Optional.ofNullable(updateReq.getPhone_number()).orElse(this.senderPhoneNumber);
         this.invitationImg = Optional.ofNullable(updateReq.getInvitation_img()).orElse(this.invitationImg);
         this.invitationComment = Optional.ofNullable(updateReq.getInvitation_comment()).orElse(this.invitationComment);
     }
