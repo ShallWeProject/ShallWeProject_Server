@@ -36,4 +36,6 @@ public interface ExperienceGiftService {
     List<ExperienceRes> getAllPopularGift(UserPrincipal userPrincipal);
 
     void registerExperienceGift(UserPrincipal userPrincipal, AdminExperienceReq adminExperienceReq);
+
+    List<AdminExperienceRes> getExperienceGift(UserPrincipal userPrincipal);
 }

@@ -9,6 +9,7 @@ import com.shallwe.domain.experiencegift.dto.request.ExperienceReq;
 import com.shallwe.domain.experiencegift.exception.*;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
+import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -91,6 +92,20 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
 
         explanationRepository.saveAll(explanations);
 
+    }
+
+    @Override
+    public List<AdminExperienceRes> getExperienceGift(UserPrincipal userPrincipal) {
+        Long userId = userPrincipal.getId();
+
+        ShopOwner shopOwner = shopOwnerRepository.findById(userId)
+                .orElseThrow(InvalidShopOwnerException::new);
+
+        List<ExperienceGift> experienceGifts = experienceGiftRepository.findByShopOwnerId(shopOwner.getId());
+
+        return experienceGifts.stream()
+                .map(AdminExperienceRes::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
