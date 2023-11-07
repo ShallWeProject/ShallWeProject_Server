@@ -2,6 +2,7 @@ package com.shallwe.domain.experiencegift.presentation;
 
 import com.shallwe.domain.experiencegift.application.ExperienceGiftServiceImpl;
 import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
+import com.shallwe.domain.experiencegift.dto.response.AdminMainRes;
 import com.shallwe.domain.experiencegift.dto.response.ExperienceDetailRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -37,5 +38,17 @@ public class AdminExperienceGiftController {
             ) {
         this.experienceGiftService.registerExperienceGift(userPrincipal, adminExperienceReq);
         return ResponseCustom.OK();
+    }
+
+    @Operation(summary = "관리자 메인 페이지", description = "관리자 메인 페이지를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "관리자 메인 페이지를 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "관리자 메인 페이지를 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/main")
+    public ResponseCustom<AdminMainRes> mainAdminExperienceGift(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ) {
+        return ResponseCustom.OK(experienceGiftService.mainAdminExperienceGift(userPrincipal));
     }
 }

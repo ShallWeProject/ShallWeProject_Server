@@ -7,8 +7,11 @@ import com.shallwe.domain.experiencegift.dto.response.*;
 import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.experiencegift.dto.request.ExperienceReq;
 import com.shallwe.domain.experiencegift.exception.*;
+import com.shallwe.domain.reservation.domain.ReservationStatus;
+import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
+import com.shallwe.domain.shopowner.exception.InvalidPhoneNumberException;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -17,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -32,6 +37,7 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
     private final SubtitleRepository subtitleRepository;
     private final ExplanationRepository explanationRepository;
     private final ShopOwnerRepository shopOwnerRepository;
+    private final ReservationRepository reservationRepository;
 
 
     @Override
@@ -90,6 +96,21 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
                 .collect(Collectors.toList());
 
         explanationRepository.saveAll(explanations);
+
+    }
+
+    @Override
+    public AdminMainRes mainAdminExperienceGift(UserPrincipal userPrincipal) {
+        Long userId = userPrincipal.getId();
+
+        ShopOwner shopOwner = shopOwnerRepository.findById(userId)
+                .orElseThrow(InvalidPhoneNumberException::new);
+
+        LocalDate currentDate = LocalDate.now();
+
+        Long bookedReservationsCount = reservationRepository.countByExperienceGift_ShopOwnerAndReservationStatus(shopOwner, ReservationStatus.WAITING);
+
+        return AdminMainRes.toDto(currentDate, bookedReservationsCount);
 
     }
 

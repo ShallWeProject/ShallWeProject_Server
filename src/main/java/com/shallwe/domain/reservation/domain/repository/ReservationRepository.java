@@ -4,6 +4,7 @@ package com.shallwe.domain.reservation.domain.repository;
 import com.shallwe.domain.reservation.domain.Reservation;
 
 import com.shallwe.domain.reservation.domain.ReservationStatus;
+import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,5 +42,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @EntityGraph(attributePaths = {"memoryPhotos", "experienceGift", "experienceGift.subtitle"})
     List<Reservation> findAllByDateBetweenAndPhoneNumber(LocalDateTime startDateTime, LocalDateTime endDateTime, String phoneNumber);
+
+    Long countByExperienceGift_ShopOwnerAndReservationStatus(ShopOwner shopOwner, ReservationStatus status);
+
 
 }
