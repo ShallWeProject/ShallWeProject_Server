@@ -50,7 +50,7 @@ public class ExperienceDetailRes {
         experienceDetailRes.title=experienceGift.getTitle();
         experienceDetailRes.subtitle=experienceGift.getSubtitle().getTitle();
         experienceDetailRes.price=experienceGift.getPrice();
-        experienceDetailRes.explanation=explanations.stream().map(m -> ExplanationRes.toDto(m.getDescription(), m.getExplanationKey())).collect(Collectors.toList());
+        experienceDetailRes.explanation=explanations.stream().map(m -> ExplanationRes.toDto(m.getStage(),m.getDescription(), m.getExplanationKey())).collect(Collectors.toList());
         return experienceDetailRes;
 
     }

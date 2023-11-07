@@ -1,20 +1,21 @@
 package com.shallwe.domain.experiencegift.application;
 
-import com.shallwe.domain.experiencegift.domain.ExpCategory;
-import com.shallwe.domain.experiencegift.domain.ExperienceGift;
-import com.shallwe.domain.experiencegift.domain.Explanation;
-import com.shallwe.domain.experiencegift.domain.SttCategory;
+import com.shallwe.domain.experiencegift.domain.*;
 import com.shallwe.domain.experiencegift.domain.repository.*;
+import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
 import com.shallwe.domain.experiencegift.dto.response.*;
 import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.experiencegift.dto.request.ExperienceReq;
 import com.shallwe.domain.experiencegift.exception.*;
+import com.shallwe.domain.shopowner.domain.ShopOwner;
+import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
     private final SttCategoryRepository sttCategoryRepository;
     private final SubtitleRepository subtitleRepository;
     private final ExplanationRepository explanationRepository;
+    private final ShopOwnerRepository shopOwnerRepository;
 
 
     @Override
@@ -48,6 +50,47 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         return popularGifts.stream()
                 .map(ExperienceRes::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void registerExperienceGift(UserPrincipal userPrincipal, AdminExperienceReq adminExperienceReq) {
+        ShopOwner shopOwner = shopOwnerRepository.findById(userPrincipal.getId())
+                .orElseThrow(InvalidUserException::new);
+
+        //Subtitle이 db에 저장되어 있는 값이 없으면 생성
+        Subtitle subtitle = subtitleRepository.findByTitle(adminExperienceReq.getSubtitle())
+                //null은 새로운 Subtitle엔티티가 저장될 때 데이터베이스가 새로운 IDFMF 생성하게 해줌
+                .orElseGet(() -> subtitleRepository.save(new Subtitle(null,adminExperienceReq.getSubtitle())));
+
+        ExpCategory expCategory = null;
+        SttCategory sttCategory = null;
+
+        // 경험 카테고리가 주어졌는지 확인하고 처리
+        if (StringUtils.hasText(adminExperienceReq.getExpCategory())) {
+            expCategory = expCategoryRepository.findByExpCategory(adminExperienceReq.getExpCategory())
+                    .orElseThrow(ExpCategoryAlreadyExist::new);
+        }
+
+        // 상황 카테고리가 주어졌는지 확인하고 처리
+        if (StringUtils.hasText(adminExperienceReq.getSttCategory())) {
+            sttCategory = sttCategoryRepository.findBySttCategory(adminExperienceReq.getSttCategory())
+                    .orElseThrow(SttCategoryAlreadyExist::new);
+        }
+
+        // 두 카테고리가 동시에 주어진 경우 오류 처리
+        if (expCategory != null && sttCategory != null) {
+            throw new ChooseOnlyOneCategory();
+        }
+
+        ExperienceGift experienceGift =experienceGiftRepository.save(ExperienceGift.toDto(adminExperienceReq, subtitle, expCategory, sttCategory, shopOwner));
+
+        List<Explanation> explanations = adminExperienceReq.getExplanation().stream()
+                .map(explanationReq -> Explanation.toDto(explanationReq, experienceGift))
+                .collect(Collectors.toList());
+
+        explanationRepository.saveAll(explanations);
+
     }
 
     @Override

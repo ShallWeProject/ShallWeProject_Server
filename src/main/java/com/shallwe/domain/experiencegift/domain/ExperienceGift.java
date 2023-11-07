@@ -2,7 +2,9 @@ package com.shallwe.domain.experiencegift.domain;
 
 
 import com.shallwe.domain.common.BaseEntity;
+import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
+import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,4 +43,19 @@ public class ExperienceGift extends BaseEntity {
     @JoinColumn(name = "shopOwner_id")
     private ShopOwner shopOwner;
 
+    private String location;
+
+    public static ExperienceGift toDto(AdminExperienceReq req, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
+        return ExperienceGift.builder()
+                .title(req.getTitle())
+                .subtitle(subtitle)
+                .thumbnail(AwsS3ImageUrlUtil.toUrl(req.getGiftImgUrl()))
+                .price(req.getPrice())
+                .expCategory(expCategory)
+                .sttCategory(sttCategory)
+                .description(req.getDescription())
+                .shopOwner(shopOwner)
+                .location(req.getLocation())
+                .build();
+    }
 }

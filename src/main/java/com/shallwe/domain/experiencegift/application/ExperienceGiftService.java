@@ -1,5 +1,6 @@
 package com.shallwe.domain.experiencegift.application;
 
+import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
 import com.shallwe.domain.experiencegift.dto.response.*;
 import com.shallwe.domain.experiencegift.dto.request.ExperienceReq;
 import com.shallwe.domain.experiencegift.dto.response.ExperienceDetailRes;
@@ -33,4 +34,6 @@ public interface ExperienceGiftService {
     ExperienceMainRes mainPage(UserPrincipal userPrincipal);
 
     List<ExperienceRes> getAllPopularGift(UserPrincipal userPrincipal);
+
+    void registerExperienceGift(UserPrincipal userPrincipal, AdminExperienceReq adminExperienceReq);
 }
