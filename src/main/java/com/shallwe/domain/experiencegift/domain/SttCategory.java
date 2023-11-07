@@ -6,7 +6,6 @@ import lombok.*;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 @Getter
 @Entity
 public class SttCategory extends BaseEntity {
@@ -18,4 +17,9 @@ public class SttCategory extends BaseEntity {
     private String sttCategory;
     private String imageKey;
 
+    @Builder
+    public SttCategory(String sttCategory,String imageKey){
+        this.sttCategory=sttCategory;
+        this.imageKey=imageKey;
+    }
 }

@@ -8,4 +8,6 @@ import java.util.Optional;
 @Repository
 public interface ExpCategoryRepository extends JpaRepository<ExpCategory,Long> {
     Optional<ExpCategory> findByExpCategoryId (long expCategoryId);
+
+    Optional<ExpCategory> findByExpCategory(String expCategory);
 }

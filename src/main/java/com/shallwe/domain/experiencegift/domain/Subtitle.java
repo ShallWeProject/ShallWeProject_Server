@@ -6,7 +6,6 @@ import lombok.*;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 @Getter
 @Entity
 public class Subtitle extends BaseEntity {
@@ -16,5 +15,10 @@ public class Subtitle extends BaseEntity {
     private Long subtitleId;
 
     private String title;
+
+    @Builder
+    public Subtitle(String title) {
+        this.title = title;
+    }
 
 }
