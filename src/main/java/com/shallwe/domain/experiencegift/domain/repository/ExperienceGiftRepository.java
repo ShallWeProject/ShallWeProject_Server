@@ -13,4 +13,5 @@ public interface ExperienceGiftRepository extends JpaRepository<ExperienceGift, 
     List<ExperienceGift> findByTitleContains(String title);
     Optional<ExperienceGift> findByExperienceGiftId(Long experienceGiftId);
 
+    List<ExperienceGift> findByShopOwnerId(Long id);
 }
