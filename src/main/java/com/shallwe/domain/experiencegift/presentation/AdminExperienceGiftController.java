@@ -42,7 +42,7 @@ public class AdminExperienceGiftController {
 
     @Operation(summary = "관리자 메인 페이지", description = "관리자 메인 페이지를 조회한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "관리자 메인 페이지를 조회 성공"),
+            @ApiResponse(responseCode = "200", description = "관리자 메인 페이지를 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AdminMainRes.class))}),
             @ApiResponse(responseCode = "400", description = "관리자 메인 페이지를 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/main")
