@@ -44,7 +44,7 @@ public class AdminExperienceGiftController {
 
     @Operation(summary = "관리자 경험 선물 조회", description = "관리자 경험 선물 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "관리자 경험 선물 조회 성공"),
+            @ApiResponse(responseCode = "200", description = "관리자 경험 선물 조회 성공",content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AdminExperienceRes.class))}),
             @ApiResponse(responseCode = "400", description = "관리자 경험 선물 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("")
