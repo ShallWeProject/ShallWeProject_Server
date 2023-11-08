@@ -53,6 +53,7 @@ public class AdminExperienceGiftController {
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
         return ResponseCustom.OK(experienceGiftService.mainAdminExperienceGift(userPrincipal));
+    }
     @Operation(summary = "관리자 경험 선물 조회", description = "관리자 경험 선물 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "관리자 경험 선물 조회 성공",content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AdminExperienceRes.class))}),

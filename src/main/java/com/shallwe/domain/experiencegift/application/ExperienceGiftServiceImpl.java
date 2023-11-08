@@ -112,7 +112,9 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         Long bookedReservationsCount = reservationRepository.countByExperienceGift_ShopOwnerAndReservationStatus(shopOwner, ReservationStatus.WAITING);
 
         return AdminMainRes.toDto(currentDate, bookedReservationsCount);
+    }
 
+    @Override
     public List<AdminExperienceRes> getExperienceGift(UserPrincipal userPrincipal) {
         Long userId = userPrincipal.getId();
 
