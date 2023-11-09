@@ -70,8 +70,6 @@ public class AuthService {
                 )
         );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
         Token token = Token.builder()
                 .refreshToken(tokenMapping.getRefreshToken())
@@ -100,13 +98,12 @@ public class AuthService {
                 )
         );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
         Token token = Token.builder()
                 .refreshToken(tokenMapping.getRefreshToken())
                 .userEmail(tokenMapping.getUserEmail())
                 .build();
+
         tokenRepository.save(token);
 
         return AuthRes.builder()
