@@ -1,6 +1,7 @@
 package com.shallwe.domain.reservation.application;
 
 import com.shallwe.domain.common.Status;
+import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.experiencegift.domain.repository.ExperienceGiftRepository;
 import com.shallwe.domain.reservation.domain.Reservation;
@@ -10,9 +11,9 @@ import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
-import com.shallwe.domain.reservation.exception.InvalidUserException;
-import com.shallwe.domain.user.domain.repository.UserRepository;
-import com.shallwe.domain.user.exception.InvalidPhoneNumberException;
+import com.shallwe.domain.shopowner.domain.ShopOwner;
+import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
+import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,40 +28,39 @@ import java.util.stream.Collectors;
 public class ReservationServiceImpl {
 
     private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
     private final ExperienceGiftRepository experienceGiftRepository;
+    private final ShopOwnerRepository shopOwnerRepository;
 
-    private ReservationResponse getReservation(Long id) {
-        return reservationRepository.findById(id).map(ReservationResponse::toDto).orElseThrow(InvalidReservationException::new);
-    }
 
     @Transactional
-    public ReservationResponse addReservation( ReservationRequest reservationRequest,  UserPrincipal userPrincipal) {
-        Reservation reservation = ReservationRequest.toEntity(
-                reservationRequest,
-                userRepository.findById(userPrincipal.getId())
-                        .orElseThrow(InvalidUserException::new),
-                userRepository.findByPhoneNumber(reservationRequest.getPhoneNumber())
-                        .orElseThrow(InvalidPhoneNumberException::new),
-                experienceGiftRepository.findByExperienceGiftId(reservationRequest.getExperienceGiftId())
-                        .orElseThrow(ExperienceGiftNotFoundException::new));
+    public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest,UserPrincipal userPrincipal) {
+        ExperienceGift experienceGift = experienceGiftRepository.findByExperienceGiftId(reservationRequest.getExperienceGiftId())
+            .orElseThrow(ExperienceGiftNotFoundException::new);
 
-        Reservation savedReservation = reservationRepository.save(reservation);
-        return ReservationResponse.toDto(savedReservation);
+        ShopOwner owner = shopOwnerRepository.findById(reservationRequest.getOwnerId())
+            .orElseThrow(InvalidShopOwnerException::new);
+
+        List<Reservation> reservations = ReservationRequest.toEntityForOwner(reservationRequest, experienceGift, owner);
+        return reservations.stream()
+            .map(reservationRepository::save)
+            .map(ReservationResponse::toDtoOwner)
+            .collect(Collectors.toList());
     }
+
+
 
     public List<ReservationResponse> findUserReservation(UserPrincipal userPrincipal) {
         return reservationRepository.findAllBySenderId(userPrincipal.getId())
-                .stream().map(ReservationResponse::toDto).collect(Collectors.toList());
+                .stream().map(ReservationResponse::toDtoUser).collect(Collectors.toList());
     }
 
     public List<ReservationResponse> getAllReservation() {
-        return reservationRepository.findAll().stream().map(ReservationResponse::toDto).collect(Collectors.toList());
+        return reservationRepository.findAll().stream().map(ReservationResponse::toDtoUser).collect(Collectors.toList());
     }
     //추가
     public List<ReservationResponse> getCurrentGiftReservation(Long giftId){
         experienceGiftRepository.findById(giftId).orElseThrow(ExperienceGiftNotFoundException::new);
-        return reservationRepository.findByExperienceGift_Id(giftId).stream().map(ReservationResponse::toDto).collect(Collectors.toList());
+        return reservationRepository.findByExperienceGift_Id(giftId).stream().map(ReservationResponse::toDtoUser).collect(Collectors.toList());
     }
 
     @Transactional
@@ -74,7 +74,7 @@ public class ReservationServiceImpl {
                 reservation -> {reservation.updateReservation(updateReq);
                 return reservationRepository.save(reservation);}
         ).orElseThrow(InvalidReservationException::new);*/
-        return ReservationResponse.toDto(updateReservation);
+        return ReservationResponse.toDtoUser(updateReservation);
     }
 
     @Transactional
