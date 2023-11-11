@@ -1,7 +1,10 @@
 package com.shallwe.domain.experiencegift.dto.response;
 
+import com.shallwe.domain.experiencegift.domain.AvailableDate;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.global.utils.AwsS3ImageUrlUtil;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +22,7 @@ public class ExperienceRes {
     private String title;
     private Long price;
     private String giftImgUrl;
+    private List<AvailableDateRes> availableDate;
 
     public static ExperienceRes toDto(ExperienceGift experienceGift){
         return ExperienceRes.builder()
@@ -28,7 +32,10 @@ public class ExperienceRes {
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
                 .giftImgUrl(AwsS3ImageUrlUtil.toUrl(experienceGift.getGiftImgKey()))
+                .availableDate(experienceGift.getAvailableDates()
+                    .stream()
+                    .map(AvailableDateRes::toDto)
+                    .collect(Collectors.toList()))
                 .build();
     }
-
 }
