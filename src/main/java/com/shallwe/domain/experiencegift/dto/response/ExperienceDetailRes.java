@@ -1,5 +1,6 @@
 package com.shallwe.domain.experiencegift.dto.response;
 
+import com.shallwe.domain.experiencegift.domain.AvailableDate;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.experiencegift.domain.Explanation;
 import com.shallwe.global.utils.AwsS3ImageUrlUtil;
@@ -27,6 +28,7 @@ public class ExperienceDetailRes {
     private String description;
     private String expCategory;
     private String sttCategory;
+    private List<AvailableDateRes> availableDates;
 
     public static ExperienceDetailRes toDto(ExperienceGift experienceGift){
         return ExperienceDetailRes.builder()
@@ -39,6 +41,11 @@ public class ExperienceDetailRes {
                 .expCategory(experienceGift.getExpCategory().getExpCategory())
                 .sttCategory(experienceGift.getSttCategory().getSttCategory())
                 .giftImgUrl(experienceGift.getGiftImgKey())
+                .availableDates(experienceGift.getAvailableDates()
+                    .stream()
+                    .map(AvailableDateRes::toDto)
+                    .collect(Collectors.toList())
+                )
                 .build();
     }
 
@@ -51,8 +58,10 @@ public class ExperienceDetailRes {
         experienceDetailRes.subtitle=experienceGift.getSubtitle().getTitle();
         experienceDetailRes.price=experienceGift.getPrice();
         experienceDetailRes.explanation=explanations.stream().map(m -> ExplanationRes.toDto(m.getDescription(), m.getExplanationKey())).collect(Collectors.toList());
+        experienceDetailRes.availableDates=experienceGift.getAvailableDates()
+            .stream()
+            .map(AvailableDateRes::toDto)
+            .collect(Collectors.toList());
         return experienceDetailRes;
-
     }
-
 }
