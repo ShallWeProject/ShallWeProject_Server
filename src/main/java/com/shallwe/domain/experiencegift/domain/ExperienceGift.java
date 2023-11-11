@@ -1,10 +1,13 @@
 package com.shallwe.domain.experiencegift.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.shallwe.domain.common.BaseEntity;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.*;
+
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -41,4 +44,6 @@ public class ExperienceGift extends BaseEntity {
     @JoinColumn(name = "shopOwner_id")
     private ShopOwner shopOwner;
 
+    @OneToMany(mappedBy = "experienceGift",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AvailableDate> availableDates ;
 }
