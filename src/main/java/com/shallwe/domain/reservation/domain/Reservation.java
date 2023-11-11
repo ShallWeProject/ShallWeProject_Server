@@ -67,7 +67,7 @@ public class Reservation extends BaseEntity {
     public void updateReservation(UpdateReservationReq updateReq) {
         this.persons = Optional.ofNullable(updateReq.getPersons()).orElse(this.persons);
         this.date = Optional.ofNullable(updateReq.getDate()).orElse(this.date);
-        this.time = Optional.ofNullable(LocalTime.of(updateReq.getTime(),0)).orElse(this.time);
+        this.time = Optional.ofNullable(updateReq.getTime()).orElse(this.time);
         this.receiver = Optional.ofNullable(updateReq.getReceiver()).orElse(this.getReceiver());
         this.phoneNumber = Optional.ofNullable(updateReq.getPhone_number()).orElse(this.phoneNumber);
         this.invitationImg = Optional.ofNullable(updateReq.getInvitation_img()).orElse(this.invitationImg);

@@ -1,7 +1,6 @@
 package com.shallwe.domain.reservation.presentation;
 
 import com.shallwe.domain.reservation.application.ReservationServiceImpl;
-import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.dto.DeleteReservationRes;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
@@ -74,11 +73,11 @@ public class ReservationController {
             @ApiResponse(responseCode = "400", description = "예약 생성 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))} )
     })
     @PostMapping
-    public ResponseCustom<ReservationResponse> createReservation(
+    public ResponseCustom<List<ReservationResponse>> createReservation(
             @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationRequest reservationRequest,
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ){
-        return ResponseCustom.CREATED(reservationServiceimpl.addReservation(reservationRequest,userPrincipal));
+        return ResponseCustom.CREATED(reservationServiceimpl.addOwnerReservation(reservationRequest,userPrincipal));
     }
 
     @Operation(summary ="예약 수정하기", description = "예약을 수정합니다")
