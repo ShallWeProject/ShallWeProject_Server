@@ -2,24 +2,25 @@ package com.shallwe.domain.reservation.domain;
 
 
 import com.shallwe.domain.common.BaseEntity;
+import com.shallwe.domain.experiencegift.domain.AvailableDate;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
+import com.shallwe.domain.experiencegift.domain.TimeSlot;
 import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Where;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.hibernate.annotations.Where;
 
+@Entity
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Entity
 @Getter
 @Where(clause = "status = 'ACTIVE'")
 public class Reservation extends BaseEntity {
@@ -46,24 +47,30 @@ public class Reservation extends BaseEntity {
 
     private Long persons;
 
-    @OneToOne
-    private AvailableTime dateTime; //한 예약엔 한 타임만 가능해야한다.
-
     private String senderPhoneNumber;
 
     private String invitationImg;
 
     private String invitationComment;
 
-    @Enumerated(EnumType.STRING)
-    private ReservationStatus reservationStatus;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "availableDate_id")
+    private AvailableDate availableDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "timeslot_id")
+    private TimeSlot timeSlot;
 
     @OneToMany(mappedBy = "reservation")
     List<MemoryPhoto> memoryPhotos = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus reservationStatus;
+
     public void updateReservation(UpdateReservationReq updateReq) {
         this.persons = Optional.ofNullable(updateReq.getPersons()).orElse(this.persons);
-        this.dateTime = Optional.ofNullable(updateReq.getDate()).orElse(this.dateTime);
+        this.availableDate = Optional.ofNullable(updateReq.getAvailableDate()).orElse(this.availableDate);
+        this.timeSlot = Optional.ofNullable(updateReq.getTimeSlot()).orElse(this.timeSlot);
         this.receiver = Optional.ofNullable(updateReq.getReceiver()).orElse(this.getReceiver());
         this.senderPhoneNumber = Optional.ofNullable(updateReq.getPhone_number()).orElse(this.senderPhoneNumber);
         this.invitationImg = Optional.ofNullable(updateReq.getInvitation_img()).orElse(this.invitationImg);
