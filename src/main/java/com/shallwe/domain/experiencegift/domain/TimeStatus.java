@@ -1,4 +1,4 @@
-package com.shallwe.domain.reservation.domain;
+package com.shallwe.domain.experiencegift.domain;
 
 public enum TimeStatus {
 
