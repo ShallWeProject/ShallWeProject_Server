@@ -9,8 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface ExperienceGiftRepository extends JpaRepository<ExperienceGift, Long>, ExperienceGiftQuerydslRepository{
-
     List<ExperienceGift> findByTitleContains(String title);
     Optional<ExperienceGift> findByExperienceGiftId(Long experienceGiftId);
+
+    List<ExperienceGift> findAllByShopOwnerId(Long shopOwnerId);
 
 }
