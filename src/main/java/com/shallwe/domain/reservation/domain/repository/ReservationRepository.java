@@ -28,6 +28,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r FROM Reservation r WHERE r.experienceGift.experienceGiftId = :giftId")
     List<Reservation> findByExperienceGift_Id(@Param("giftId")Long giftId);
 
+    @Query("SELECT r FROM Reservation r WHERE r.experienceGift.experienceGiftId = :giftId and r.status = :BOOKED")
+    List<Reservation> findAllByExperienceGift_IdAndStatus(@Param("giftId")Long giftID);
+
 
     @EntityGraph(attributePaths = {"memoryPhotos"})
     List<Reservation> findAllByDateAndPhoneNumber(LocalDateTime date, String phoneNumber);

@@ -3,6 +3,7 @@ package com.shallwe.domain.shopowner.presentation;
 
 import com.shallwe.domain.shopowner.application.ShopOwnerServiceImpl;
 import com.shallwe.domain.shopowner.dto.ShopOwnerChangePasswordReq;
+import com.shallwe.domain.shopowner.dto.ShopOwnerGiftManageRes;
 import com.shallwe.domain.user.dto.DeleteUserRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -52,4 +53,16 @@ public class ShopOwnerController {
         return ResponseCustom.OK(shopOwnerService.deleteCurrentShopOwner(userPrincipal));
     }
 
+    @Operation(summary = "사장 예약 조회", description = "사장이 등록한 상품의 예약을 조회 합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+        @ApiResponse(responseCode = "400", description = "상품 예약 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping
+    public ResponseCustom<ShopOwnerGiftManageRes> getCurrentGiftReservation(
+        @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+        @Parameter(description = "상품 ID를 입력해주세요", required = true) @RequestHeader Long giftId
+    ) {
+        return ResponseCustom.OK(shopOwnerService.getShopOwnerReservation(userPrincipal,giftId));
+    }
 }
