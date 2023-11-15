@@ -7,7 +7,9 @@ import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.*;
@@ -31,21 +33,28 @@ public class Reservation extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "experience_gift_id")
+    @Schema(description = "선물 ID")
+    @NotBlank
     private ExperienceGift experienceGift;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
+    @Schema(description = "사장ID")
+    @NotBlank
     private ShopOwner owner;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
+    @Schema(description = "보내는이 ID")
     private User sender;
 
     private Long persons;
 
+    @Schema(description = "예약 날짜, YYYY-DD-MM ")
     private LocalDate date;
 
+    @Schema(description = "예약 시간, HH:MM")
     private LocalTime time;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,6 +68,7 @@ public class Reservation extends BaseEntity {
     private String invitationComment;
 
     @Enumerated(EnumType.STRING)
+    @Schema(description = "예약 상태", allowableValues = {"CANCLED","BOOKED","COMPLETED","WAITING","USING"})
     private ReservationStatus reservationStatus;
 
     @OneToMany(mappedBy = "reservation")
@@ -72,6 +82,10 @@ public class Reservation extends BaseEntity {
         this.phoneNumber = Optional.ofNullable(updateReq.getPhone_number()).orElse(this.phoneNumber);
         this.invitationImg = Optional.ofNullable(updateReq.getInvitation_img()).orElse(this.invitationImg);
         this.invitationComment = Optional.ofNullable(updateReq.getInvitation_comment()).orElse(this.invitationComment);
+    }
+
+    public void updateStatus(ReservationStatus status){
+        this.reservationStatus = status;
     }
 
     public int getHour(){
