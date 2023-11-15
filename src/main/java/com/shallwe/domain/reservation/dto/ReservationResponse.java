@@ -52,6 +52,7 @@ public class ReservationResponse {
     ReservationResponseBuilder builder = ReservationResponse.builder()
         .id(reservation.getId())
         .experienceGiftId(reservation.getExperienceGift().getExperienceGiftId())
+        .ownerId(reservation.getOwner().getId())
         .date(reservation.getDate().toString())
         .time(reservation.getTime().toString())
         .reservationStatus(reservation.getReservationStatus());
