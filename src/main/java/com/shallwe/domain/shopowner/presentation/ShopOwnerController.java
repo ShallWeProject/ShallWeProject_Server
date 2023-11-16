@@ -79,7 +79,7 @@ public class ShopOwnerController {
       @ApiResponse(responseCode = "400", description = "예약 확정 실패", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
   })
-  @GetMapping
+  @PostMapping("/confirm")
   public ResponseCustom<Message> confirmReservationPayment(
       @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
       @Parameter(description = "예약 ID를 입력해주세요", required = true) @RequestHeader Long reservationId
