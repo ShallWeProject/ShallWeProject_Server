@@ -6,6 +6,8 @@ import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -31,6 +33,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r FROM Reservation r WHERE r.experienceGift.experienceGiftId = :giftId and r.status = :BOOKED")
     List<Reservation> findAllByExperienceGift_IdAndStatus(@Param("giftId")Long giftID);
 
+    Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
 
     @EntityGraph(attributePaths = {"memoryPhotos"})
     List<Reservation> findAllByDateAndPhoneNumber(LocalDateTime date, String phoneNumber);
@@ -47,6 +50,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findAllByDateBetweenAndPhoneNumber(LocalDateTime startDateTime, LocalDateTime endDateTime, String phoneNumber);
 
     Long countByExperienceGift_ShopOwnerAndReservationStatus(ShopOwner shopOwner, ReservationStatus status);
-
-
 }
