@@ -60,7 +60,9 @@ public class ReservationServiceImpl {
   public ReservationResponse addUserReservation(ReservationUserReq reservationRequest,
       UserPrincipal userPrincipal) {
 
-    User sender = userPrincipal.getUser();
+    User nonPersistentSender = userPrincipal.getUser();
+    User sender = userRepository.findById(nonPersistentSender.getId()).orElseThrow(
+        InvalidUserException::new);
     User receiver = userRepository.findByPhoneNumber(reservationRequest.getPhoneNumber()).orElseThrow(
         InvalidUserException::new);
 
