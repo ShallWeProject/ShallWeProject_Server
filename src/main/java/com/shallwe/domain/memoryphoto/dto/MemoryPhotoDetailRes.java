@@ -15,7 +15,9 @@ import java.util.List;
 @Builder
 public class MemoryPhotoDetailRes {
 
-    private LocalDateTime date;
+    private String date;
+
+    private String time;
 
     private String experienceGiftTitle;
 
@@ -25,7 +27,8 @@ public class MemoryPhotoDetailRes {
 
     public static MemoryPhotoDetailRes toDto(Reservation reservation) {
         return MemoryPhotoDetailRes.builder()
-                .date(reservation.getDate())
+                .date(reservation.getDate().toString())
+                .time(reservation.getTime().toString())
                 .experienceGiftTitle(reservation.getExperienceGift().getTitle())
                 .experienceGiftSubTitle(reservation.getExperienceGift().getSubtitle().getTitle())
                 .memoryPhotoImages(reservation.getMemoryPhotos().stream()
