@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findReservationByPhoneNumberAndReservationStatusIn(String phoneNUmber, List<ReservationStatus> reservationStatusList);
 
     @EntityGraph(attributePaths = {"memoryPhotos", "experienceGift", "experienceGift.subtitle"})
-    List<Reservation> findAllByDateBetweenAndPhoneNumber(LocalDateTime startDateTime, LocalDateTime endDateTime, String phoneNumber);
+    List<Reservation> findAllByDateAndPhoneNumber(LocalDate date, String phoneNumber);
 
     Long countByExperienceGift_ShopOwnerAndReservationStatus(ShopOwner shopOwner, ReservationStatus status);
 

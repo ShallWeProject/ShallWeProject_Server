@@ -34,9 +34,7 @@ public class MemoryPhotoServiceImpl implements MemoryPhotoService{
     public List<MemoryPhotoDetailRes> getMemoryPhotoByDate(final UserPrincipal userPrincipal, final LocalDate date) {
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(InvalidUserException::new);
-        LocalDateTime startDateTime = date.atStartOfDay(); // 시작 시간 지정
-        LocalDateTime endDateTime = startDateTime.plusDays(1).minusSeconds(1); // 끝 시간 지정
-        List<Reservation> reservations = reservationRepository.findAllByDateBetweenAndPhoneNumber(startDateTime, endDateTime, user.getPhoneNumber());
+        List<Reservation> reservations = reservationRepository.findAllByDateAndPhoneNumber(date, user.getPhoneNumber());
 
         return reservations.stream()
                 .map(MemoryPhotoDetailRes::toDto)

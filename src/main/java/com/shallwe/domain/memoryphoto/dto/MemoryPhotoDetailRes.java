@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -15,9 +17,9 @@ import java.util.List;
 @Builder
 public class MemoryPhotoDetailRes {
 
-    private String date;
+    private LocalDate date;
 
-    private String time;
+    private LocalTime time;
 
     private String experienceGiftTitle;
 
@@ -27,8 +29,8 @@ public class MemoryPhotoDetailRes {
 
     public static MemoryPhotoDetailRes toDto(Reservation reservation) {
         return MemoryPhotoDetailRes.builder()
-                .date(reservation.getDate().toString())
-                .time(reservation.getTime().toString())
+                .date(reservation.getDate())
+                .time(reservation.getTime())
                 .experienceGiftTitle(reservation.getExperienceGift().getTitle())
                 .experienceGiftSubTitle(reservation.getExperienceGift().getSubtitle().getTitle())
                 .memoryPhotoImages(reservation.getMemoryPhotos().stream()
