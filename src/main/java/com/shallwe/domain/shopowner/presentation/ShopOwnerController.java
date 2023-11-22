@@ -2,7 +2,6 @@ package com.shallwe.domain.shopowner.presentation;
 
 
 import com.shallwe.domain.shopowner.application.ShopOwnerServiceImpl;
-import com.shallwe.domain.shopowner.dto.ShopOwnerChangePasswordReq;
 import com.shallwe.domain.shopowner.dto.ShopOwnerGiftManageRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -26,22 +25,6 @@ import org.springframework.web.bind.annotation.*;
 public class ShopOwnerController {
 
   private final ShopOwnerServiceImpl shopOwnerService;
-
-  @Operation(summary = "사장 비밀번호 변경(토큰 필요)", description = "사장 비밀번호 변경을 수행합니다.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "사장 비밀번호 변경 성공", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
-      @ApiResponse(responseCode = "400", description = "사장 비밀번호 변경 실패", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-  })
-  @PatchMapping(value = "/change-password")
-  public ResponseCustom<Message> shopOwnerChangePassword(
-      @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-      @Parameter(description = "ShopOwnerChangePasswordReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerChangePasswordReq shopOwnerChangePasswordReq
-  ) {
-    return ResponseCustom.OK(
-        shopOwnerService.shopOwnerChangePassword(userPrincipal, shopOwnerChangePasswordReq));
-  }
 
   @Operation(summary = "사장 탈퇴", description = "사장 탈퇴를 수행합니다.")
   @ApiResponses(value = {

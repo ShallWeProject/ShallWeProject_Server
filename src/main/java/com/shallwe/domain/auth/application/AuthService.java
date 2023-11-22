@@ -7,8 +7,10 @@ import com.shallwe.domain.auth.exception.AlreadyExistEmailException;
 import com.shallwe.domain.auth.exception.InvalidPasswordException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
+import com.shallwe.domain.auth.dto.ShopOwnerChangePasswordReq;
 import com.shallwe.domain.shopowner.exception.AlreadyExistPhoneNumberException;
 import com.shallwe.domain.shopowner.exception.InvalidPhoneNumberException;
+import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.DefaultAssert;
 
@@ -223,6 +225,18 @@ public class AuthService {
                 .build();
 
         return authRes;
+    }
+
+    @Transactional
+    public Message shopOwnerChangePassword(final ShopOwnerChangePasswordReq shopOwnerChangePasswordReq) {
+        ShopOwner shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumber(shopOwnerChangePasswordReq.getPhoneNumber())
+                .orElseThrow(InvalidShopOwnerException::new);
+
+        shopOwner.changePassword(
+                passwordEncoder.encode(shopOwnerChangePasswordReq.getChangePassword()));
+
+        return Message.builder()
+                .message("비밀번호가 변경되었습니다.").build();
     }
 
     private boolean valid(final String refreshToken) {
