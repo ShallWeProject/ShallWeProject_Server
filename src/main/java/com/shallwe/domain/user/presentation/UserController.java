@@ -44,7 +44,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "유저 탈퇴 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = DeleteUserRes.class))}),
             @ApiResponse(responseCode = "400", description = "유저 탈퇴 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @PatchMapping
+    @PatchMapping("/inactive")
     public ResponseCustom<DeleteUserRes> inactiveCurrentUser(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
