@@ -98,8 +98,9 @@ public class ReservationServiceImpl {
   @Transactional
   public ReservationResponse updateReservation(UpdateReservationReq updateReq,
       UserPrincipal userPrincipal) {
-    Reservation updateReservation = reservationRepository.findByReceiverIdAndId(
-        userPrincipal.getId(), updateReq.getId()).map(
+
+    Reservation updateReservation = reservationRepository.findById(
+        updateReq.getId()).map(
         reservation -> {
           reservation.updateReservation(updateReq);
           return reservationRepository.save(reservation);
