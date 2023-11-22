@@ -4,12 +4,14 @@ package com.shallwe.domain.reservation.domain;
 import com.shallwe.domain.common.BaseEntity;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
+import com.shallwe.domain.reservation.dto.ReservationRequest;
+import com.shallwe.domain.reservation.dto.ReservationUserReq;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.*;
@@ -34,13 +36,13 @@ public class Reservation extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "experience_gift_id")
     @Schema(description = "선물 ID")
-    @NotBlank
+    @NotNull
     private ExperienceGift experienceGift;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     @Schema(description = "사장ID")
-    @NotBlank
+    @NotNull
     private ShopOwner owner;
 
 
@@ -84,11 +86,16 @@ public class Reservation extends BaseEntity {
         this.invitationComment = Optional.ofNullable(updateReq.getInvitation_comment()).orElse(this.invitationComment);
     }
 
-    public void updateStatus(ReservationStatus status){
-        this.reservationStatus = status;
+    public void updateUserReservationRequest(ReservationUserReq reservationRequest,User sender, User receiver){
+        this.sender = sender;
+        this.receiver = receiver;
+        this.phoneNumber = reservationRequest.getPhoneNumber();
+        this.invitationComment = reservationRequest.getInvitationComment();
+        this.persons = reservationRequest.getPersons();
+        this.invitationImg = reservationRequest.getImageKey();
     }
 
-    public int getHour(){
-        return time.getHour();
+    public void updateStatus(ReservationStatus status){
+        this.reservationStatus = status;
     }
 }

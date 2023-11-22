@@ -4,6 +4,7 @@ import com.shallwe.domain.reservation.application.ReservationServiceImpl;
 import com.shallwe.domain.reservation.dto.DeleteReservationRes;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
+import com.shallwe.domain.reservation.dto.ReservationUserReq;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -78,6 +79,19 @@ public class ReservationController {
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ){
         return ResponseCustom.CREATED(reservationServiceimpl.addOwnerReservation(reservationRequest,userPrincipal));
+    }
+
+    @Operation(summary ="유저 예약 추가하기", description = "등록된 예약이 예약 가능한지 확인 후, 예약을 확정 상태로 변경합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "예약 생성 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ReservationResponse.class))}),
+        @ApiResponse(responseCode = "400", description = "예약 생성 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))} )
+    })
+    @PostMapping("/user")
+    public ResponseCustom<ReservationResponse> createUserReservation(
+        @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationUserReq reservationRequest,
+        @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ){
+        return ResponseCustom.CREATED(reservationServiceimpl.addUserReservation(reservationRequest,userPrincipal));
     }
 
     @Operation(summary ="예약 수정하기", description = "예약을 수정합니다")
