@@ -15,26 +15,21 @@ public class ReservationUserReq {
 
   private Long experienceGiftId;
   private Long persons;
-  private Long senderId;
   private LocalDate date;
   private LocalTime time;
   private String phoneNumber;
   private String imageKey;
   private String invitationComment;
-  private ReservationStatus reservationStatus;
 
   @Builder
-  public ReservationUserReq(Long experienceGiftId, Long persons, Long senderId, LocalDate date,
-      LocalTime time, String phoneNumber, String imageKey, String invitationComment,
-      ReservationStatus reservationStatus) {
+  public ReservationUserReq(Long experienceGiftId, Long persons, LocalDate date,
+      LocalTime time, String phoneNumber, String imageKey, String invitationComment) {
     this.experienceGiftId = experienceGiftId;
     this.persons = persons;
-    this.senderId = senderId;
     this.date = date;
     this.time = time;
     this.phoneNumber = phoneNumber;
     this.imageKey = imageKey;
     this.invitationComment = invitationComment;
-    this.reservationStatus = reservationStatus;
   }
 }
