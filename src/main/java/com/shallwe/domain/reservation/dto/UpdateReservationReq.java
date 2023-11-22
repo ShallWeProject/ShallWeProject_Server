@@ -1,7 +1,5 @@
 package com.shallwe.domain.reservation.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.shallwe.domain.user.domain.User;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.Data;
@@ -14,8 +12,6 @@ public class UpdateReservationReq {
     private Long persons;
     private LocalDate date;
     private LocalTime time;
-    private User sender;
-    private User receiver;
     private String phone_number;
     private String invitation_img;
     private String invitation_comment;
