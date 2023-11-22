@@ -39,16 +39,16 @@ public class UserController {
         return ResponseCustom.OK(userServiceImpl.getCurrentUser(userPrincipal));
     }
 
-    @Operation(summary = "유저 정보 삭제", description = "현제 접속된 유저정보를 삭제합니다.")
+    @Operation(summary = "유저 탈퇴", description = "현재 유저를 탈퇴 처리 합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저 삭제 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = DeleteUserRes.class))}),
-            @ApiResponse(responseCode = "400", description = "유저 삭제 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "200", description = "유저 탈퇴 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = DeleteUserRes.class))}),
+            @ApiResponse(responseCode = "400", description = "유저 탈퇴 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @DeleteMapping
-    public ResponseCustom<DeleteUserRes> deleteCurrentUser(
+    @PatchMapping("/inactive")
+    public ResponseCustom<DeleteUserRes> inactiveCurrentUser(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
-        return ResponseCustom.OK(userServiceImpl.deleteCurrentUser(userPrincipal));
+        return ResponseCustom.OK(userServiceImpl.inactiveCurrentUser(userPrincipal));
     }
 
     @Operation(summary = "유저 정보 입력", description = "마켓팅 정보 동의와 나이, 성별 정보를 입력받습니다.")
