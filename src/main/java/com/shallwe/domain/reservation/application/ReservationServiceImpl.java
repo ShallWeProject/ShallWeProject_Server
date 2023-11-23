@@ -1,5 +1,7 @@
 package com.shallwe.domain.reservation.application;
 
+import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
+
 import com.shallwe.domain.common.Status;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
@@ -12,6 +14,8 @@ import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.ReservationUserReq;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
+import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
+import com.shallwe.domain.reservation.exception.InvalidAvailableTimeException;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.reservation.exception.InvalidUserException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
@@ -20,6 +24,7 @@ import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.global.config.security.token.UserPrincipal;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +42,20 @@ public class ReservationServiceImpl {
   private final ShopOwnerRepository shopOwnerRepository;
   private final UserRepository userRepository;
 
+  public List<ValidTimeSlotRes> getValidReservationTime(UserPrincipal userPrincipal, Long giftId) {
+    ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
+        .orElseThrow(ExperienceGiftNotFoundException::new);
+
+    List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndReservationStatus(
+            experienceGift, WAITING)
+        .orElseThrow(InvalidAvailableTimeException::new);
+    System.out.println(Arrays.toString(reservations.toArray()));
+    return reservations.stream().map(reservation -> ValidTimeSlotRes.builder()
+        .reservationId(reservation.getId())
+        .date(reservation.getDate())
+        .time(reservation.getTime())
+        .build()).toList();
+  }
 
   @Transactional
   public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest,
