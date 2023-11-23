@@ -82,20 +82,21 @@ public class ReservationServiceImpl {
     User nonPersistentSender = userPrincipal.getUser();
     User sender = userRepository.findById(nonPersistentSender.getId()).orElseThrow(
         InvalidUserException::new);
-    User receiver = userRepository.findByPhoneNumber(reservationRequest.getPhoneNumber()).orElseThrow(
-        InvalidUserException::new);
+    User receiver = userRepository.findByPhoneNumber(reservationRequest.getPhoneNumber())
+        .orElseThrow(
+            InvalidUserException::new);
 
     Reservation reservation = reservationRepository.findByDateAndTime(
-        reservationRequest.getDate(), reservationRequest.getTime())
+            reservationRequest.getDate(), reservationRequest.getTime())
         .orElseThrow(InvalidReservationException::new);
 
-    if(reservation.getReservationStatus().equals(ReservationStatus.WAITING)){
+    if (reservation.getReservationStatus().equals(WAITING)) {
       reservation.updateStatus(ReservationStatus.BOOKED);
-      reservation.updateUserReservationRequest(reservationRequest,sender,receiver);
-    }else{
+      reservation.updateUserReservationRequest(reservationRequest, sender, receiver);
+    } else {
       throw new InvalidReservationException();
     }
-    return  ReservationResponse.toDtoUser(reservation);
+    return ReservationResponse.toDtoUser(reservation);
   }
 
   public List<ReservationResponse> findUserReservation(UserPrincipal userPrincipal) {
@@ -109,9 +110,12 @@ public class ReservationServiceImpl {
   }
 
   public List<ReservationResponse> getCurrentGiftReservation(Long giftId) {
-    experienceGiftRepository.findById(giftId).orElseThrow(ExperienceGiftNotFoundException::new);
-    return reservationRepository.findByExperienceGift_Id(giftId).stream()
-        .map(ReservationResponse::toDtoUser).collect(Collectors.toList());
+    ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
+        .orElseThrow(ExperienceGiftNotFoundException::new);
+    List<Reservation> reservations = reservationRepository.findAllByExperienceGift(experienceGift)
+        .orElseThrow(ExperienceGiftNotFoundException::new);
+    return reservations.stream().map(ReservationResponse::toDtoUser)
+        .collect(Collectors.toList());
   }
 
   @Transactional
