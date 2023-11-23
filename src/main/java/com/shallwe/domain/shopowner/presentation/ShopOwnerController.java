@@ -1,6 +1,7 @@
 package com.shallwe.domain.shopowner.presentation;
 
 
+import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.shopowner.application.ShopOwnerServiceImpl;
 import com.shallwe.domain.shopowner.dto.ShopOwnerChangePasswordReq;
 import com.shallwe.domain.shopowner.dto.ShopOwnerGiftManageRes;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,9 +67,9 @@ public class ShopOwnerController {
           @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
   })
   @GetMapping
-  public ResponseCustom<ShopOwnerGiftManageRes> getCurrentGiftReservation(
+  public ResponseCustom<List<ReservationResponse>> getCurrentGiftReservation(
       @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-      @Parameter(description = "상품 ID를 입력해주세요", required = true) @RequestHeader Long giftId
+      @Parameter(description = "상품 ID를 입력해주세요", required = true) @RequestParam Long giftId
   ) {
     return ResponseCustom.OK(shopOwnerService.getShopOwnerReservation(userPrincipal, giftId));
   }
@@ -82,7 +84,7 @@ public class ShopOwnerController {
   @PostMapping("/confirm")
   public ResponseCustom<Message> confirmReservationPayment(
       @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-      @Parameter(description = "예약 ID를 입력해주세요", required = true) @RequestHeader Long reservationId
+      @Parameter(description = "예약 ID를 입력해주세요", required = true) @RequestParam Long reservationId
   ) {
     return ResponseCustom.OK(shopOwnerService.confirmPayment(userPrincipal, reservationId));
   }
