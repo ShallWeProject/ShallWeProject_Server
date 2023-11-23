@@ -22,7 +22,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationQuerydslRepository {
 
     List<Reservation> findAllBySenderId(Long userId);
     Optional<Reservation> findBySenderIdAndId(Long userId, Long reservationId);

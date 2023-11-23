@@ -2,6 +2,7 @@ package com.shallwe.domain.auth.presentation;
 
 
 import com.shallwe.domain.auth.application.SmsService;
+import com.shallwe.domain.auth.dto.ShopOwnerChangePasswordReq;
 import com.shallwe.global.payload.ResponseCustom;
 import jakarta.validation.Valid;
 
@@ -9,18 +10,10 @@ import com.shallwe.domain.auth.dto.*;
 import com.shallwe.global.payload.ErrorResponse;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
-import com.shallwe.domain.user.domain.User;
 import com.shallwe.global.payload.Message;
 import com.shallwe.domain.auth.application.AuthService;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -149,6 +142,21 @@ public class AuthController {
             @Parameter(description = "Schemas의 RefreshTokenRequest를 참고해주세요.", required = true) @Valid @RequestBody RefreshTokenReq tokenRefreshRequest
     ) {
         return ResponseCustom.OK(authService.signOut(tokenRefreshRequest));
+    }
+
+    @Operation(summary = "사장 비밀번호 변경", description = "사장 비밀번호 변경을 수행합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사장 비밀번호 변경 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+            @ApiResponse(responseCode = "400", description = "사장 비밀번호 변경 실패", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @PatchMapping(value = "/shop-owner/change-password")
+    public ResponseCustom<Message> shopOwnerChangePassword(
+            @Parameter(description = "ShopOwnerChangePasswordReq Schema를 확인해주세요.", required = true) @RequestBody ShopOwnerChangePasswordReq shopOwnerChangePasswordReq
+    ) {
+        return ResponseCustom.OK(
+                authService.shopOwnerChangePassword(shopOwnerChangePasswordReq));
     }
 
 }

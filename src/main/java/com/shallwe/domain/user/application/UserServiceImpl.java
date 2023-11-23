@@ -2,6 +2,7 @@ package com.shallwe.domain.user.application;
 
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
+import com.shallwe.domain.common.Status;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
@@ -36,12 +37,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public DeleteUserRes deleteCurrentUser(final UserPrincipal userPrincipal) {
+    public DeleteUserRes inactiveCurrentUser(final UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         Token token = tokenRepository.findByUserEmail(user.getEmail())
                 .orElseThrow(InvalidTokenException::new);
-        userRepository.delete(user);
+        user.updateStatus(Status.DELETE);
         tokenRepository.delete(token);
 
         return DeleteUserRes.toDto();
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
-                .findReservationBySenderAndReservationStatusIn(user, Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
+                .findReservationsBySenderAndReservationStatusIn(user);
 
         return reservations.stream()
                 .map(SendGiftDetailRes::toDto)
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
-                .findReservationByPhoneNumberAndReservationStatusIn(user.getPhoneNumber(), Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
+                .findReservationsByPhoneNumberAndReservationStatusIn(user.getPhoneNumber());
 
         return reservations.stream()
                 .map(ReceiveGiftDetailRes::toDto)

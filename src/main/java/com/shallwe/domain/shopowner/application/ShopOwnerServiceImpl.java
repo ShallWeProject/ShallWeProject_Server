@@ -19,6 +19,8 @@ import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.shopowner.dto.ShopOwnerChangePasswordReq;
+import com.shallwe.domain.shopowner.dto.ShopOwnerReservationRes;
+import com.shallwe.domain.shopowner.dto.ShopOwnerGiftManageRes;
 import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.exception.InvalidTokenException;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -41,19 +43,6 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
   private final ReservationRepository reservationRepository;
   private final ExperienceGiftRepository experienceGiftRepository;
 
-  @Override
-  @Transactional
-  public Message shopOwnerChangePassword(final UserPrincipal userPrincipal,
-      final ShopOwnerChangePasswordReq shopOwnerChangePasswordReq) {
-    ShopOwner shopOwner = shopOwnerRepository.findById(userPrincipal.getId())
-        .orElseThrow(InvalidShopOwnerException::new);
-
-    shopOwner.changePassword(
-        passwordEncoder.encode(shopOwnerChangePasswordReq.getChangePassword()));
-
-    return Message.builder()
-        .message("비밀번호가 변경되었습니다.").build();
-  }
 
   @Override
   @Transactional
