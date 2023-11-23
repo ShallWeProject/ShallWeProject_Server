@@ -6,6 +6,7 @@ import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.ReservationUserReq;
 import com.shallwe.domain.reservation.dto.UpdateReservationReq;
+import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.ErrorResponse;
@@ -53,6 +54,20 @@ public class ReservationController {
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ){
         return ResponseCustom.OK(reservationServiceimpl.findUserReservation(userPrincipal));
+    }
+
+    @Operation(summary="가능한 예약 불러오기", description = "상품 ID로 검색")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "해당 유저 예약 정보 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
+        @ApiResponse(responseCode = "400", description = "해당 유저 예약 정보 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+
+    })
+    @GetMapping("/validTimes")
+    public ResponseCustom<List<ValidTimeSlotRes>> getValidReservations(
+        @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+        @Parameter(description = "ExperienceGift ID를 입력해주세요.", required = true) @RequestParam Long giftId
+    ){
+        return ResponseCustom.OK(reservationServiceimpl.getValidReservationTime(userPrincipal,giftId));
     }
 
     @Operation(summary = "해당 경험 선물에 생성된 예약 조회 ", description = "경험 ID로 검색")
