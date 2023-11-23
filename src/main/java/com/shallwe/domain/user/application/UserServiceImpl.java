@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
-                .findReservationBySenderAndReservationStatusIn(user, Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
+                .findReservationsBySenderAndReservationStatusIn(user);
 
         return reservations.stream()
                 .map(SendGiftDetailRes::toDto)
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<Reservation> reservations = reservationRepository
-                .findReservationByPhoneNumberAndReservationStatusIn(user.getPhoneNumber(), Arrays.asList(ReservationStatus.BOOKED, ReservationStatus.COMPLETED));
+                .findReservationsByPhoneNumberAndReservationStatusIn(user.getPhoneNumber());
 
         return reservations.stream()
                 .map(ReceiveGiftDetailRes::toDto)
