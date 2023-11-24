@@ -3,6 +3,8 @@ package com.shallwe.domain.user.dto;
 import com.shallwe.domain.reservation.domain.Reservation;
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import com.shallwe.domain.reservation.domain.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 public class ReceiveGiftDetailRes {
 
     private Long reservationId;
+    private ReservationStatus reservationStatus;
     private String experienceTitle;
     private String experienceSubTitle;
     private LocalDate date;
@@ -26,6 +29,7 @@ public class ReceiveGiftDetailRes {
     public static ReceiveGiftDetailRes toDto(Reservation reservation) {
         return ReceiveGiftDetailRes.builder()
                 .reservationId(reservation.getId())
+                .reservationStatus(reservation.getReservationStatus())
                 .experienceTitle(reservation.getExperienceGift().getTitle())
                 .experienceSubTitle(reservation.getExperienceGift().getSubtitle().getTitle())
                 .date(reservation.getDate())

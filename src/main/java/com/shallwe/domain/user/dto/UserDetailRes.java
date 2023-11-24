@@ -2,12 +2,15 @@ package com.shallwe.domain.user.dto;
 
 import com.shallwe.domain.user.domain.Gender;
 import com.shallwe.domain.user.domain.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserDetailRes {
 
     private Long id;
@@ -26,20 +29,8 @@ public class UserDetailRes {
 
     private Gender gender;
 
-    @Builder
-    public UserDetailRes(Long id, String name, String birthDay, Integer age, String email, String phoneNumber, String profileImgUrl, Gender gender){
-        this.id=id;
-        this.name=name;
-        this.birthDay=birthDay;
-        this.age=age;
-        this.email=email;
-        this.phoneNumber = phoneNumber;
-        this.profileImgUrl=profileImgUrl;
-        this.gender=gender;
-    }
-
-    public static UserDetailRes toDto(User user){
-        UserDetailResBuilder builder= UserDetailRes.builder()
+    public static UserDetailRes toDto(User user) {
+        return UserDetailRes.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .birthDay(user.getBirthDay())
@@ -47,8 +38,8 @@ public class UserDetailRes {
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .profileImgUrl(user.getProfileImgUrl())
-                .gender(user.getGender());
-        return builder.build();
+                .gender(user.getGender())
+                .build();
     }
 
 }

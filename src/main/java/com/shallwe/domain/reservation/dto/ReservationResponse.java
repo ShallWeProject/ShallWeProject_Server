@@ -2,8 +2,10 @@ package com.shallwe.domain.reservation.dto;
 
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
+import com.shallwe.domain.user.domain.User;
 import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,20 +35,21 @@ public class ReservationResponse {
     ReservationResponseBuilder builder = ReservationResponse.builder()
         .id(reservation.getId())
         .experienceGiftId(reservation.getExperienceGift().getExperienceGiftId())
-        .senderId(reservation.getSender().getId())
+        .senderId(Optional.ofNullable(reservation.getSender()).map(User::getId).orElse(null))
         .ownerId(reservation.getOwner().getId())
-        .sender(reservation.getSender().getName())
-        .persons(reservation.getPersons())
+        .sender(Optional.ofNullable(reservation.getSender()).map(User::getName).orElse(null))
+        .persons(Optional.ofNullable(reservation.getPersons()).orElse(null))
         .date(reservation.getDate().toString())
         .time(reservation.getTime().toString())
-        .phoneNumber(reservation.getPhoneNumber())
-        .receiver(reservation.getReceiver().getName())
-        .invitationImageURL(AwsS3ImageUrlUtil.toUrl(reservation.getInvitationImg()))
-        .invitationComment(reservation.getInvitationComment())
+        .phoneNumber(Optional.ofNullable(reservation.getPhoneNumber()).orElse(null))
+        .receiver(Optional.ofNullable(reservation.getReceiver()).map(User::getName).orElse(null))
+        .invitationImageURL(Optional.ofNullable(reservation.getInvitationImg()).map(AwsS3ImageUrlUtil::toUrl).orElse(null))
+        .invitationComment(Optional.ofNullable(reservation.getInvitationComment()).orElse(null))
         .reservationStatus(reservation.getReservationStatus());
 
     return builder.build();
   }
+
 
   public static ReservationResponse toDtoOwner(Reservation reservation) {
     ReservationResponseBuilder builder = ReservationResponse.builder()
