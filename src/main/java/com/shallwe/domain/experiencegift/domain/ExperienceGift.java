@@ -8,6 +8,9 @@ import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -45,11 +48,13 @@ public class ExperienceGift extends BaseEntity {
 
     private String location;
 
+    @OneToMany(mappedBy = "experienceGift")
+    private List<ExperienceGiftImg> imgList=new ArrayList<>();
+
     public static ExperienceGift toDto(AdminExperienceReq req, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
         return ExperienceGift.builder()
                 .title(req.getTitle())
                 .subtitle(subtitle)
-                .thumbnail(AwsS3ImageUrlUtil.toUrl(req.getGiftImgUrl()))
                 .price(req.getPrice())
                 .expCategory(expCategory)
                 .sttCategory(sttCategory)

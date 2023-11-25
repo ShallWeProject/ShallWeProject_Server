@@ -16,6 +16,7 @@ import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
+import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,7 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
     private final ExplanationRepository explanationRepository;
     private final ShopOwnerRepository shopOwnerRepository;
     private final ReservationRepository reservationRepository;
+    private final ExperienceGiftImgRepository experienceGiftImgRepository;
 
 
     @Override
@@ -54,9 +56,15 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<ExperienceGift> popularGifts = experienceGiftRepository.findAllPopularGifts();
-        return popularGifts.stream()
-                .map(ExperienceRes::toDto)
-                .collect(Collectors.toList());
+
+        return popularGifts.stream().map(experienceGift -> {
+            List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);
+            List<String> imgUrls = giftImgs.stream()
+                    .map(ExperienceGiftImg::getImgKey)
+                    .collect(Collectors.toList());
+
+            return ExperienceRes.toDto(experienceGift, imgUrls);
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -98,6 +106,13 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
 
         explanationRepository.saveAll(explanations);
 
+        List<ExperienceGiftImg> imgList = adminExperienceReq.getGiftImgKey().stream()
+                .map(imgKey -> new ExperienceGiftImg(null, experienceGift, AwsS3ImageUrlUtil.toUrl(imgKey)))
+                .collect(Collectors.toList());
+
+        experienceGiftImgRepository.saveAll(imgList);
+
+
     }
 
     @Override
@@ -128,24 +143,21 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
                 .collect(Collectors.toList());
     }
 
-    @Override
-    @Transactional
-    public ExperienceDetailRes createExperience(UserPrincipal userPrincipal,ExperienceReq experienceReq ) {
-        userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        ExperienceGift experienceGift = ExperienceReq.toEntity(experienceReq,
-                subtitleRepository.findBySubtitleId(experienceReq.getSubtitleId()).orElseThrow(SubtitleNotFoundException::new),
-                expCategoryRepository.findByExpCategoryId(experienceReq.getExpCategoryId()).orElseThrow(ExpCategoryNotFoundException::new),
-                sttCategoryRepository.findBySttCategoryId(experienceReq.getSttCategoryId()).orElseThrow(SttCategoryNotFoundException::new)
-        );
-        ExperienceGift savedGift = experienceGiftRepository.save(experienceGift);
-        return ExperienceDetailRes.toDto(savedGift);
-    }
+
 
     @Override
     public List<ExperienceRes> searchExperience(UserPrincipal userPrincipal, String title) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        return experienceGiftRepository.findByTitleContains(title)
-                .stream().map(ExperienceRes::toDto).collect(Collectors.toList());
+        List<ExperienceGift> experienceGifts = experienceGiftRepository.findByTitleContains(title);
+
+        return experienceGifts.stream().map(experienceGift -> {
+            List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);
+            List<String> imgUrls = giftImgs.stream()
+                    .map(ExperienceGiftImg::getImgKey)
+                    .collect(Collectors.toList());
+
+            return ExperienceRes.toDto(experienceGift, imgUrls);
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -153,36 +165,74 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
         ExperienceGift experienceGift=experienceGiftRepository.findByExperienceGiftId(ExperienceGiftId).orElseThrow(ExperienceGiftNotFoundException::new);
         List<Explanation> explanations=explanationRepository.findByExperienceGift(experienceGift);
-        return ExperienceDetailRes.toDetailDto(experienceGift,explanations);
+
+        List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);
+        List<String> imgUrls = giftImgs.stream()
+                .map(ExperienceGiftImg::getImgKey)
+                .collect(Collectors.toList());
+
+        return ExperienceDetailRes.toDetailDto(experienceGift,explanations,imgUrls);
 
     }
 
     @Override
-    public List<ExperienceSttCategoryRes> highSttCategoryPricedGift(UserPrincipal userPrincipal,Long SttCategoryId) {
+    public List<ExperienceSttCategoryRes> highSttCategoryPricedGift(UserPrincipal userPrincipal,Long sttCategoryId) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        return experienceGiftRepository.findGiftsBySttCategoryIdOrderByPriceDesc(SttCategoryId)
-                .stream().map(ExperienceSttCategoryRes::toDto).collect(Collectors.toList());
+        List<ExperienceGift> gifts = experienceGiftRepository.findGiftsBySttCategoryIdOrderByPriceDesc(sttCategoryId);
+
+        return gifts.stream().map(experienceGift -> {
+            List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);
+            List<String> imgUrls = giftImgs.stream()
+                    .map(ExperienceGiftImg::getImgKey)
+                    .collect(Collectors.toList());
+
+            return ExperienceSttCategoryRes.toDto(experienceGift, imgUrls);
+        }).collect(Collectors.toList());
     }
 
     @Override
-    public List<ExperienceSttCategoryRes> lowSttCategoryPricedGift(UserPrincipal userPrincipal, Long SttCategoryId) {
+    public List<ExperienceSttCategoryRes> lowSttCategoryPricedGift(UserPrincipal userPrincipal, Long sttCategoryId) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        return experienceGiftRepository.findGiftsBySttCategoryIdOrderByPriceAsc(SttCategoryId)
-                .stream().map(ExperienceSttCategoryRes::toDto).collect(Collectors.toList());
+        List<ExperienceGift> gifts = experienceGiftRepository.findGiftsBySttCategoryIdOrderByPriceAsc(sttCategoryId);
+
+        return gifts.stream().map(experienceGift -> {
+            List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);
+            List<String> imgUrls = giftImgs.stream()
+                    .map(ExperienceGiftImg::getImgKey)
+                    .collect(Collectors.toList());
+
+            return ExperienceSttCategoryRes.toDto(experienceGift, imgUrls);
+        }).collect(Collectors.toList());
     }
 
     @Override
-    public List<ExperienceExpCategoryRes> highExpCategoryPricedGift(UserPrincipal userPrincipal, Long ExpCategoryId) {
+    public List<ExperienceExpCategoryRes> highExpCategoryPricedGift(UserPrincipal userPrincipal, Long expCategoryId) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        return experienceGiftRepository.findGiftsByExpCategoryIdOrderByPriceDesc(ExpCategoryId)
-                .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
+        List<ExperienceGift> gifts = experienceGiftRepository.findGiftsByExpCategoryIdOrderByPriceDesc(expCategoryId);
+
+        return gifts.stream().map(experienceGift -> {
+            List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);
+            List<String> imgUrls = giftImgs.stream()
+                    .map(ExperienceGiftImg::getImgKey)
+                    .collect(Collectors.toList());
+
+            return ExperienceExpCategoryRes.toDto(experienceGift, imgUrls);
+        }).collect(Collectors.toList());
     }
 
     @Override
-    public List<ExperienceExpCategoryRes> lowExpCategoryPricedGift(UserPrincipal userPrincipal, Long ExpCategoryId) {
+    public List<ExperienceExpCategoryRes> lowExpCategoryPricedGift(UserPrincipal userPrincipal, Long expCategoryId) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        return experienceGiftRepository.findGiftsByExpCategoryIdOrderByPriceAsc(ExpCategoryId)
-                .stream().map(ExperienceExpCategoryRes::toDto).collect(Collectors.toList());
+        List<ExperienceGift> gifts = experienceGiftRepository.findGiftsByExpCategoryIdOrderByPriceAsc(expCategoryId);
+
+        return gifts.stream().map(experienceGift -> {
+            List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);
+            List<String> imgUrls = giftImgs.stream()
+                    .map(ExperienceGiftImg::getImgKey)
+                    .collect(Collectors.toList());
+
+            return ExperienceExpCategoryRes.toDto(experienceGift, imgUrls);
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -190,9 +240,14 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<ExperienceGift> popularGifts = experienceGiftRepository.findPopularGiftsBySttCategoryId(sttCategoryId);
-        return popularGifts.stream()
-                .map(ExperienceSttCategoryRes::toDto)
-                .collect(Collectors.toList());
+        return popularGifts.stream().map(experienceGift -> {
+            List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);
+            List<String> imgUrls = giftImgs.stream()
+                    .map(ExperienceGiftImg::getImgKey)
+                    .collect(Collectors.toList());
+
+            return ExperienceSttCategoryRes.toDto(experienceGift, imgUrls);
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -200,9 +255,14 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
         List<ExperienceGift> popularGifts = experienceGiftRepository.findPopularGiftsByExpCategoryId(expCategoryId);
-        return popularGifts.stream()
-                .map(ExperienceExpCategoryRes::toDto)
-                .collect(Collectors.toList());
+        return popularGifts.stream().map(experienceGift -> {
+            List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);
+            List<String> imgUrls = giftImgs.stream()
+                    .map(ExperienceGiftImg::getImgKey)
+                    .collect(Collectors.toList());
+
+            return ExperienceExpCategoryRes.toDto(experienceGift, imgUrls);
+        }).collect(Collectors.toList());
     }
 
 
