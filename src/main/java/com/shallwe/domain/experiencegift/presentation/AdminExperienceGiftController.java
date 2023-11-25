@@ -65,4 +65,33 @@ public class AdminExperienceGiftController {
     ) {
         return ResponseCustom.OK(experienceGiftService.getExperienceGift(userPrincipal));
     }
+
+    @Operation(summary = "관리자 경험 선물 수정", description = "관리자 경험 선물 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "관리자 경험 선물 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "관리자 경험 선물 수정 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @PutMapping("/{experienceGiftId}")
+    public ResponseCustom modifyExperienceGift(
+            @PathVariable Long experienceGiftId,
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @RequestBody  AdminExperienceReq adminExperienceReq
+    ) {
+        this.experienceGiftService.modifyExperienceGift(experienceGiftId,userPrincipal, adminExperienceReq);
+        return ResponseCustom.OK();
+    }
+
+    @Operation(summary = "관리자 경험 선물 삭제", description = "관리자 경험 선물을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "관리자 경험 선물 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "관리자 경험 선물 삭제 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @DeleteMapping("/{experienceGiftId}")
+    public ResponseCustom<Void> deleteExperienceGift(
+            @PathVariable Long experienceGiftId,
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ) {
+        experienceGiftService.deleteExperienceGift(experienceGiftId, userPrincipal);
+        return ResponseCustom.OK();
+    }
 }
