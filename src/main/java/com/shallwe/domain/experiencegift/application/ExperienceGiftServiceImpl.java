@@ -175,12 +175,25 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
 
         experienceGift.update(adminExperienceReq, subtitle, expCategory, sttCategory, shopOwner);
 
-        List<Explanation> newExplanations = adminExperienceReq.getExplanation().stream()
-                .map(explanationReq -> Explanation.toDto(explanationReq, experienceGift))
-                .collect(Collectors.toList());
+        if (adminExperienceReq.getExplanation() != null && !adminExperienceReq.getExplanation().isEmpty()) {
+            explanationRepository.deleteByExperienceGift(experienceGift);
 
-        explanationRepository.saveAll(newExplanations);
+            List<Explanation> newExplanations = adminExperienceReq.getExplanation().stream()
+                    .map(explanationReq -> Explanation.toDto(explanationReq, experienceGift))
+                    .collect(Collectors.toList());
 
+            explanationRepository.saveAll(newExplanations);
+        }
+
+        List<String> giftImgKeyList = adminExperienceReq.getGiftImgKey();
+        if (giftImgKeyList != null && !giftImgKeyList.isEmpty()) {
+            experienceGiftImgRepository.deleteByExperienceGift(experienceGift);
+
+            List<ExperienceGiftImg> newImgList = giftImgKeyList.stream()
+                    .map(imgKey -> new ExperienceGiftImg(null,experienceGift, AwsS3ImageUrlUtil.toUrl(imgKey)))
+                    .collect(Collectors.toList());
+            experienceGiftImgRepository.saveAll(newImgList);
+        }
     }
 
     @Override
@@ -205,7 +218,7 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
     @Override
     public List<ExperienceRes> searchExperience(UserPrincipal userPrincipal, String title) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
-        List<ExperienceGift> experienceGifts = experienceGiftRepository.findByTitleContains(title);
+        List<ExperienceGift> experienceGifts = experienceGiftRepository.findByTitleContainsAndStatus(title,Status.ACTIVE);
 
         return experienceGifts.stream().map(experienceGift -> {
             List<ExperienceGiftImg> giftImgs = experienceGiftImgRepository.findByExperienceGift(experienceGift);

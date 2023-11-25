@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ExperienceGiftImgRepository extends JpaRepository<ExperienceGiftImg,Long> {
     List<ExperienceGiftImg> findByExperienceGift(ExperienceGift experienceGift);
+
+    void deleteByExperienceGift(ExperienceGift experienceGift);
 }
