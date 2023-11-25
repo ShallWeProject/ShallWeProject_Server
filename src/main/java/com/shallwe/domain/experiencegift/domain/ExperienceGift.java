@@ -4,7 +4,6 @@ package com.shallwe.domain.experiencegift.domain;
 import com.shallwe.domain.common.BaseEntity;
 import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
-import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -66,7 +65,6 @@ public class ExperienceGift extends BaseEntity {
 
     public void update(AdminExperienceReq adminExperienceReq, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
         this.title = adminExperienceReq.getTitle();
-        this.giftImgKey=adminExperienceReq.getGiftImgUrl();
         this.description=adminExperienceReq.getDescription();
         this.location=adminExperienceReq.getLocation();
         this.price=adminExperienceReq.getPrice();
@@ -75,5 +73,4 @@ public class ExperienceGift extends BaseEntity {
         this.sttCategory = sttCategory;
         this.shopOwner = shopOwner;
     }
-
 }
