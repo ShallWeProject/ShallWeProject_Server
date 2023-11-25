@@ -38,4 +38,8 @@ public interface ExperienceGiftService {
 
     AdminMainRes mainAdminExperienceGift(UserPrincipal userPrincipal);
     List<AdminExperienceRes> getExperienceGift(UserPrincipal userPrincipal);
+
+    void modifyExperienceGift(Long experienceGiftId,UserPrincipal userPrincipal, AdminExperienceReq adminExperienceReq);
+
+    void deleteExperienceGift(Long experienceGiftId, UserPrincipal userPrincipal);
 }

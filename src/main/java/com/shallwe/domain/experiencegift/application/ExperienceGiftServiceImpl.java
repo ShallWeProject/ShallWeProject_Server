@@ -1,5 +1,6 @@
 package com.shallwe.domain.experiencegift.application;
 
+import com.shallwe.domain.common.Status;
 import com.shallwe.domain.experiencegift.domain.*;
 import com.shallwe.domain.experiencegift.domain.repository.*;
 import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
@@ -136,11 +137,67 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         ShopOwner shopOwner = shopOwnerRepository.findById(userId)
                 .orElseThrow(InvalidShopOwnerException::new);
 
-        List<ExperienceGift> experienceGifts = experienceGiftRepository.findByShopOwnerId(shopOwner.getId());
+        List<ExperienceGift> experienceGifts = experienceGiftRepository.findByShopOwnerIdAndStatus(shopOwner.getId(),Status.ACTIVE);
 
         return experienceGifts.stream()
                 .map(AdminExperienceRes::toDto)
                 .collect(Collectors.toList());
+    }
+
+
+    @Override
+    @Transactional
+    public void modifyExperienceGift(Long experienceGiftId,UserPrincipal userPrincipal, AdminExperienceReq adminExperienceReq) {
+        ShopOwner shopOwner = shopOwnerRepository.findById(userPrincipal.getId())
+                .orElseThrow(InvalidUserException::new);
+
+        ExperienceGift experienceGift = experienceGiftRepository.findById(experienceGiftId)
+                .orElseThrow(ExperienceGiftNotFoundException::new);
+
+        Subtitle subtitle = subtitleRepository.findByTitle(adminExperienceReq.getSubtitle())
+                .orElseGet(() -> subtitleRepository.save(new Subtitle(adminExperienceReq.getSubtitle())));
+
+
+        ExpCategory expCategory = null;
+        SttCategory sttCategory = null;
+
+        // 경험 카테고리가 주어졌는지 확인하고 처리
+        if (StringUtils.hasText(adminExperienceReq.getExpCategory())) {
+            expCategory = expCategoryRepository.findByExpCategory(adminExperienceReq.getExpCategory())
+                    .orElseThrow(ExpCategoryAlreadyExist::new);
+        }
+
+        // 상황 카테고리가 주어졌는지 확인하고 처리
+        if (StringUtils.hasText(adminExperienceReq.getSttCategory())) {
+            sttCategory = sttCategoryRepository.findBySttCategory(adminExperienceReq.getSttCategory())
+                    .orElseThrow(SttCategoryAlreadyExist::new);
+        }
+
+        experienceGift.update(adminExperienceReq, subtitle, expCategory, sttCategory, shopOwner);
+
+        List<Explanation> newExplanations = adminExperienceReq.getExplanation().stream()
+                .map(explanationReq -> Explanation.toDto(explanationReq, experienceGift))
+                .collect(Collectors.toList());
+
+        explanationRepository.saveAll(newExplanations);
+
+    }
+
+    @Override
+    @Transactional
+    public void deleteExperienceGift(Long experienceGiftId, UserPrincipal userPrincipal) {
+         ShopOwner shopOwner = shopOwnerRepository.findById(userPrincipal.getId())
+                 .orElseThrow(InvalidUserException::new);
+
+        ExperienceGift experienceGift = experienceGiftRepository.findById(experienceGiftId)
+                .orElseThrow(ExperienceGiftNotFoundException::new);
+
+        if (!experienceGift.getShopOwner().equals(shopOwner)) {
+            throw new ExperienceGiftNotFoundException();
+        }
+
+        experienceGift.updateStatus(Status.DELETE);
+        experienceGiftRepository.save(experienceGift);
     }
 
 

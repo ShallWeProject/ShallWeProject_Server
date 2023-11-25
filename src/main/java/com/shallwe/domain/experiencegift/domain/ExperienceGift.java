@@ -63,4 +63,17 @@ public class ExperienceGift extends BaseEntity {
                 .location(req.getLocation())
                 .build();
     }
+
+    public void update(AdminExperienceReq adminExperienceReq, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
+        this.title = adminExperienceReq.getTitle();
+        this.giftImgKey=adminExperienceReq.getGiftImgUrl();
+        this.description=adminExperienceReq.getDescription();
+        this.location=adminExperienceReq.getLocation();
+        this.price=adminExperienceReq.getPrice();
+        this.subtitle = subtitle;
+        this.expCategory = expCategory;
+        this.sttCategory = sttCategory;
+        this.shopOwner = shopOwner;
+    }
+
 }
