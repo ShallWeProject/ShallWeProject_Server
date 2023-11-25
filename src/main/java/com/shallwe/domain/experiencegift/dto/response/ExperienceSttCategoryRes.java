@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @Builder
@@ -15,21 +17,19 @@ public class ExperienceSttCategoryRes {
 
     private Long sttCategoryId;
     private Long ExperienceGiftId;
-    private String thumbnail;
     private String subtitleTitle;
     private String title;
     private Long price;
-    private String giftImgUrl;
+    private List<String> giftImgUrl;
 
-    public static ExperienceSttCategoryRes toDto(ExperienceGift experienceGift){
+    public static ExperienceSttCategoryRes toDto(ExperienceGift experienceGift,List<String> giftImgUrl){
         return ExperienceSttCategoryRes.builder()
                 .ExperienceGiftId(experienceGift.getSttCategory().getSttCategoryId())
                 .ExperienceGiftId(experienceGift.getExperienceGiftId())
-                .thumbnail(experienceGift.getThumbnail())
                 .subtitleTitle(experienceGift.getSubtitle().getTitle())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
-                .giftImgUrl(AwsS3ImageUrlUtil.toUrl(experienceGift.getGiftImgKey()))
+                .giftImgUrl(giftImgUrl)
                 .build();
     }
 

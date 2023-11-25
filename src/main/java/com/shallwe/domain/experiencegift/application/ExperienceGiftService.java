@@ -14,8 +14,6 @@ import java.util.Optional;
 
 public interface ExperienceGiftService {
 
-    ExperienceDetailRes createExperience(final UserPrincipal userPrincipal,final ExperienceReq experienceReq);
-
     List<ExperienceRes> searchExperience(UserPrincipal userPrincipal,String title);
 
     ExperienceDetailRes getExperienceDetails(final UserPrincipal userPrincipal,Long ExperienceGiftId);
