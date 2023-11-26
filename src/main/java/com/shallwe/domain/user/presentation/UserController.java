@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,11 +45,12 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "유저 탈퇴 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = DeleteUserRes.class))}),
             @ApiResponse(responseCode = "400", description = "유저 탈퇴 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @PatchMapping("/inactive")
+    @PostMapping("/inactive")
     public ResponseCustom<DeleteUserRes> inactiveCurrentUser(
-            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "PostComplainReq를 확인 해 주세요.", required = true) @RequestBody PostComplainReq postComplainReq
     ) {
-        return ResponseCustom.OK(userServiceImpl.inactiveCurrentUser(userPrincipal));
+        return ResponseCustom.OK(userServiceImpl.inactiveCurrentUser(userPrincipal, postComplainReq));
     }
 
     @Operation(summary = "유저 정보 입력", description = "마켓팅 정보 동의와 나이, 성별 정보를 입력받습니다.")
