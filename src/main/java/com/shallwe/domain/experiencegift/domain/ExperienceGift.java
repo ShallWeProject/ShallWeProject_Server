@@ -4,7 +4,9 @@ package com.shallwe.domain.experiencegift.domain;
 import com.shallwe.domain.common.BaseEntity;
 import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -47,6 +49,8 @@ public class ExperienceGift extends BaseEntity {
 
     private String location;
 
+    private String note;
+
     @OneToMany(mappedBy = "experienceGift")
     private List<ExperienceGiftImg> imgList=new ArrayList<>();
 
@@ -60,6 +64,7 @@ public class ExperienceGift extends BaseEntity {
                 .description(req.getDescription())
                 .shopOwner(shopOwner)
                 .location(req.getLocation())
+                .note(req.getNote())
                 .build();
     }
 
