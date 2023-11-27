@@ -48,4 +48,9 @@ public class AdminExperienceReq {
     @Schema(type = "Long", description = "가격", maxLength = 30)
     @NotNull(message = "가격은 필수 입력 값입니다.")
     private Long price;
+
+    @Schema(type = "String", description = "유의사항", maxLength = 255)
+    private String note;
+
+
 }
