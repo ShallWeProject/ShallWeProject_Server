@@ -3,7 +3,6 @@ package com.shallwe.domain.shopowner.application;
 
 import static com.shallwe.domain.reservation.domain.ReservationStatus.BOOKED;
 import static com.shallwe.domain.reservation.domain.ReservationStatus.CONFIRMED;
-import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
 
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
@@ -18,9 +17,6 @@ import com.shallwe.domain.reservation.exception.InvalidAvailableTimeException;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
-import com.shallwe.domain.shopowner.dto.ShopOwnerChangePasswordReq;
-import com.shallwe.domain.shopowner.dto.ShopOwnerReservationRes;
-import com.shallwe.domain.shopowner.dto.ShopOwnerGiftManageRes;
 import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.exception.InvalidTokenException;
 import com.shallwe.global.config.security.token.UserPrincipal;
