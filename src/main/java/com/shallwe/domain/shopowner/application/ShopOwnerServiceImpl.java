@@ -18,6 +18,7 @@ import com.shallwe.domain.reservation.exception.InvalidAvailableTimeException;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
+import com.shallwe.domain.shopowner.dto.ShopOwnerChangePasswordReq;
 import com.shallwe.domain.shopowner.dto.ShopOwnerReservationRes;
 import com.shallwe.domain.shopowner.dto.ShopOwnerGiftManageRes;
 import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;

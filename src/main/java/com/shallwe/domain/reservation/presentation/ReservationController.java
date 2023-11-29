@@ -58,7 +58,8 @@ public class ReservationController {
 
     @Operation(summary="가능한 예약 불러오기", description = "상품 ID로 검색")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "해당 유저 예약 정보 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
+
+        @ApiResponse(responseCode = "200", description = "해당 유저 예약 정보 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation =ValidTimeSlotRes.class)))}),
         @ApiResponse(responseCode = "400", description = "해당 유저 예약 정보 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
 
     })
