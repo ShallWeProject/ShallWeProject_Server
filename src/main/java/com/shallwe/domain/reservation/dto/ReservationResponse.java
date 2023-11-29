@@ -43,7 +43,9 @@ public class ReservationResponse {
         .time(reservation.getTime().toString())
         .phoneNumber(Optional.ofNullable(reservation.getPhoneNumber()).orElse(null))
         .receiver(Optional.ofNullable(reservation.getReceiver()).map(User::getName).orElse(null))
-        .invitationImageURL(Optional.ofNullable(reservation.getInvitationImg()).map(AwsS3ImageUrlUtil::toUrl).orElse(null))
+        .invitationImageURL(
+            Optional.ofNullable(reservation.getInvitationImg()).map(AwsS3ImageUrlUtil::toUrl)
+                .orElse(null))
         .invitationComment(Optional.ofNullable(reservation.getInvitationComment()).orElse(null))
         .reservationStatus(reservation.getReservationStatus());
 
@@ -62,4 +64,5 @@ public class ReservationResponse {
 
     return builder.build();
   }
+
 }

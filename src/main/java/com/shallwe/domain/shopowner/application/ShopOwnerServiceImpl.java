@@ -12,7 +12,6 @@ import com.shallwe.domain.experiencegift.domain.repository.ExperienceGiftReposit
 import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
-import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
 import com.shallwe.domain.reservation.exception.InvalidAvailableTimeException;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
@@ -22,9 +21,7 @@ import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.exception.InvalidTokenException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.Message;
-import jakarta.xml.bind.helpers.ValidationEventLocatorImpl;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,7 +37,6 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
   private final TokenRepository tokenRepository;
   private final ReservationRepository reservationRepository;
   private final ExperienceGiftRepository experienceGiftRepository;
-
 
   @Override
   @Transactional
