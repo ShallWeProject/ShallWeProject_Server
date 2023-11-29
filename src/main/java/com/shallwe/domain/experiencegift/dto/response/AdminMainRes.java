@@ -17,11 +17,14 @@ public class AdminMainRes {
     private LocalDate currentDate;
     @Schema(type = "Long", description = "예약 접수 개수", example = "3")
     private Long bookedReservationsCount;
+    @Schema(type = "Long", description = "예약 확인 개수", example = "3")
+    private Long bookedCheckCount;
 
-    public static AdminMainRes toDto(LocalDate currentDate, Long bookedReservationsCount) {
+    public static AdminMainRes toDto(LocalDate currentDate, Long bookedReservationsCount,Long bookedCheckCount) {
         return AdminMainRes.builder()
                 .currentDate(currentDate)
                 .bookedReservationsCount(bookedReservationsCount)
+                .bookedCheckCount(bookedCheckCount)
                 .build();
     }
 
