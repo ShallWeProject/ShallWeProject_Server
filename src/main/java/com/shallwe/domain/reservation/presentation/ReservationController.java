@@ -76,7 +76,7 @@ public class ReservationController {
     @Operation(summary = "날짜로 예약 조회", description = "등록한 상품의 ID와 날짜로 이용 가능한 예약을 조회 합니다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ReservationResponse.class))}),
       @ApiResponse(responseCode = "400", description = "상품 예약 조회 실패", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
   })
