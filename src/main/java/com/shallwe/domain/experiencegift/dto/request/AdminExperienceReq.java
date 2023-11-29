@@ -30,7 +30,7 @@ public class AdminExperienceReq {
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
     private String title;
 
-    @Schema(type = "String", description = "썸네일")
+    @Schema(type = "List", description = "썸네일")
     private List<String> giftImgKey;
 
     @Schema(type = "String", description = "상품 설명", maxLength = 256)

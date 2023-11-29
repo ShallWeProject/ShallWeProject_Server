@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class ExplanationReq {
     private String stage;
     private String description;
-    private String explanationUrl;
+    private String explanationKey;
 }
