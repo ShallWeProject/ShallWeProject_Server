@@ -10,6 +10,7 @@ import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.ErrorResponse;
+import com.shallwe.global.payload.Message;
 import com.shallwe.global.payload.ResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +72,22 @@ public class ReservationController {
     ){
         return ResponseCustom.OK(reservationServiceimpl.getValidReservationTime(userPrincipal,giftId));
     }
+
+    @Operation(summary = "날짜로 예약 조회", description = "등록한 상품의 ID와 날짜로 이용 가능한 예약을 조회 합니다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ReservationResponse.class))}),
+      @ApiResponse(responseCode = "400", description = "상품 예약 조회 실패", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+  })
+  @GetMapping("/date")
+  public ResponseCustom<List<ReservationResponse>> getReservationWithDate(
+      @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+      @Parameter(description = "상품 ID를 입력해주세요", required = true) @RequestParam Long giftId,
+      @Parameter(description = "조회하려는 날짜를 입력해주세요 YYYY-MM-DD ", required = true) @RequestParam LocalDate date
+  ) {
+    return ResponseCustom.OK(reservationServiceimpl.getReservationByDate(userPrincipal, giftId,date));
+  }
 
     @Operation(summary = "해당 경험 선물에 생성된 예약 조회 ", description = "경험 ID로 검색")
     @ApiResponses(value = {

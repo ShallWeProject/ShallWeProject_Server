@@ -13,6 +13,7 @@ import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundExcepti
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
+import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
 import com.shallwe.domain.reservation.exception.InvalidAvailableTimeException;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
@@ -21,6 +22,7 @@ import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.exception.InvalidTokenException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.Message;
+import jakarta.xml.bind.helpers.ValidationEventLocatorImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -57,17 +59,18 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
   }
 
   @Override
-  public List<ReservationResponse> getShopOwnerReservation(UserPrincipal userPrincipal,
+  public List<ValidTimeSlotRes> getShopOwnerReservation(UserPrincipal userPrincipal,
       Long giftId) {
     ExperienceGift experienceGift = experienceGiftRepository.findByExperienceGiftId(giftId)
         .orElseThrow(ExperienceGiftNotFoundException::new);
     List<Reservation> reservationList = reservationRepository.findAllByExperienceGift(
         experienceGift).orElseThrow(InvalidAvailableTimeException::new);
 
-    return reservationList.stream()
-        .map(ReservationResponse::toDtoUser)
-        .collect(
-            Collectors.toList());
+    return reservationList.stream().map(reservation -> ValidTimeSlotRes.builder()
+        .reservationId(reservation.getId())
+        .date(reservation.getDate())
+        .time(reservation.getTime())
+        .build()).toList();
   }
 
   @Override

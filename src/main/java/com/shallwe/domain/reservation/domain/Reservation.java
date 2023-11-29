@@ -67,7 +67,7 @@ public class Reservation extends BaseEntity {
     private String invitationComment;
 
     @Enumerated(EnumType.STRING)
-    @Schema(description = "예약 상태", allowableValues = {"CANCLED","BOOKED","COMPLETED","WAITING","USING"})
+    @Schema(description = "예약 상태", allowableValues = {"CANCELED","WAITING","BOOKED","CONFIRMED","COMPLETED","USING"})
     private ReservationStatus reservationStatus;
 
     @OneToMany(mappedBy = "reservation")
