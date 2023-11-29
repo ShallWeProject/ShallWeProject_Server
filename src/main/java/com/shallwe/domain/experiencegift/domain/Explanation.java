@@ -37,7 +37,7 @@ public class Explanation extends BaseEntity {
                 .experienceGift(experienceGift)
                 .stage(explanationReq.getStage())
                 .description(explanationReq.getDescription())
-                .explanationUrl(AwsS3ImageUrlUtil.toUrl(explanationReq.getExplanationUrl()))
+                .explanationUrl(AwsS3ImageUrlUtil.toUrl(explanationReq.getExplanationKey()))
                 .build();
     }
 
