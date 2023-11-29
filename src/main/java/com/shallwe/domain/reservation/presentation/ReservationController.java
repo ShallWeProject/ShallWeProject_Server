@@ -11,6 +11,7 @@ import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.ErrorResponse;
+import com.shallwe.global.payload.Message;
 import com.shallwe.global.payload.ResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -82,6 +83,7 @@ public class ReservationController {
   })
   @GetMapping("/date")
   public ResponseCustom<List<ReservationIdUserRes>> getReservationWithDate(
+
       @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
       @Parameter(description = "상품 ID를 입력해주세요", required = true) @RequestParam Long giftId,
       @Parameter(description = "조회하려는 날짜를 입력해주세요 YYYY-MM-DD ", required = true) @RequestParam LocalDate date

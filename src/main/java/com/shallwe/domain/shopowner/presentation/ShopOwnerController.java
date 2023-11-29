@@ -66,6 +66,7 @@ public class ShopOwnerController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
           @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
+
       @ApiResponse(responseCode = "400", description = "상품 예약 조회 실패", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
   })
@@ -76,6 +77,7 @@ public class ShopOwnerController {
       @Parameter(description = "조회하려는 날짜를 입력해주세요 YYYY-MM-DD ", required = true) @RequestParam LocalDate date
   ) {
     return ResponseCustom.OK(reservationService.getReservationByDateOwner(userPrincipal, giftId,date));
+
   }
 
   @Operation(summary = "예약 확정", description = "유저 결제 확인 후 예약을 확정상태로 변경합니다.")

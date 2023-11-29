@@ -126,8 +126,10 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService{
         LocalDate currentDate = LocalDate.now();
 
         Long bookedReservationsCount = reservationRepository.countByExperienceGift_ShopOwnerAndReservationStatus(shopOwner, ReservationStatus.WAITING);
+        Long bookedCheckCount = reservationRepository.countByExperienceGift_ShopOwnerAndReservationStatus(shopOwner, ReservationStatus.BOOKED);
 
-        return AdminMainRes.toDto(currentDate, bookedReservationsCount);
+
+        return AdminMainRes.toDto(currentDate, bookedReservationsCount,bookedCheckCount);
     }
 
     @Override

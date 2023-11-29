@@ -54,6 +54,7 @@ public class AdminExperienceGiftController {
     ) {
         return ResponseCustom.OK(experienceGiftService.mainAdminExperienceGift(userPrincipal));
     }
+
     @Operation(summary = "관리자 경험 선물 조회", description = "관리자 경험 선물 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "관리자 경험 선물 조회 성공",content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AdminExperienceRes.class))}),
