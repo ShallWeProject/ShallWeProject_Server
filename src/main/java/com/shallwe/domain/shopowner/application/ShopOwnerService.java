@@ -4,6 +4,8 @@ package com.shallwe.domain.shopowner.application;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.shopowner.dto.ShopOwnerChangePasswordReq;
 
+
+
 import com.shallwe.domain.shopowner.dto.ShopOwnerGiftManageRes;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.Message;

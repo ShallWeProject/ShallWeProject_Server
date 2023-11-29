@@ -6,7 +6,9 @@ import com.shallwe.domain.common.Status;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
+import com.shallwe.domain.user.domain.Complain;
 import com.shallwe.domain.user.domain.User;
+import com.shallwe.domain.user.domain.repository.ComplainRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 
 import com.shallwe.domain.user.dto.*;
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final ReservationRepository reservationRepository;
+    private final ComplainRepository complainRepository;
 
     @Override
     public UserDetailRes getCurrentUser(final UserPrincipal userPrincipal) {
@@ -37,13 +40,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public DeleteUserRes inactiveCurrentUser(final UserPrincipal userPrincipal) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
+    public DeleteUserRes inactiveCurrentUser(final UserPrincipal userPrincipal, final PostComplainReq postComplainReq) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(InvalidUserException::new);
+
+        Complain complain = Complain.builder()
+                .content(postComplainReq.getComplain())
+                .build();
 
         Token token = tokenRepository.findByUserEmail(user.getEmail())
                 .orElseThrow(InvalidTokenException::new);
+
         user.updateStatus(Status.DELETE);
         tokenRepository.delete(token);
+        complainRepository.save(complain);
 
         return DeleteUserRes.toDto();
     }

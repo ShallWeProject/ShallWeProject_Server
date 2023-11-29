@@ -1,5 +1,7 @@
 package com.shallwe.domain.experiencegift.dto.request;
 
+import com.shallwe.domain.experiencegift.domain.ExperienceGift;
+import com.shallwe.domain.experiencegift.domain.ExperienceGiftImg;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,7 +18,7 @@ import java.util.List;
 public class AdminExperienceReq {
     @Schema(type = "String", description = "지역", maxLength = 30)
     @NotBlank(message = "지역은 필수 입력 값입니다.")
-    private String title;
+    private String subtitle;
 
     @Schema(type = "String", description = "경험 카테고리")
     private String expCategory;
@@ -26,10 +28,10 @@ public class AdminExperienceReq {
 
     @Schema(type = "String", description = "상품명", maxLength = 100)
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
-    private String subtitle;
+    private String title;
 
     @Schema(type = "String", description = "썸네일")
-    private String giftImgUrl;
+    private List<String> giftImgKey;
 
     @Schema(type = "String", description = "상품 설명", maxLength = 256)
     @NotBlank(message = "상품 설명은 필수 입력 값입니다.")
@@ -46,4 +48,9 @@ public class AdminExperienceReq {
     @Schema(type = "Long", description = "가격", maxLength = 30)
     @NotNull(message = "가격은 필수 입력 값입니다.")
     private Long price;
+
+    @Schema(type = "String", description = "유의사항", maxLength = 255)
+    private String note;
+
+
 }

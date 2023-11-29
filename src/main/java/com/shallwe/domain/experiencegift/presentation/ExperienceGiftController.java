@@ -1,7 +1,6 @@
 package com.shallwe.domain.experiencegift.presentation;
 
 import com.shallwe.domain.experiencegift.application.ExperienceGiftServiceImpl;
-import com.shallwe.domain.experiencegift.dto.request.ExperienceReq;
 import com.shallwe.domain.experiencegift.dto.response.*;
 import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.global.config.Constant;
@@ -130,19 +129,4 @@ public class ExperienceGiftController {
             throw new ExperienceGiftNotFoundException();
         }
     }
-
-    @Operation(summary = "경험 선물 추가", description = "경험 선물을 추가합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "경험 선물 추가 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExperienceDetailRes.class))}),
-            @ApiResponse(responseCode = "400", description = "경험 선물 추가 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-    })
-    @PostMapping
-    public ResponseCustom<ExperienceDetailRes> CreateExpGift(
-            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ExperienceReq reservationRequest
-    ) {
-        return ResponseCustom.OK(experienceGiftService.createExperience(userPrincipal, reservationRequest));
-    }
-
-
 }

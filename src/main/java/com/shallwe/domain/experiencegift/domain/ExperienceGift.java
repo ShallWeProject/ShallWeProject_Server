@@ -4,9 +4,13 @@ package com.shallwe.domain.experiencegift.domain;
 import com.shallwe.domain.common.BaseEntity;
 import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
-import com.shallwe.global.utils.AwsS3ImageUrlUtil;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -45,17 +49,33 @@ public class ExperienceGift extends BaseEntity {
 
     private String location;
 
+    private String note;
+
+    @OneToMany(mappedBy = "experienceGift")
+    private List<ExperienceGiftImg> imgList=new ArrayList<>();
+
     public static ExperienceGift toDto(AdminExperienceReq req, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
         return ExperienceGift.builder()
                 .title(req.getTitle())
                 .subtitle(subtitle)
-                .thumbnail(AwsS3ImageUrlUtil.toUrl(req.getGiftImgUrl()))
                 .price(req.getPrice())
                 .expCategory(expCategory)
                 .sttCategory(sttCategory)
                 .description(req.getDescription())
                 .shopOwner(shopOwner)
                 .location(req.getLocation())
+                .note(req.getNote())
                 .build();
+    }
+
+    public void update(AdminExperienceReq adminExperienceReq, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
+        this.title = adminExperienceReq.getTitle();
+        this.description=adminExperienceReq.getDescription();
+        this.location=adminExperienceReq.getLocation();
+        this.price=adminExperienceReq.getPrice();
+        this.subtitle = subtitle;
+        this.expCategory = expCategory;
+        this.sttCategory = sttCategory;
+        this.shopOwner = shopOwner;
     }
 }

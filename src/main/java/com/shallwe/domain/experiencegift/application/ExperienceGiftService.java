@@ -14,8 +14,6 @@ import java.util.Optional;
 
 public interface ExperienceGiftService {
 
-    ExperienceDetailRes createExperience(final UserPrincipal userPrincipal,final ExperienceReq experienceReq);
-
     List<ExperienceRes> searchExperience(UserPrincipal userPrincipal,String title);
 
     ExperienceDetailRes getExperienceDetails(final UserPrincipal userPrincipal,Long ExperienceGiftId);
@@ -40,4 +38,8 @@ public interface ExperienceGiftService {
 
     AdminMainRes mainAdminExperienceGift(UserPrincipal userPrincipal);
     List<AdminExperienceRes> getExperienceGift(UserPrincipal userPrincipal);
+
+    void modifyExperienceGift(Long experienceGiftId,UserPrincipal userPrincipal, AdminExperienceReq adminExperienceReq);
+
+    void deleteExperienceGift(Long experienceGiftId, UserPrincipal userPrincipal);
 }
