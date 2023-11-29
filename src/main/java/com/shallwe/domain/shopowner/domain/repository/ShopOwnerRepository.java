@@ -10,5 +10,4 @@ public interface ShopOwnerRepository extends JpaRepository<ShopOwner, Long> {
     boolean existsByPhoneNumber(String phoneNumber);
 
     Optional<ShopOwner> findShopOwnerByPhoneNumber(String phoneNumber);
-
 }
