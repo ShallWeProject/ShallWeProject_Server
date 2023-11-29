@@ -11,7 +11,6 @@ import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.*;
@@ -36,13 +35,11 @@ public class Reservation extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "experience_gift_id")
     @Schema(description = "선물 ID")
-    @NotNull
     private ExperienceGift experienceGift;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     @Schema(description = "사장ID")
-    @NotNull
     private ShopOwner owner;
 
 
