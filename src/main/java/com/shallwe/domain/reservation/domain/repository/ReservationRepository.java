@@ -37,6 +37,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
     Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
 
+    Optional<List<Reservation>> findAllByExperienceGiftAndDate(ExperienceGift experienceGift, LocalDate date);
+
     @EntityGraph(attributePaths = {"memoryPhotos"})
     List<Reservation> findAllByDateAndPhoneNumber(LocalDateTime date, String phoneNumber);
 
@@ -52,4 +54,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     List<Reservation> findAllByDateAndPhoneNumber(LocalDate date, String phoneNumber);
 
     Long countByExperienceGift_ShopOwnerAndReservationStatus(ShopOwner shopOwner, ReservationStatus status);
+
 }

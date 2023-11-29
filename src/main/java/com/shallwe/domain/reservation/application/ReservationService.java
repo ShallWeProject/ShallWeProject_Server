@@ -1,13 +1,13 @@
 package com.shallwe.domain.reservation.application;
 
-import com.shallwe.domain.reservation.domain.Reservation;
-import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
+import com.shallwe.global.config.security.token.UserPrincipal;
+import java.time.LocalDate;
+import java.util.List;
 
 public interface ReservationService {
 
-    ReservationResponse getCurrentReservation(Reservation reservation);
-    Reservation addReservation(Long userId, ReservationRequest reservationRequest);
+    List<ReservationResponse> getReservationByDate (UserPrincipal userPrincipal, Long giftId, LocalDate date);
 
 }
 

@@ -24,6 +24,7 @@ import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.global.config.security.token.UserPrincipal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class ReservationServiceImpl {
+public class ReservationServiceImpl implements ReservationService{
 
   private final ReservationRepository reservationRepository;
   private final ExperienceGiftRepository experienceGiftRepository;
@@ -55,6 +56,18 @@ public class ReservationServiceImpl {
         .date(reservation.getDate())
         .time(reservation.getTime())
         .build()).toList();
+  }
+
+  public List<ReservationResponse> getReservationByDate(UserPrincipal userPrincipal, Long giftId, LocalDate date){
+    ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
+        .orElseThrow(ExperienceGiftNotFoundException::new);
+
+    List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(experienceGift,date)
+        .orElseThrow(InvalidReservationException::new);
+
+    return reservations.stream()
+        .map(ReservationResponse::toDtoUser)
+        .collect(Collectors.toList());
   }
 
   @Transactional
