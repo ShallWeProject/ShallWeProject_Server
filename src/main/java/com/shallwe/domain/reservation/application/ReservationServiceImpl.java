@@ -123,7 +123,7 @@ public class ReservationServiceImpl {
       UserPrincipal userPrincipal) {
 
     Reservation updateReservation = reservationRepository.findById(
-        updateReq.getId()).map(
+        updateReq.getReservationId()).map(
         reservation -> {
           reservation.updateReservation(updateReq);
           return reservationRepository.save(reservation);
