@@ -77,14 +77,16 @@ public class ReservationServiceImpl implements ReservationService {
   public List<ReservationIdOwnerRes> getReservationByDateOwner(UserPrincipal userPrincipal, Long giftId,
       LocalDate date) {
     ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
-        .orElseThrow(ExperienceGiftNotFoundException::new);
+            .orElseThrow(ExperienceGiftNotFoundException::new);
 
     List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(
-            experienceGift, date)
-        .orElseThrow(InvalidReservationException::new);
+                    experienceGift, date)
+            .orElseThrow(InvalidReservationException::new);
 
     return reservations.stream()
-        .map(ReservationIdOwnerRes::toDtoOwner)
+            .map(ReservationIdOwnerRes::toDtoOwner)
+            .toList();
+  }
 
   @Transactional
   public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest,
