@@ -10,6 +10,8 @@ import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.DeleteReservationRes;
+import com.shallwe.domain.reservation.dto.ReservationIdOwnerRes;
+import com.shallwe.domain.reservation.dto.ReservationIdUserRes;
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.ReservationUserReq;
@@ -36,7 +38,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class ReservationServiceImpl implements ReservationService{
+public class ReservationServiceImpl implements ReservationService {
 
   private final ReservationRepository reservationRepository;
   private final ExperienceGiftRepository experienceGiftRepository;
@@ -58,17 +60,31 @@ public class ReservationServiceImpl implements ReservationService{
         .build()).toList();
   }
 
-  public List<ReservationResponse> getReservationByDate(UserPrincipal userPrincipal, Long giftId, LocalDate date){
+  public List<ReservationIdUserRes> getReservationByDateUser(UserPrincipal userPrincipal, Long giftId,
+      LocalDate date) {
     ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
         .orElseThrow(ExperienceGiftNotFoundException::new);
 
-    List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(experienceGift,date)
+    List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(
+            experienceGift, date)
+        .orElseThrow(InvalidReservationException::new);
+
+      return reservations.stream()
+              .map(ReservationIdUserRes::toDtoUser)
+              .collect(Collectors.toList());
+  }
+
+  public List<ReservationIdOwnerRes> getReservationByDateOwner(UserPrincipal userPrincipal, Long giftId,
+      LocalDate date) {
+    ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
+        .orElseThrow(ExperienceGiftNotFoundException::new);
+
+    List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(
+            experienceGift, date)
         .orElseThrow(InvalidReservationException::new);
 
     return reservations.stream()
-        .map(ReservationResponse::toDtoUser)
-        .collect(Collectors.toList());
-  }
+        .map(ReservationIdOwnerRes::toDtoOwner)
 
   @Transactional
   public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest,
