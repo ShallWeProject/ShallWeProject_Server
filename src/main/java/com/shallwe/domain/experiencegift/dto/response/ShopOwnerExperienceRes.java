@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AdminExperienceRes {
+public class ShopOwnerExperienceRes {
     @Schema(type = "Long", description = "경험선물 Id", example = "1")
     private Long experienceGiftId;
     @Schema(type = "String", description = "상품명", maxLength = 100)
@@ -15,8 +15,8 @@ public class AdminExperienceRes {
     @Schema(type = "String", description = "지역", maxLength = 30)
     private String title;
 
-    public static AdminExperienceRes toDto(ExperienceGift experienceGift){
-        return AdminExperienceRes.builder()
+    public static ShopOwnerExperienceRes toDto(ExperienceGift experienceGift){
+        return ShopOwnerExperienceRes.builder()
                 .experienceGiftId(experienceGift.getExperienceGiftId())
                 .subtitle(experienceGift.getSubtitle().getTitle())
                 .title(experienceGift.getTitle())
