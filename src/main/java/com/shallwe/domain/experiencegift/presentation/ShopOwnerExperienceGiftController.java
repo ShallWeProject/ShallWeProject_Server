@@ -23,10 +23,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "ShopOwner ExperienceGifts", description = "ShopOwner ExperienceGifts API")
-@RequestMapping("/api/v1/shop-owners/experience-gift")
+@RequestMapping("/api/v1/experience/gift/shop-owner")
 @RestController
 @RequiredArgsConstructor
 public class ShopOwnerExperienceGiftController {
+
     private final ExperienceGiftServiceImpl experienceGiftService;
 
     @Operation(summary = "사장님 경험 선물 등록", description = "사장님 경험 선물 등록합니다.")
@@ -38,7 +39,7 @@ public class ShopOwnerExperienceGiftController {
     public ResponseCustom<Void> registerExperienceGift(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @RequestBody @Valid ShopOwnerExperienceReq shopOwnerExperienceReq
-            ) {
+    ) {
         this.experienceGiftService.registerExperienceGift(userPrincipal, shopOwnerExperienceReq);
         return ResponseCustom.OK();
     }
@@ -57,7 +58,7 @@ public class ShopOwnerExperienceGiftController {
 
     @Operation(summary = "사장님 경험 선물 조회", description = "사장님 경험 선물 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "사장님 경험 선물 조회 성공",content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ShopOwnerExperienceRes.class)))}),
+            @ApiResponse(responseCode = "200", description = "사장님 경험 선물 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ShopOwnerExperienceRes.class)))}),
             @ApiResponse(responseCode = "400", description = "사장님 경험 선물 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("")
@@ -78,7 +79,7 @@ public class ShopOwnerExperienceGiftController {
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @RequestBody ShopOwnerExperienceReq shopOwnerExperienceReq
     ) {
-        this.experienceGiftService.modifyExperienceGift(experienceGiftId,userPrincipal, shopOwnerExperienceReq);
+        this.experienceGiftService.modifyExperienceGift(experienceGiftId, userPrincipal, shopOwnerExperienceReq);
         return ResponseCustom.OK();
     }
 
@@ -87,7 +88,7 @@ public class ShopOwnerExperienceGiftController {
             @ApiResponse(responseCode = "200", description = "사장님 경험 선물 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "사장님 경험 선물 삭제 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @DeleteMapping("/{experienceGiftId}")
+    @PatchMapping("/{experienceGiftId}")
     public ResponseCustom<Void> deleteExperienceGift(
             @PathVariable Long experienceGiftId,
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
