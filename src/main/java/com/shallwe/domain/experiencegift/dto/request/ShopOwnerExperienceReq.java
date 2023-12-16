@@ -1,7 +1,5 @@
 package com.shallwe.domain.experiencegift.dto.request;
 
-import com.shallwe.domain.experiencegift.domain.ExperienceGift;
-import com.shallwe.domain.experiencegift.domain.ExperienceGiftImg;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,7 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminExperienceReq {
+public class ShopOwnerExperienceReq {
     @Schema(type = "String", description = "지역", maxLength = 30)
     @NotBlank(message = "지역은 필수 입력 값입니다.")
     private String subtitle;
