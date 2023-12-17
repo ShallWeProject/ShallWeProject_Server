@@ -5,6 +5,7 @@ import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
 import com.shallwe.domain.memoryphoto.domain.repository.MemoryPhotoRepository;
 import com.shallwe.domain.memoryphoto.dto.MemoryPhotoDetailRes;
 import com.shallwe.domain.memoryphoto.dto.UploadMemoryPhotoReq;
+import com.shallwe.domain.memoryphoto.exception.MemoryPhotoUploaderMismatchException;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
@@ -42,6 +43,7 @@ public class MemoryPhotoServiceImpl implements MemoryPhotoService{
                 .toList();
     }
 
+    @Override
     @Transactional
     public Message uploadMemoryPhoto(UserPrincipal userPrincipal, UploadMemoryPhotoReq uploadMemoryPhotoReq) {
         User user = userRepository.findById(userPrincipal.getId())
@@ -61,12 +63,20 @@ public class MemoryPhotoServiceImpl implements MemoryPhotoService{
         return Message.builder().message("메모리 포토 업로드가 완료되었습니다.").build();
     }
 
-//    public Message deleteMemoryPhoto(UserPrincipal userPrincipal, String memoryPhotoUrl) {
-//        MemoryPhoto memoryPhoto = memoryPhotoRepository.findByMemoryImgUrl(memoryPhotoUrl)
-//                .orElseThrow(InvalidReservationException::new);
-//
-//        if(memoryPhoto.getReservation().)
-//        memoryPhoto.updateStatus(Status.DELETE);
-//    }
+    @Override
+    @Transactional
+    public Message deleteMemoryPhoto(UserPrincipal userPrincipal, String memoryPhotoUrl) {
+        MemoryPhoto memoryPhoto = memoryPhotoRepository.findByMemoryImgUrl(memoryPhotoUrl)
+                .orElseThrow(InvalidReservationException::new);
+
+        if(!memoryPhoto.getUploader().getId().equals(userPrincipal.getId()))
+            throw new MemoryPhotoUploaderMismatchException();
+
+        memoryPhoto.updateStatus(Status.DELETE);
+
+        return Message.builder()
+                .message("Memory Photo 삭제가 완료되었습니다.")
+                .build();
+    }
 
 }
