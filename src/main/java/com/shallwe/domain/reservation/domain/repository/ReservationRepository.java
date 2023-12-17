@@ -25,33 +25,14 @@ import java.util.Optional;
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationQuerydslRepository {
 
     List<Reservation> findAllBySenderId(Long userId);
-    Optional<Reservation> findBySenderIdAndId(Long userId, Long reservationId);
 
     Optional<List<Reservation>> findAllByExperienceGift(ExperienceGift experienceGift);
-
-    Optional<Reservation> findByReceiverIdAndId(Long userId, Long reservationId);
-    @Query("SELECT r FROM Reservation r WHERE r.experienceGift.experienceGiftId = :giftId")
-    List<Reservation> findByExperienceGift_Id(@Param("giftId")Long giftId);
 
     Optional<List<Reservation>> findAllByExperienceGiftAndReservationStatus(ExperienceGift experienceGift, ReservationStatus reservationStatus);
 
     Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
 
     Optional<List<Reservation>> findAllByExperienceGiftAndDate(ExperienceGift experienceGift, LocalDate date);
-
-    @EntityGraph(attributePaths = {"memoryPhotos"})
-    List<Reservation> findAllByDateAndPhoneNumber(LocalDateTime date, String phoneNumber);
-
-    @EntityGraph(attributePaths = {"experienceGift", "sender", "receiver", "experienceGift.subtitle",
-    "experienceGift.expCategory", "experienceGift.sttCategory"})
-    List<Reservation> findReservationBySenderAndReservationStatusIn(User user, List<ReservationStatus> reservationStatusList);
-
-    @EntityGraph(attributePaths = {"experienceGift", "sender", "receiver", "experienceGift.subtitle",
-            "experienceGift.expCategory", "experienceGift.sttCategory"})
-    List<Reservation> findReservationByPhoneNumberAndReservationStatusIn(String phoneNUmber, List<ReservationStatus> reservationStatusList);
-
-    @EntityGraph(attributePaths = {"memoryPhotos", "experienceGift", "experienceGift.subtitle"})
-    List<Reservation> findAllByDateAndPhoneNumber(LocalDate date, String phoneNumber);
 
     Long countByExperienceGift_ShopOwnerAndReservationStatus(ShopOwner shopOwner, ReservationStatus status);
 

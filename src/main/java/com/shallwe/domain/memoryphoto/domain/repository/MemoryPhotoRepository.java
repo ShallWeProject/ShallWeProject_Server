@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface MemoryPhotoRepository extends JpaRepository<MemoryPhoto, Long> {
 
-
     Optional<MemoryPhoto> findByMemoryImgUrl(String memoryImgUrl);
 
 }

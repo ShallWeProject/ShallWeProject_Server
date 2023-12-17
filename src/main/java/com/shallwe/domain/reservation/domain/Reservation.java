@@ -94,4 +94,5 @@ public class Reservation extends BaseEntity {
     public void updateStatus(ReservationStatus status){
         this.reservationStatus = status;
     }
+
 }

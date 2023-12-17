@@ -1,12 +1,8 @@
 package com.shallwe.domain.reservation.domain.repository;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.shallwe.domain.experiencegift.domain.QExpCategory;
-import com.shallwe.domain.experiencegift.domain.QExperienceGift;
-import com.shallwe.domain.experiencegift.domain.QSttCategory;
-import com.shallwe.domain.experiencegift.domain.QSubtitle;
-import com.shallwe.domain.reservation.domain.QReservation;
+
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.user.domain.QUser;
@@ -23,11 +19,10 @@ import static com.shallwe.domain.experiencegift.domain.QSttCategory.*;
 import static com.shallwe.domain.experiencegift.domain.QSubtitle.*;
 import static com.shallwe.domain.memoryphoto.domain.QMemoryPhoto.memoryPhoto;
 import static com.shallwe.domain.reservation.domain.QReservation.*;
-import static com.shallwe.domain.user.domain.QUser.*;
 
 @RequiredArgsConstructor
 @Repository
-public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRepository{
+public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRepository {
 
     private final JPAQueryFactory queryFactory;
 
