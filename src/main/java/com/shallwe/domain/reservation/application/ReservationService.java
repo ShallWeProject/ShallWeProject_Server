@@ -14,7 +14,6 @@ import java.util.List;
 
 public interface ReservationService {
 
-
     List<ReservationIdOwnerRes> getReservationByDateOwner (UserPrincipal userPrincipal, Long giftId, LocalDate date);
     List<ReservationIdUserRes> getReservationByDateUser (UserPrincipal userPrincipal, Long giftId, LocalDate date);
 
@@ -36,6 +35,5 @@ public interface ReservationService {
         UserPrincipal userPrincipal);
 
     public DeleteReservationRes deleteReservation(Long id);
-
     }
 
