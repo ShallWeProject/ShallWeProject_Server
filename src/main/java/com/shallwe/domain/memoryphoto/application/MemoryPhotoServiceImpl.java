@@ -1,5 +1,6 @@
 package com.shallwe.domain.memoryphoto.application;
 
+import com.shallwe.domain.common.Status;
 import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
 import com.shallwe.domain.memoryphoto.domain.repository.MemoryPhotoRepository;
 import com.shallwe.domain.memoryphoto.dto.MemoryPhotoDetailRes;
@@ -34,20 +35,24 @@ public class MemoryPhotoServiceImpl implements MemoryPhotoService{
     public List<MemoryPhotoDetailRes> getMemoryPhotoByDate(final UserPrincipal userPrincipal, final LocalDate date) {
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(InvalidUserException::new);
-        List<Reservation> reservations = reservationRepository.findAllByDateAndPhoneNumber(date, user.getPhoneNumber());
+        List<Reservation> reservations = reservationRepository.findReservationsByDateAndUser(date, user);
 
         return reservations.stream()
-                .map(MemoryPhotoDetailRes::toDto)
+                .map(reservation -> MemoryPhotoDetailRes.toDto(reservation, user))
                 .toList();
     }
 
     @Transactional
     public Message uploadMemoryPhoto(UserPrincipal userPrincipal, UploadMemoryPhotoReq uploadMemoryPhotoReq) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(InvalidUserException::new);
+
         Reservation reservation = reservationRepository.findById(uploadMemoryPhotoReq.getReservationId())
                 .orElseThrow(InvalidReservationException::new);
 
         MemoryPhoto memoryPhoto = MemoryPhoto.builder()
                 .memoryImgUrl(AwsS3ImageUrlUtil.toUrl(uploadMemoryPhotoReq.getMemoryPhotoImgKey()))
+                .uploader(user)
                 .reservation(reservation)
                 .build();
 
@@ -55,5 +60,13 @@ public class MemoryPhotoServiceImpl implements MemoryPhotoService{
 
         return Message.builder().message("메모리 포토 업로드가 완료되었습니다.").build();
     }
+
+//    public Message deleteMemoryPhoto(UserPrincipal userPrincipal, String memoryPhotoUrl) {
+//        MemoryPhoto memoryPhoto = memoryPhotoRepository.findByMemoryImgUrl(memoryPhotoUrl)
+//                .orElseThrow(InvalidReservationException::new);
+//
+//        if(memoryPhoto.getReservation().)
+//        memoryPhoto.updateStatus(Status.DELETE);
+//    }
 
 }

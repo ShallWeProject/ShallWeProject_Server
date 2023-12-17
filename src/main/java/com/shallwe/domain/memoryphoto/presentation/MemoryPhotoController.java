@@ -51,12 +51,25 @@ public class MemoryPhotoController {
             @ApiResponse(responseCode = "200", description = "MemoryPhoto 업로드 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
             @ApiResponse(responseCode = "400", description = "MemoryPhoto 업로드 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @PostMapping()
+    @PostMapping
     public ResponseCustom<Message> uploadMemoryPhoto(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @Parameter(description = "UploadMemoryPhotoReq Schema를 확인해주세요.", required = true) @RequestBody UploadMemoryPhotoReq uploadMemoryPhotoReq
     ) {
         return ResponseCustom.OK(memoryPhotoService.uploadMemoryPhoto(userPrincipal, uploadMemoryPhotoReq));
     }
+
+//    @Operation(summary = "메모리 포토를 삭제합니다.", description = "메모리 포토를 삭제합니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "MemoryPhoto 삭제 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+//            @ApiResponse(responseCode = "400", description = "MemoryPhoto 삭제 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+//    })
+//    @PatchMapping
+//    public ResponseCustom<Message> deleteMemoryPhoto(
+//            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+//            @RequestParam(value = "memoryPhotoUrl") String memoryPhotoUrl
+//    ) {
+//        return ResponseCustom.OK(memoryPhotoService.deleteMemoryPhoto(userPrincipal, memoryPhotoUrl));
+//    }
 
 }
