@@ -3,6 +3,7 @@ package com.shallwe.domain.shopowner.presentation;
 
 import com.shallwe.domain.reservation.application.ReservationServiceImpl;
 import com.shallwe.domain.reservation.dto.ReservationIdOwnerRes;
+import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
 import com.shallwe.domain.shopowner.application.ShopOwnerServiceImpl;
@@ -33,6 +34,19 @@ public class ShopOwnerController {
   private final ShopOwnerServiceImpl shopOwnerService;
   private final ReservationServiceImpl reservationService;
 
+  @Operation(summary ="예약 추가하기", description = "현재 유저, 경험을 가져와 예약을 추가합니다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "예약 생성 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ReservationResponse.class))}),
+      @ApiResponse(responseCode = "400", description = "예약 생성 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))} )
+  })
+  @PostMapping("/")
+  public ResponseCustom<List<ReservationResponse>> createReservation(
+      @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationRequest reservationRequest,
+      @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+  ){
+    return ResponseCustom.CREATED(reservationService.addOwnerReservation(reservationRequest,userPrincipal));
+  }
+
   @Operation(summary = "사장 탈퇴", description = "사장 탈퇴를 수행합니다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "사장 탈퇴 성공", content = {
@@ -62,7 +76,7 @@ public class ShopOwnerController {
     return ResponseCustom.OK(shopOwnerService.getShopOwnerReservation(userPrincipal, giftId));
   }
 
-  @Operation(summary = "사장 예약 조회", description = "사장이 등록한 상품의 예약을 조회 합니다.")
+  @Operation(summary = "날짜로 이용 가능한 예약 조회", description = "사장이 등록한 상품의 예약을 조회 합니다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
           @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),

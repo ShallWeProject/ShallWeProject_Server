@@ -85,6 +85,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     return reservations.stream()
         .map(ReservationIdOwnerRes::toDtoOwner)
+        .collect(Collectors.toList());
+  }
 
   @Transactional
   public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest,
