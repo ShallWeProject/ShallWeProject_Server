@@ -19,7 +19,7 @@ public class ReservationIdOwnerRes {
 
   @Schema(description = "예약 상태 {WAITING(예약대기), BOOKED(예약중), COMFIRMED(예약확정), COMPLETED(이용완료), CANCELED(예약취소)}")
   ReservationStatus status;
-  
+
   @Schema(description = "보내는이 이름(예약자)")
   String sender;
 

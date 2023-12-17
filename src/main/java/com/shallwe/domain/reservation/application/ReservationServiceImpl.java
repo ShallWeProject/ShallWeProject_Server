@@ -67,6 +67,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(
             experienceGift, date)
+
         .orElseThrow(InvalidReservationException::new);
 
       return reservations.stream()
@@ -84,8 +85,8 @@ public class ReservationServiceImpl implements ReservationService {
             .orElseThrow(InvalidReservationException::new);
 
     return reservations.stream()
-            .map(ReservationIdOwnerRes::toDtoOwner)
-            .toList();
+        .map(ReservationIdOwnerRes::toDtoOwner)
+        .collect(Collectors.toList());
   }
 
   @Transactional
