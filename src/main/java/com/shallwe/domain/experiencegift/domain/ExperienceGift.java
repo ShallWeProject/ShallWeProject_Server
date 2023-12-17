@@ -2,11 +2,9 @@ package com.shallwe.domain.experiencegift.domain;
 
 
 import com.shallwe.domain.common.BaseEntity;
-import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
+import com.shallwe.domain.experiencegift.dto.request.ShopOwnerExperienceReq;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -54,7 +52,7 @@ public class ExperienceGift extends BaseEntity {
     @OneToMany(mappedBy = "experienceGift")
     private List<ExperienceGiftImg> imgList=new ArrayList<>();
 
-    public static ExperienceGift toDto(AdminExperienceReq req, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
+    public static ExperienceGift toDto(ShopOwnerExperienceReq req, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
         return ExperienceGift.builder()
                 .title(req.getTitle())
                 .subtitle(subtitle)
@@ -68,11 +66,11 @@ public class ExperienceGift extends BaseEntity {
                 .build();
     }
 
-    public void update(AdminExperienceReq adminExperienceReq, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
-        this.title = adminExperienceReq.getTitle();
-        this.description=adminExperienceReq.getDescription();
-        this.location=adminExperienceReq.getLocation();
-        this.price=adminExperienceReq.getPrice();
+    public void update(ShopOwnerExperienceReq shopOwnerExperienceReq, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
+        this.title = shopOwnerExperienceReq.getTitle();
+        this.description= shopOwnerExperienceReq.getDescription();
+        this.location= shopOwnerExperienceReq.getLocation();
+        this.price= shopOwnerExperienceReq.getPrice();
         this.subtitle = subtitle;
         this.expCategory = expCategory;
         this.sttCategory = sttCategory;

@@ -3,10 +3,13 @@ package com.shallwe.domain.shopowner.presentation;
 
 import com.shallwe.domain.reservation.application.ReservationServiceImpl;
 import com.shallwe.domain.reservation.dto.ReservationIdOwnerRes;
+
 import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
 import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
 import com.shallwe.domain.shopowner.application.ShopOwnerServiceImpl;
+import com.shallwe.domain.shopowner.dto.ShopOwnerIdentificationReq;
+
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.ErrorResponse;
@@ -61,6 +64,21 @@ public class ShopOwnerController {
     return ResponseCustom.OK(shopOwnerService.deleteCurrentShopOwner(userPrincipal));
   }
 
+  @Operation(summary = "사장 신분증/사업자등록증/통장사본 등록", description = "사장 신분증/사업자등록증/통장사본 등록합니다.")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "사장 신분증/사업자등록증/통장사본 등록 성공", content = {
+                  @Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+          @ApiResponse(responseCode = "400", description = "사장 신분증/사업자등록증/통장사본 등록 실패", content = {
+                  @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+  })
+  @PostMapping("/identification")
+  public ResponseCustom<Message> uploadShopOwnerIdentification(
+          @Parameter(description = "ShopOwnerIdentificationReq Schema를 확인해 주세요.", required = true) @RequestBody ShopOwnerIdentificationReq shopOwnerIdentificationReq,
+          @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+  ) {
+    return ResponseCustom.OK(shopOwnerService.uploadShopOwnerIdentification(shopOwnerIdentificationReq, userPrincipal));
+  }
+
   @Operation(summary = "사장 예약 조회", description = "사장이 등록한 상품의 예약을 조회 합니다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
@@ -80,7 +98,6 @@ public class ShopOwnerController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
           @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
-
       @ApiResponse(responseCode = "400", description = "상품 예약 조회 실패", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
   })
@@ -108,4 +125,5 @@ public class ShopOwnerController {
   ) {
     return ResponseCustom.OK(shopOwnerService.confirmPayment(userPrincipal, reservationId));
   }
+
 }

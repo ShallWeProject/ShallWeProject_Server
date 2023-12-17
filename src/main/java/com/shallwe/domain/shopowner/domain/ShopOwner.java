@@ -12,8 +12,6 @@ import lombok.*;
 import org.hibernate.annotations.Where;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 @Entity
 @Getter
 @Where(clause = "status = 'ACTIVE'")
@@ -30,11 +28,41 @@ public class ShopOwner extends BaseEntity {
 
     private Boolean marketingConsent;
 
+    private String identification;
+
+    private String businessRegistration;
+
+    private String bankbook;
+
     @OneToMany
     private List<Reservation> reservationList;
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    @Builder
+    public ShopOwner(String name, String phoneNumber, String password, Boolean marketingConsent, String identification, String businessRegistration, String bankbook, List<Reservation> reservationList) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.marketingConsent = marketingConsent;
+        this.identification = identification;
+        this.businessRegistration = businessRegistration;
+        this.bankbook = bankbook;
+        this.reservationList = reservationList;
+    }
+
+    public void updateIdentification(String identification) {
+        this.identification = identification;
+    }
+
+    public void updateBusinessRegistration(String businessRegistration) {
+        this.businessRegistration = businessRegistration;
+    }
+
+    public void updateBankbook(String bankbook) {
+        this.bankbook = bankbook;
     }
 
 }

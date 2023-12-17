@@ -1,8 +1,7 @@
 package com.shallwe.domain.experiencegift.application;
 
-import com.shallwe.domain.experiencegift.dto.request.AdminExperienceReq;
+import com.shallwe.domain.experiencegift.dto.request.ShopOwnerExperienceReq;
 import com.shallwe.domain.experiencegift.dto.response.*;
-import com.shallwe.domain.experiencegift.dto.request.ExperienceReq;
 import com.shallwe.domain.experiencegift.dto.response.ExperienceDetailRes;
 import com.shallwe.domain.experiencegift.dto.response.ExperienceExpCategoryRes;
 import com.shallwe.domain.experiencegift.dto.response.ExperienceRes;
@@ -10,7 +9,6 @@ import com.shallwe.domain.experiencegift.dto.response.ExperienceSttCategoryRes;
 import com.shallwe.global.config.security.token.UserPrincipal;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ExperienceGiftService {
 
@@ -34,12 +32,12 @@ public interface ExperienceGiftService {
 
     List<ExperienceRes> getAllPopularGift(UserPrincipal userPrincipal);
 
-    void registerExperienceGift(UserPrincipal userPrincipal, AdminExperienceReq adminExperienceReq);
+    void registerExperienceGift(UserPrincipal userPrincipal, ShopOwnerExperienceReq shopOwnerExperienceReq);
 
-    AdminMainRes mainAdminExperienceGift(UserPrincipal userPrincipal);
-    List<AdminExperienceRes> getExperienceGift(UserPrincipal userPrincipal);
+    ShopOwnerMainRes mainAdminExperienceGift(UserPrincipal userPrincipal);
+    List<ShopOwnerExperienceRes> getExperienceGift(UserPrincipal userPrincipal);
 
-    void modifyExperienceGift(Long experienceGiftId,UserPrincipal userPrincipal, AdminExperienceReq adminExperienceReq);
+    void modifyExperienceGift(Long experienceGiftId,UserPrincipal userPrincipal, ShopOwnerExperienceReq shopOwnerExperienceReq);
 
     void deleteExperienceGift(Long experienceGiftId, UserPrincipal userPrincipal);
 }

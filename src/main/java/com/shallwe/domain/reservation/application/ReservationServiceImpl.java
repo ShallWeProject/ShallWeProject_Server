@@ -67,6 +67,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(
             experienceGift, date)
+
         .orElseThrow(InvalidReservationException::new);
 
       return reservations.stream()
@@ -81,7 +82,22 @@ public class ReservationServiceImpl implements ReservationService {
 
     List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(
             experienceGift, date)
+
         .orElseThrow(InvalidReservationException::new);
+
+      return reservations.stream()
+              .map(ReservationIdUserRes::toDtoUser)
+              .collect(Collectors.toList());
+  }
+
+  public List<ReservationIdOwnerRes> getReservationByDateOwner(UserPrincipal userPrincipal, Long giftId,
+      LocalDate date) {
+    ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
+            .orElseThrow(ExperienceGiftNotFoundException::new);
+
+    List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(
+                    experienceGift, date)
+            .orElseThrow(InvalidReservationException::new);
 
     return reservations.stream()
         .map(ReservationIdOwnerRes::toDtoOwner)
