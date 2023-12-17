@@ -2,6 +2,7 @@ package com.shallwe.domain.memoryphoto.dto;
 
 import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
 import com.shallwe.domain.reservation.domain.Reservation;
+import com.shallwe.domain.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,16 +26,16 @@ public class MemoryPhotoDetailRes {
 
     private String experienceGiftSubTitle;
 
-    private List<String> memoryPhotoImages;
+    private List<MemoryPhotoUserDetailRes> memoryPhotoImages;
 
-    public static MemoryPhotoDetailRes toDto(Reservation reservation) {
+    public static MemoryPhotoDetailRes toDto(Reservation reservation, User user) {
         return MemoryPhotoDetailRes.builder()
                 .date(reservation.getDate())
                 .time(reservation.getTime())
                 .experienceGiftTitle(reservation.getExperienceGift().getTitle())
                 .experienceGiftSubTitle(reservation.getExperienceGift().getSubtitle().getTitle())
                 .memoryPhotoImages(reservation.getMemoryPhotos().stream()
-                        .map(MemoryPhoto::getMemoryImgUrl)
+                        .map(memoryPhoto -> MemoryPhotoUserDetailRes.toDto(memoryPhoto.getMemoryImgUrl(), memoryPhoto.getUploader().getId().equals(user.getId())))
                         .toList())
                 .build();
     }

@@ -14,12 +14,14 @@ import com.shallwe.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.shallwe.domain.experiencegift.domain.QExpCategory.*;
 import static com.shallwe.domain.experiencegift.domain.QExperienceGift.*;
 import static com.shallwe.domain.experiencegift.domain.QSttCategory.*;
 import static com.shallwe.domain.experiencegift.domain.QSubtitle.*;
+import static com.shallwe.domain.memoryphoto.domain.QMemoryPhoto.memoryPhoto;
 import static com.shallwe.domain.reservation.domain.QReservation.*;
 import static com.shallwe.domain.user.domain.QUser.*;
 
@@ -61,6 +63,24 @@ public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRep
                                 .and(reservation.reservationStatus.in(ReservationStatus.BOOKED, ReservationStatus.COMPLETED))
                 )
                 .orderBy(reservation.reservationStatus.asc()).orderBy(reservation.date.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Reservation> findReservationsByDateAndUser(LocalDate date, User user) {
+        return queryFactory
+                .selectFrom(reservation)
+                .leftJoin(reservation.experienceGift, experienceGift).fetchJoin()
+                .leftJoin(reservation.experienceGift.subtitle, subtitle).fetchJoin()
+                .leftJoin(reservation.memoryPhotos, memoryPhoto).fetchJoin()
+                .leftJoin(memoryPhoto.uploader).fetchJoin()
+                .leftJoin(reservation.sender).fetchJoin()
+                .leftJoin(reservation.receiver).fetchJoin()
+                .where(
+                        reservation.date.eq(date)
+                                .and(reservation.sender.eq(user).or(reservation.receiver.eq(user)))
+                                .and(reservation.reservationStatus.in(ReservationStatus.COMPLETED))
+                )
                 .fetch();
     }
 
