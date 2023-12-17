@@ -142,6 +142,7 @@ public class ReservationController {
       @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
   ) {
     return ResponseCustom.OK(reservationServiceimpl.updateReservation(updateReq, userPrincipal));
+
   }
 
   @Operation(summary = "예약 삭제하기", description = "예약을 삭제합니다")

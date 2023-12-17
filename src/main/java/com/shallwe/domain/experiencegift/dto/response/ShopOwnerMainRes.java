@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class AdminMainRes {
+public class ShopOwnerMainRes {
     @Schema(type = "LocalDate", description = "현재 날짜", example = "2023-11-07")
     private LocalDate currentDate;
     @Schema(type = "Long", description = "예약 접수 개수", example = "3")
@@ -20,8 +20,8 @@ public class AdminMainRes {
     @Schema(type = "Long", description = "예약 확인 개수", example = "3")
     private Long bookedCheckCount;
 
-    public static AdminMainRes toDto(LocalDate currentDate, Long bookedReservationsCount,Long bookedCheckCount) {
-        return AdminMainRes.builder()
+    public static ShopOwnerMainRes toDto(LocalDate currentDate, Long bookedReservationsCount, Long bookedCheckCount) {
+        return ShopOwnerMainRes.builder()
                 .currentDate(currentDate)
                 .bookedReservationsCount(bookedReservationsCount)
                 .bookedCheckCount(bookedCheckCount)

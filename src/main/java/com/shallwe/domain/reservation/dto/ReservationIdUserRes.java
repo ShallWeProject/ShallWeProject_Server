@@ -23,6 +23,7 @@ public class ReservationIdUserRes {
     this.reservationId = reservationId;
     this.status = status;
     this.time = time;
+
   }
 
   public static ReservationIdUserRes toDtoUser(Reservation reservation){
