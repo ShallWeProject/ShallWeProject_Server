@@ -9,7 +9,9 @@ import java.util.List;
 public interface ReservationQuerydslRepository {
 
     List<Reservation> findReservationsByPhoneNumberAndReservationStatusIn(String phoneNumber);
+
     List<Reservation> findReservationsBySenderAndReservationStatusIn(User sender);
+
     List<Reservation> findReservationsByDateAndUser(LocalDate date, User user);
 
 }
