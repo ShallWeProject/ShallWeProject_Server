@@ -18,6 +18,7 @@ public class ReceiveGiftDetailRes {
 
     private Long reservationId;
     private ReservationStatus reservationStatus;
+    private Long experienceGiftId;
     private String experienceTitle;
     private String experienceSubTitle;
     private LocalDate date;
@@ -30,6 +31,7 @@ public class ReceiveGiftDetailRes {
         return ReceiveGiftDetailRes.builder()
                 .reservationId(reservation.getId())
                 .reservationStatus(reservation.getReservationStatus())
+                .experienceGiftId(reservation.getExperienceGift().getExperienceGiftId())
                 .experienceTitle(reservation.getExperienceGift().getTitle())
                 .experienceSubTitle(reservation.getExperienceGift().getSubtitle().getTitle())
                 .date(reservation.getDate())
