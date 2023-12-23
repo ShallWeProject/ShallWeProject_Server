@@ -2,7 +2,6 @@ package com.shallwe.domain.experiencegift.dto.response;
 
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.experiencegift.domain.Explanation;
-import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,20 +28,20 @@ public class ExperienceDetailRes {
 
     public static ExperienceDetailRes toDto(ExperienceGift experienceGift,List<String> giftImgUrl){
         return ExperienceDetailRes.builder()
-                .ExperienceGiftId(experienceGift.getExperienceGiftId())
+                .ExperienceGiftId(experienceGift.getId())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
                 .description(experienceGift.getDescription())
                 .subtitle(experienceGift.getSubtitle().getTitle())
-                .expCategory(experienceGift.getExpCategory().getExpCategory())
-                .sttCategory(experienceGift.getSttCategory().getSttCategory())
+                .expCategory(experienceGift.getExperienceCategory().getExpCategory())
+                .sttCategory(experienceGift.getSituationCategory().getSttCategory())
                 .giftImgUrl(giftImgUrl)
                 .build();
     }
 
     public static ExperienceDetailRes toDetailDto(ExperienceGift experienceGift, List<Explanation> explanations,List<String> giftImgUrl){
         ExperienceDetailRes experienceDetailRes=new ExperienceDetailRes();
-        experienceDetailRes.ExperienceGiftId=experienceGift.getExperienceGiftId();
+        experienceDetailRes.ExperienceGiftId=experienceGift.getId();
         experienceDetailRes.giftImgUrl= giftImgUrl;
         experienceDetailRes.title=experienceGift.getTitle();
         experienceDetailRes.subtitle=experienceGift.getSubtitle().getTitle();

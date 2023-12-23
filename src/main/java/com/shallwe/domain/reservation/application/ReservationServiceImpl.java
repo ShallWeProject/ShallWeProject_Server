@@ -94,7 +94,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest,
                                                          UserPrincipal userPrincipal) {
-        ExperienceGift experienceGift = experienceGiftRepository.findByExperienceGiftId(
+        ExperienceGift experienceGift = experienceGiftRepository.findById(
                         reservationRequest.getExperienceGiftId())
                 .orElseThrow(ExperienceGiftNotFoundException::new);
 

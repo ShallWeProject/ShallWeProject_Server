@@ -12,11 +12,11 @@ import java.util.List;
 
 public interface ExperienceGiftService {
 
-    List<ExperienceRes> searchExperience(UserPrincipal userPrincipal,String title);
+    List<ExperienceRes> searchExperience(UserPrincipal userPrincipal, String title);
 
-    ExperienceDetailRes getExperienceDetails(final UserPrincipal userPrincipal,Long ExperienceGiftId);
+    ExperienceDetailRes getExperienceDetails(final UserPrincipal userPrincipal, Long ExperienceGiftId);
 
-    List<ExperienceSttCategoryRes> highSttCategoryPricedGift(UserPrincipal userPrincipal,Long SttCategoryId);
+    List<ExperienceSttCategoryRes> highSttCategoryPricedGift(UserPrincipal userPrincipal, Long SttCategoryId);
 
     List<ExperienceSttCategoryRes> lowSttCategoryPricedGift(UserPrincipal userPrincipal, Long sttCategoryId);
 
@@ -35,9 +35,11 @@ public interface ExperienceGiftService {
     void registerExperienceGift(UserPrincipal userPrincipal, ShopOwnerExperienceReq shopOwnerExperienceReq);
 
     ShopOwnerMainRes mainAdminExperienceGift(UserPrincipal userPrincipal);
+
     List<ShopOwnerExperienceRes> getExperienceGift(UserPrincipal userPrincipal);
 
-    void modifyExperienceGift(Long experienceGiftId,UserPrincipal userPrincipal, ShopOwnerExperienceReq shopOwnerExperienceReq);
+    void modifyExperienceGift(Long experienceGiftId, UserPrincipal userPrincipal, ShopOwnerExperienceReq shopOwnerExperienceReq);
 
     void deleteExperienceGift(Long experienceGiftId, UserPrincipal userPrincipal);
+
 }

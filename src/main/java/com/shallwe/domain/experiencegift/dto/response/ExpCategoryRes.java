@@ -1,6 +1,6 @@
 package com.shallwe.domain.experiencegift.dto.response;
 
-import com.shallwe.domain.experiencegift.domain.ExpCategory;
+import com.shallwe.domain.experiencegift.domain.ExperienceCategory;
 import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.Builder;
 import lombok.Data;
@@ -18,11 +18,12 @@ public class ExpCategoryRes {
         this.imageUrl=imageUrl;
     }
 
-    public static ExpCategoryRes toDto(ExpCategory expCategory){
+    public static ExpCategoryRes toDto(ExperienceCategory experienceCategory){
         return ExpCategoryRes.builder()
-                .expCategoryId(expCategory.getExpCategoryId())
-                .expCategory(expCategory.getExpCategory())
-                .imageUrl(AwsS3ImageUrlUtil.toUrl(expCategory.getImageKey()))
+                .expCategoryId(experienceCategory.getId())
+                .expCategory(experienceCategory.getExpCategory())
+                .imageUrl(AwsS3ImageUrlUtil.toUrl(experienceCategory.getImageKey()))
                 .build();
     }
+
 }

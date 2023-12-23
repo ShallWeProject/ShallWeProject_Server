@@ -1,7 +1,6 @@
 package com.shallwe.domain.experiencegift.dto.response;
 
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
-import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +23,8 @@ public class ExperienceExpCategoryRes {
 
     public static ExperienceExpCategoryRes toDto(ExperienceGift experienceGift,List<String> giftImgUrl){
         return ExperienceExpCategoryRes.builder()
-                .expCategoryId(experienceGift.getExpCategory().getExpCategoryId())
-                .ExperienceGiftId(experienceGift.getExperienceGiftId())
+                .expCategoryId(experienceGift.getExperienceCategory().getId())
+                .ExperienceGiftId(experienceGift.getId())
                 .subtitleTitle(experienceGift.getSubtitle().getTitle())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())

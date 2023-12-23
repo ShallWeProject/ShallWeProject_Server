@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.shallwe.domain.experiencegift.domain.QExpCategory.*;
+import static com.shallwe.domain.experiencegift.domain.QExperienceCategory.*;
 import static com.shallwe.domain.experiencegift.domain.QExperienceGift.*;
-import static com.shallwe.domain.experiencegift.domain.QSttCategory.*;
+import static com.shallwe.domain.experiencegift.domain.QSituationCategory.*;
 import static com.shallwe.domain.experiencegift.domain.QSubtitle.*;
 import static com.shallwe.domain.memoryphoto.domain.QMemoryPhoto.memoryPhoto;
 import static com.shallwe.domain.reservation.domain.QReservation.*;
@@ -33,8 +33,8 @@ public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRep
                 .selectFrom(reservation)
                 .leftJoin(reservation.experienceGift, experienceGift).fetchJoin()
                 .leftJoin(reservation.experienceGift.subtitle, subtitle).fetchJoin()
-                .leftJoin(reservation.experienceGift.expCategory, expCategory1).fetchJoin()
-                .leftJoin(reservation.experienceGift.sttCategory, sttCategory1).fetchJoin()
+                .leftJoin(reservation.experienceGift.experienceCategory, experienceCategory).fetchJoin()
+                .leftJoin(reservation.experienceGift.situationCategory, situationCategory).fetchJoin()
                 .leftJoin(reservation.sender, new QUser("sender")).fetchJoin()
                 .where(
                         reservation.phoneNumber.eq(phoneNumber)
@@ -50,8 +50,8 @@ public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRep
                 .selectFrom(reservation)
                 .leftJoin(reservation.experienceGift, experienceGift).fetchJoin()
                 .leftJoin(reservation.experienceGift.subtitle, subtitle).fetchJoin()
-                .leftJoin(reservation.experienceGift.expCategory, expCategory1).fetchJoin()
-                .leftJoin(reservation.experienceGift.sttCategory, sttCategory1).fetchJoin()
+                .leftJoin(reservation.experienceGift.experienceCategory, experienceCategory).fetchJoin()
+                .leftJoin(reservation.experienceGift.situationCategory, situationCategory).fetchJoin()
                 .leftJoin(reservation.receiver, new QUser("receiver")).fetchJoin()
                 .where(
                         reservation.sender.eq(sender)
