@@ -141,7 +141,6 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
     @Transactional
     public void modifyExperienceGift(Long experienceGiftId, UserPrincipal userPrincipal, ShopOwnerExperienceReq shopOwnerExperienceReq) {
@@ -208,7 +207,6 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
 
         experienceGift.updateStatus(Status.DELETE);
     }
-
 
     @Override
     public List<ExperienceRes> searchExperience(UserPrincipal userPrincipal, String title) {
