@@ -32,7 +32,7 @@ public class ReceiveGiftDetailRes {
         return ReceiveGiftDetailRes.builder()
                 .reservationId(reservation.getId())
                 .reservationStatus(reservation.getReservationStatus())
-                .experienceGiftId(reservation.getExperienceGift().getExperienceGiftId())
+                .experienceGiftId(reservation.getExperienceGift().getId())
                 .experienceTitle(reservation.getExperienceGift().getTitle())
                 .experienceSubTitle(reservation.getExperienceGift().getSubtitle().getTitle())
                 .date(reservation.getDate())

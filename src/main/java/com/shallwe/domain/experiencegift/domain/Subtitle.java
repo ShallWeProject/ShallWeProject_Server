@@ -5,14 +5,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @Entity
 public class Subtitle extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long subtitleId;
+    private Long id;
 
     private String title;
 

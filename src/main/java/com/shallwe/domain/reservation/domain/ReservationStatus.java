@@ -21,5 +21,4 @@ public enum ReservationStatus {
 
     private final String value;
 
-
 }

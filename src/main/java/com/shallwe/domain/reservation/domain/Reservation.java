@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 @Entity
 @Getter
 @Where(clause = "status = 'ACTIVE'")
@@ -93,6 +91,22 @@ public class Reservation extends BaseEntity {
 
     public void updateStatus(ReservationStatus status){
         this.reservationStatus = status;
+    }
+
+    @Builder
+    public Reservation(ExperienceGift experienceGift, ShopOwner owner, User sender, Long persons, LocalDate date, LocalTime time, User receiver, String phoneNumber, String invitationImg, String invitationComment, ReservationStatus reservationStatus, List<MemoryPhoto> memoryPhotos) {
+        this.experienceGift = experienceGift;
+        this.owner = owner;
+        this.sender = sender;
+        this.persons = persons;
+        this.date = date;
+        this.time = time;
+        this.receiver = receiver;
+        this.phoneNumber = phoneNumber;
+        this.invitationImg = invitationImg;
+        this.invitationComment = invitationComment;
+        this.reservationStatus = reservationStatus;
+        this.memoryPhotos = memoryPhotos;
     }
 
 }
