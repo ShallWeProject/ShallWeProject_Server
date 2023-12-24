@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ExperienceReq {
+
     private String title;
     private String thumbnail;
     private Long price;
@@ -17,7 +18,6 @@ public class ExperienceReq {
     private Long sttCategoryId;
     private Long subtitleId;
     private String description;
-
 
     @Builder
     public static ExperienceGift toEntity(ExperienceReq experienceReq, Subtitle subtitle, ExperienceCategory experienceCategory, SituationCategory situationCategory){

@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ShopOwnerExperienceRes {
+
     @Schema(type = "Long", description = "경험선물 Id", example = "1")
     private Long experienceGiftId;
     @Schema(type = "String", description = "상품명", maxLength = 100)

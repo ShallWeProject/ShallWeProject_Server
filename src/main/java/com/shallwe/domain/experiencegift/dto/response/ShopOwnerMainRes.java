@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class ShopOwnerMainRes {
+
     @Schema(type = "LocalDate", description = "현재 날짜", example = "2023-11-07")
     private LocalDate currentDate;
     @Schema(type = "Long", description = "예약 접수 개수", example = "3")

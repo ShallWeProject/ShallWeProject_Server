@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class ExpCategoryRes {
+
     private Long expCategoryId;
     private String expCategory;
     private String imageUrl;

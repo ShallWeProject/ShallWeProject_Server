@@ -48,7 +48,6 @@ public class ExperienceDetailRes {
         experienceDetailRes.price=experienceGift.getPrice();
         experienceDetailRes.explanation=explanations.stream().map(m -> ExplanationRes.toDto(m.getStage(),m.getDescription(), m.getExplanationKey())).collect(Collectors.toList());
         return experienceDetailRes;
-
     }
 
 }

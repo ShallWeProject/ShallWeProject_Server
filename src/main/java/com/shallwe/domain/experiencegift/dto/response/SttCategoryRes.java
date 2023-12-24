@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class SttCategoryRes {
+
     private Long sttCategoryId;
     private String sttCategory;
     private String imageUrl;
@@ -25,4 +26,5 @@ public class SttCategoryRes {
                 .imageUrl(AwsS3ImageUrlUtil.toUrl(situationCategory.getImageKey()))
                 .build();
     }
+
 }
