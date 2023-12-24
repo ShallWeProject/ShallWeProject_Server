@@ -44,7 +44,7 @@ public class ShopOwnerController {
             @ApiResponse(responseCode = "201", description = "예약 생성 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ReservationResponse.class))}),
             @ApiResponse(responseCode = "400", description = "예약 생성 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
-    @PostMapping("/")
+    @PostMapping
     public ResponseCustom<List<ReservationResponse>> createReservation(
             @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationRequest reservationRequest,
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
