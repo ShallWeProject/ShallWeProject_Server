@@ -30,14 +30,13 @@ public class ReservationResponse {
   private String invitationComment;
   private ReservationStatus reservationStatus;
 
-
   public static ReservationResponse toDtoUser(Reservation reservation) {
     ReservationResponseBuilder builder = ReservationResponse.builder()
         .id(reservation.getId())
         .experienceGiftId(reservation.getExperienceGift().getId())
         .senderId(Optional.ofNullable(reservation.getSender()).map(User::getId).orElse(null))
         .ownerId(reservation.getOwner().getId())
-        .sender(Optional.ofNullable(reservation.getSender()).map(User::getName).orElse(null))
+            .sender(Optional.ofNullable(reservation.getSender()).map(User::getName).orElse(null))
         .persons(Optional.ofNullable(reservation.getPersons()).orElse(null))
         .date(reservation.getDate().toString())
         .time(reservation.getTime().toString())
@@ -51,7 +50,6 @@ public class ReservationResponse {
 
     return builder.build();
   }
-
 
   public static ReservationResponse toDtoOwner(Reservation reservation) {
     ReservationResponseBuilder builder = ReservationResponse.builder()

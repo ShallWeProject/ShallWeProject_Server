@@ -47,6 +47,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ShopOwnerRepository shopOwnerRepository;
     private final UserRepository userRepository;
 
+    @Override
     public List<ValidTimeSlotRes> getValidReservationTime(UserPrincipal userPrincipal, Long giftId) {
         ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
                 .orElseThrow(ExperienceGiftNotFoundException::new);
@@ -62,8 +63,8 @@ public class ReservationServiceImpl implements ReservationService {
                 .build()).toList();
     }
 
-    public List<ReservationIdUserRes> getReservationByDateUser(UserPrincipal userPrincipal, Long giftId,
-                                                               LocalDate date) {
+    @Override
+    public List<ReservationIdUserRes> getReservationByDateUser(UserPrincipal userPrincipal, Long giftId, LocalDate date) {
         ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
                 .orElseThrow(ExperienceGiftNotFoundException::new);
 
@@ -77,8 +78,8 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
     }
 
-    public List<ReservationIdOwnerRes> getReservationByDateOwner(UserPrincipal userPrincipal, Long giftId,
-                                                                 LocalDate date) {
+    @Override
+    public List<ReservationIdOwnerRes> getReservationByDateOwner(UserPrincipal userPrincipal, Long giftId, LocalDate date) {
         ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
                 .orElseThrow(ExperienceGiftNotFoundException::new);
 
@@ -91,9 +92,9 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
-    public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest,
-                                                         UserPrincipal userPrincipal) {
+    public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest, UserPrincipal userPrincipal) {
         ExperienceGift experienceGift = experienceGiftRepository.findById(
                         reservationRequest.getExperienceGiftId())
                 .orElseThrow(ExperienceGiftNotFoundException::new);
@@ -109,10 +110,9 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
-    public ReservationResponse addUserReservation(ReservationUserReq reservationRequest,
-                                                  UserPrincipal userPrincipal) {
-
+    public ReservationResponse addUserReservation(ReservationUserReq reservationRequest, UserPrincipal userPrincipal) {
         User nonPersistentSender = userPrincipal.getUser();
         User sender = userRepository.findById(nonPersistentSender.getId()).orElseThrow(
                 InvalidUserException::new);
@@ -133,16 +133,19 @@ public class ReservationServiceImpl implements ReservationService {
         return ReservationResponse.toDtoUser(reservation);
     }
 
+    @Override
     public List<ReservationResponse> findUserReservation(UserPrincipal userPrincipal) {
         return reservationRepository.findAllBySenderId(userPrincipal.getId())
                 .stream().map(ReservationResponse::toDtoUser).collect(Collectors.toList());
     }
 
+    @Override
     public List<ReservationResponse> getAllReservation() {
         return reservationRepository.findAll().stream().map(ReservationResponse::toDtoUser)
                 .collect(Collectors.toList());
     }
 
+    @Override
     public List<ReservationResponse> getCurrentGiftReservation(Long giftId) {
         ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
                 .orElseThrow(ExperienceGiftNotFoundException::new);
@@ -152,10 +155,9 @@ public class ReservationServiceImpl implements ReservationService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
-    public ReservationResponse updateReservation(UpdateReservationReq updateReq,
-                                                 UserPrincipal userPrincipal) {
-
+    public ReservationResponse updateReservation(UpdateReservationReq updateReq, UserPrincipal userPrincipal) {
         Reservation updateReservation = reservationRepository.findById(
                 updateReq.getReservationId()).map(
                 reservation -> {
@@ -166,6 +168,7 @@ public class ReservationServiceImpl implements ReservationService {
         return ReservationResponse.toDtoUser(updateReservation);
     }
 
+    @Override
     @Transactional
     public DeleteReservationRes deleteReservation(Long id) {
         Reservation reservation = reservationRepository.findById(id)
