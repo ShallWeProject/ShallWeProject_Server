@@ -77,7 +77,6 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
                 .orElseGet(() -> subtitleRepository.save(new Subtitle(shopOwnerExperienceReq.getSubtitle())));
 
         ExperienceCategory experienceCategory = null;
-        SituationCategory situationCategory = null;
 
         // 경험 카테고리가 주어졌는지 확인하고 처리
         if (StringUtils.hasText(shopOwnerExperienceReq.getExpCategory())) {
@@ -85,18 +84,7 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
                     .orElseThrow(ExpCategoryAlreadyExist::new);
         }
 
-        // 상황 카테고리가 주어졌는지 확인하고 처리
-        if (StringUtils.hasText(shopOwnerExperienceReq.getSttCategory())) {
-            situationCategory = situationCategoryRepository.findBySttCategory(shopOwnerExperienceReq.getSttCategory())
-                    .orElseThrow(SttCategoryAlreadyExist::new);
-        }
-
-        // 두 카테고리가 동시에 주어진 경우 오류 처리
-        if (experienceCategory != null && situationCategory != null) {
-            throw new ChooseOnlyOneCategory();
-        }
-
-        ExperienceGift experienceGift = experienceGiftRepository.save(ExperienceGift.toDto(shopOwnerExperienceReq, subtitle, experienceCategory, situationCategory, shopOwner));
+        ExperienceGift experienceGift = experienceGiftRepository.save(ExperienceGift.toDto(shopOwnerExperienceReq, subtitle, experienceCategory, shopOwner));
 
         List<Explanation> explanations = shopOwnerExperienceReq.getExplanation().stream()
                 .map(explanationReq -> Explanation.toDto(explanationReq, experienceGift))
@@ -155,7 +143,6 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
 
 
         ExperienceCategory experienceCategory = null;
-        SituationCategory situationCategory = null;
 
         // 경험 카테고리가 주어졌는지 확인하고 처리
         if (StringUtils.hasText(shopOwnerExperienceReq.getExpCategory())) {
@@ -163,13 +150,7 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
                     .orElseThrow(ExpCategoryAlreadyExist::new);
         }
 
-        // 상황 카테고리가 주어졌는지 확인하고 처리
-        if (StringUtils.hasText(shopOwnerExperienceReq.getSttCategory())) {
-            situationCategory = situationCategoryRepository.findBySttCategory(shopOwnerExperienceReq.getSttCategory())
-                    .orElseThrow(SttCategoryAlreadyExist::new);
-        }
-
-        experienceGift.update(shopOwnerExperienceReq, subtitle, experienceCategory, situationCategory, shopOwner);
+        experienceGift.update(shopOwnerExperienceReq, subtitle, experienceCategory, shopOwner);
 
         if (shopOwnerExperienceReq.getExplanation() != null && !shopOwnerExperienceReq.getExplanation().isEmpty()) {
             explanationRepository.deleteByExperienceGift(experienceGift);

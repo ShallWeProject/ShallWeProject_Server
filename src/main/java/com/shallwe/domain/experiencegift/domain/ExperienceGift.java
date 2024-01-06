@@ -25,8 +25,6 @@ public class ExperienceGift extends BaseEntity {
     @JoinColumn(name = "subtitle_id")
     private Subtitle subtitle;
 
-    private String thumbnail;
-
     private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -52,13 +50,12 @@ public class ExperienceGift extends BaseEntity {
     @OneToMany(mappedBy = "experienceGift")
     private List<ExperienceGiftImage> imgList = new ArrayList<>();
 
-    public static ExperienceGift toDto(ShopOwnerExperienceReq req, Subtitle subtitle, ExperienceCategory experienceCategory, SituationCategory situationCategory, ShopOwner shopOwner) {
+    public static ExperienceGift toDto(ShopOwnerExperienceReq req, Subtitle subtitle, ExperienceCategory experienceCategory, ShopOwner shopOwner) {
         return ExperienceGift.builder()
                 .title(req.getTitle())
                 .subtitle(subtitle)
                 .price(req.getPrice())
                 .experienceCategory(experienceCategory)
-                .situationCategory(situationCategory)
                 .description(req.getDescription())
                 .shopOwner(shopOwner)
                 .location(req.getLocation())
@@ -66,22 +63,21 @@ public class ExperienceGift extends BaseEntity {
                 .build();
     }
 
-    public void update(ShopOwnerExperienceReq shopOwnerExperienceReq, Subtitle subtitle, ExperienceCategory experienceCategory, SituationCategory situationCategory, ShopOwner shopOwner) {
+    public void update(ShopOwnerExperienceReq shopOwnerExperienceReq, Subtitle subtitle, ExperienceCategory experienceCategory, ShopOwner shopOwner) {
         this.title = shopOwnerExperienceReq.getTitle();
         this.description = shopOwnerExperienceReq.getDescription();
         this.location = shopOwnerExperienceReq.getLocation();
         this.price = shopOwnerExperienceReq.getPrice();
         this.subtitle = subtitle;
         this.experienceCategory = experienceCategory;
-        this.situationCategory = situationCategory;
         this.shopOwner = shopOwner;
+        this.note=shopOwnerExperienceReq.getNote();
     }
 
     @Builder
-    public ExperienceGift(String title, Subtitle subtitle, String thumbnail, Long price, ExperienceCategory experienceCategory, SituationCategory situationCategory, String description, String giftImgKey, ShopOwner shopOwner, String location, String note, List<ExperienceGiftImage> imgList) {
+    public ExperienceGift(String title, Subtitle subtitle, Long price, ExperienceCategory experienceCategory, SituationCategory situationCategory, String description, String giftImgKey, ShopOwner shopOwner, String location, String note, List<ExperienceGiftImage> imgList) {
         this.title = title;
         this.subtitle = subtitle;
-        this.thumbnail = thumbnail;
         this.price = price;
         this.experienceCategory = experienceCategory;
         this.situationCategory = situationCategory;

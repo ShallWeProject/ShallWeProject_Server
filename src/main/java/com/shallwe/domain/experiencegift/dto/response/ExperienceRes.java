@@ -15,7 +15,6 @@ import java.util.List;
 public class ExperienceRes {
 
     private Long ExperienceGiftId;
-    private String thumbnail;
     private String subtitle;
     private String title;
     private Long price;
@@ -24,7 +23,6 @@ public class ExperienceRes {
     public static ExperienceRes toDto(ExperienceGift experienceGift, List<String> experienceGiftImgs){
         return ExperienceRes.builder()
                 .ExperienceGiftId(experienceGift.getId())
-                .thumbnail(experienceGift.getThumbnail())
                 .subtitle(experienceGift.getSubtitle().getTitle())
                 .title(experienceGift.getTitle())
                 .price(experienceGift.getPrice())
