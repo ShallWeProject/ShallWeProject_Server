@@ -2,43 +2,33 @@ package com.shallwe.domain.reservation.application;
 
 import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
 
-import com.shallwe.domain.common.Status;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
-import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.experiencegift.domain.repository.ExperienceGiftRepository;
+import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.reservation.domain.Reservation;
-import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
-import com.shallwe.domain.reservation.dto.DeleteReservationRes;
 import com.shallwe.domain.reservation.dto.ReservationIdOwnerRes;
 import com.shallwe.domain.reservation.dto.ReservationIdUserRes;
-import com.shallwe.domain.reservation.dto.ReservationRequest;
 import com.shallwe.domain.reservation.dto.ReservationResponse;
-import com.shallwe.domain.reservation.dto.ReservationUserReq;
-import com.shallwe.domain.reservation.dto.UpdateReservationReq;
 import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
 import com.shallwe.domain.reservation.exception.InvalidAvailableTimeException;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.reservation.exception.InvalidUserException;
-import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
-import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
-import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ReservationServiceImpl implements ReservationService {
+public class ReservationCheckServiceImpl {
 
   private final ReservationRepository reservationRepository;
   private final ExperienceGiftRepository experienceGiftRepository;
@@ -70,69 +60,28 @@ public class ReservationServiceImpl implements ReservationService {
 
         .orElseThrow(InvalidReservationException::new);
 
-      return reservations.stream()
-              .map(ReservationIdUserRes::toDtoUser)
-              .collect(Collectors.toList());
+    return reservations.stream()
+        .map(ReservationIdUserRes::toDtoUser)
+        .collect(Collectors.toList());
   }
 
   public List<ReservationIdOwnerRes> getReservationByDateOwner(UserPrincipal userPrincipal, Long giftId,
       LocalDate date) {
     ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
-            .orElseThrow(ExperienceGiftNotFoundException::new);
+        .orElseThrow(ExperienceGiftNotFoundException::new);
 
     List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(
-                    experienceGift, date)
-            .orElseThrow(InvalidReservationException::new);
+            experienceGift, date)
+        .orElseThrow(InvalidReservationException::new);
 
     return reservations.stream()
         .map(ReservationIdOwnerRes::toDtoOwner)
         .collect(Collectors.toList());
   }
 
-  @Transactional
-  public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest,
-      UserPrincipal userPrincipal) {
-    ExperienceGift experienceGift = experienceGiftRepository.findByExperienceGiftId(
-            reservationRequest.getExperienceGiftId())
-        .orElseThrow(ExperienceGiftNotFoundException::new);
-
-    ShopOwner owner = shopOwnerRepository.findById(reservationRequest.getOwnerId())
-        .orElseThrow(InvalidShopOwnerException::new);
-
-    List<Reservation> reservations = ReservationRequest.toEntityForOwner(reservationRequest,
-        experienceGift, owner);
-    return reservations.stream()
-        .map(reservationRepository::save)
-        .map(ReservationResponse::toDtoOwner)
-        .collect(Collectors.toList());
-  }
-
-  @Transactional
-  public ReservationResponse addUserReservation(ReservationUserReq reservationRequest,
-      UserPrincipal userPrincipal) {
-
-    User nonPersistentSender = userPrincipal.getUser();
-    User sender = userRepository.findById(nonPersistentSender.getId()).orElseThrow(
-        InvalidUserException::new);
-    User receiver = userRepository.findByPhoneNumber(reservationRequest.getPhoneNumber())
-        .orElseThrow(
-            InvalidUserException::new);
-
-    Reservation reservation = reservationRepository.findByDateAndTime(
-            reservationRequest.getDate(), reservationRequest.getTime())
-        .orElseThrow(InvalidReservationException::new);
-
-    if (reservation.getReservationStatus().equals(WAITING)) {
-      reservation.updateStatus(ReservationStatus.BOOKED);
-      reservation.updateUserReservationRequest(reservationRequest, sender, receiver);
-    } else {
-      throw new InvalidReservationException();
-    }
-    return ReservationResponse.toDtoUser(reservation);
-  }
-
   public List<ReservationResponse> findUserReservation(UserPrincipal userPrincipal) {
-    return reservationRepository.findAllBySenderId(userPrincipal.getId()).orElseThrow(InvalidUserException::new)
+    return reservationRepository.findAllBySenderId(userPrincipal.getId()).orElseThrow(
+            InvalidUserException::new)
         .stream().map(ReservationResponse::toDtoUser).collect(Collectors.toList());
   }
 
@@ -150,25 +99,5 @@ public class ReservationServiceImpl implements ReservationService {
         .collect(Collectors.toList());
   }
 
-  @Transactional
-  public ReservationResponse updateReservation(UpdateReservationReq updateReq,
-      UserPrincipal userPrincipal) {
 
-    Reservation updateReservation = reservationRepository.findById(
-        updateReq.getReservationId()).map(
-        reservation -> {
-          reservation.updateReservation(updateReq);
-          return reservationRepository.save(reservation);
-        }
-    ).orElseThrow(InvalidReservationException::new);
-    return ReservationResponse.toDtoUser(updateReservation);
-  }
-
-  @Transactional
-  public DeleteReservationRes deleteReservation(Long id) {
-    Reservation reservation = reservationRepository.findById(id)
-        .orElseThrow(InvalidReservationException::new);
-    reservation.updateStatus(Status.DELETE);
-    return DeleteReservationRes.toDTO();
-  }
 }
