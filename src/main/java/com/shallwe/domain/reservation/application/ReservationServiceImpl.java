@@ -132,7 +132,7 @@ public class ReservationServiceImpl implements ReservationService {
   }
 
   public List<ReservationResponse> findUserReservation(UserPrincipal userPrincipal) {
-    return reservationRepository.findAllBySenderId(userPrincipal.getId()).orElseThrow(InvalidUserException::new)
+    return reservationRepository.findAllBySenderId(userPrincipal.getId())
         .stream().map(ReservationResponse::toDtoUser).collect(Collectors.toList());
   }
 
