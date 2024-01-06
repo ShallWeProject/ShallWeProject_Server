@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ExperienceSttCategoryRes {
 
-    private Long sttCategoryId;
     private Long ExperienceGiftId;
     private String subtitleTitle;
     private String title;
@@ -23,7 +22,6 @@ public class ExperienceSttCategoryRes {
 
     public static ExperienceSttCategoryRes toDto(ExperienceGift experienceGift,List<String> giftImgUrl){
         return ExperienceSttCategoryRes.builder()
-                .ExperienceGiftId(experienceGift.getSituationCategory().getId())
                 .ExperienceGiftId(experienceGift.getId())
                 .subtitleTitle(experienceGift.getSubtitle().getTitle())
                 .title(experienceGift.getTitle())

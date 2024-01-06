@@ -23,21 +23,6 @@ public class ExperienceDetailRes {
     private Long price;
     private List<ExplanationRes> explanation;
     private String description;
-    private String expCategory;
-    private String sttCategory;
-
-    public static ExperienceDetailRes toDto(ExperienceGift experienceGift,List<String> giftImgUrl){
-        return ExperienceDetailRes.builder()
-                .ExperienceGiftId(experienceGift.getId())
-                .title(experienceGift.getTitle())
-                .price(experienceGift.getPrice())
-                .description(experienceGift.getDescription())
-                .subtitle(experienceGift.getSubtitle().getTitle())
-                .expCategory(experienceGift.getExperienceCategory().getExpCategory())
-                .sttCategory(experienceGift.getSituationCategory().getSttCategory())
-                .giftImgUrl(giftImgUrl)
-                .build();
-    }
 
     public static ExperienceDetailRes toDetailDto(ExperienceGift experienceGift, List<Explanation> explanations,List<String> giftImgUrl){
         ExperienceDetailRes experienceDetailRes=new ExperienceDetailRes();
@@ -46,6 +31,7 @@ public class ExperienceDetailRes {
         experienceDetailRes.title=experienceGift.getTitle();
         experienceDetailRes.subtitle=experienceGift.getSubtitle().getTitle();
         experienceDetailRes.price=experienceGift.getPrice();
+        experienceDetailRes.description=experienceGift.getDescription();
         experienceDetailRes.explanation=explanations.stream().map(m -> ExplanationRes.toDto(m.getStage(),m.getDescription(), m.getExplanationKey())).collect(Collectors.toList());
         return experienceDetailRes;
     }
