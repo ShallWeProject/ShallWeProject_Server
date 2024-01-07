@@ -1,7 +1,8 @@
 package com.shallwe.domain.shopowner.presentation;
 
 
-import com.shallwe.domain.reservation.application.ReservationServiceImpl;
+import com.shallwe.domain.reservation.application.ReservationCheckService;
+import com.shallwe.domain.reservation.application.ReservationManipulationService;
 import com.shallwe.domain.reservation.dto.ReservationIdOwnerRes;
 
 import com.shallwe.domain.reservation.dto.ReservationRequest;
@@ -35,7 +36,8 @@ import org.springframework.web.bind.annotation.*;
 public class ShopOwnerController {
 
   private final ShopOwnerServiceImpl shopOwnerService;
-  private final ReservationServiceImpl reservationService;
+  private final ReservationCheckService reservationCheckServiceService;
+  private final ReservationManipulationService reservationManipulationService;
 
   @Operation(summary ="예약 추가하기", description = "현재 유저, 경험을 가져와 예약을 추가합니다.")
   @ApiResponses(value = {
@@ -47,7 +49,7 @@ public class ShopOwnerController {
       @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationRequest reservationRequest,
       @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
   ){
-    return ResponseCustom.CREATED(reservationService.addOwnerReservation(reservationRequest,userPrincipal));
+    return ResponseCustom.CREATED(reservationManipulationService.addOwnerReservation(reservationRequest,userPrincipal));
   }
 
   @Operation(summary = "사장 탈퇴", description = "사장 탈퇴를 수행합니다.")
@@ -107,7 +109,7 @@ public class ShopOwnerController {
       @Parameter(description = "상품 ID를 입력해주세요", required = true) @RequestParam Long giftId,
       @Parameter(description = "조회하려는 날짜를 입력해주세요 YYYY-MM-DD ", required = true) @RequestParam LocalDate date
   ) {
-    return ResponseCustom.OK(reservationService.getReservationByDateOwner(userPrincipal, giftId,date));
+    return ResponseCustom.OK(reservationCheckServiceService.getReservationByDateOwner(userPrincipal, giftId,date));
 
   }
 
