@@ -1,6 +1,4 @@
-package com.shallwe.domain.reservation.dto;
-
-
+package com.shallwe.domain.reservation.dto.response;
 
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
@@ -14,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ReservationIdOwnerRes {
+
   @Schema(description = "예약 Id")
   Long reservationId;
 
