@@ -9,11 +9,11 @@ import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundExcepti
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
-import com.shallwe.domain.reservation.dto.DeleteReservationRes;
-import com.shallwe.domain.reservation.dto.ReservationRequest;
-import com.shallwe.domain.reservation.dto.ReservationResponse;
-import com.shallwe.domain.reservation.dto.ReservationUserReq;
-import com.shallwe.domain.reservation.dto.UpdateReservationReq;
+import com.shallwe.domain.reservation.dto.response.DeleteReservationRes;
+import com.shallwe.domain.reservation.dto.request.OwnerReservationCreate;
+import com.shallwe.domain.reservation.dto.response.ReservationResponse;
+import com.shallwe.domain.reservation.dto.request.UserReservationCreate;
+import com.shallwe.domain.reservation.dto.request.UpdateReservationReq;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.reservation.exception.InvalidUserException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
@@ -39,16 +39,17 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
   private final UserRepository userRepository;
 
   @Transactional
-  public List<ReservationResponse> addOwnerReservation(ReservationRequest reservationRequest,
+  public List<ReservationResponse> addOwnerReservation(
+      OwnerReservationCreate ownerReservationCreate,
       UserPrincipal userPrincipal) {
     ExperienceGift experienceGift = experienceGiftRepository.findByExperienceGiftId(
-            reservationRequest.getExperienceGiftId())
+            ownerReservationCreate.getExperienceGiftId())
         .orElseThrow(ExperienceGiftNotFoundException::new);
 
-    ShopOwner owner = shopOwnerRepository.findById(reservationRequest.getOwnerId())
+    ShopOwner owner = shopOwnerRepository.findById(ownerReservationCreate.getOwnerId())
         .orElseThrow(InvalidShopOwnerException::new);
 
-    List<Reservation> reservations = ReservationRequest.toEntityForOwner(reservationRequest,
+    List<Reservation> reservations = OwnerReservationCreate.toEntityForOwner(ownerReservationCreate,
         experienceGift, owner);
     return reservations.stream()
         .map(reservationRepository::save)
@@ -57,7 +58,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
   }
 
   @Transactional
-  public ReservationResponse addUserReservation(ReservationUserReq reservationRequest,
+  public ReservationResponse addUserReservation(UserReservationCreate reservationRequest,
       UserPrincipal userPrincipal) {
 
     User nonPersistentSender = userPrincipal.getUser();

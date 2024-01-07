@@ -3,11 +3,11 @@ package com.shallwe.domain.shopowner.presentation;
 
 import com.shallwe.domain.reservation.application.ReservationCheckService;
 import com.shallwe.domain.reservation.application.ReservationManipulationService;
-import com.shallwe.domain.reservation.dto.ReservationIdOwnerRes;
+import com.shallwe.domain.reservation.dto.response.ReservationIdOwnerRes;
 
-import com.shallwe.domain.reservation.dto.ReservationRequest;
-import com.shallwe.domain.reservation.dto.ReservationResponse;
-import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
+import com.shallwe.domain.reservation.dto.request.OwnerReservationCreate;
+import com.shallwe.domain.reservation.dto.response.ReservationResponse;
+import com.shallwe.domain.reservation.dto.response.ValidTimeSlotRes;
 import com.shallwe.domain.shopowner.application.ShopOwnerServiceImpl;
 import com.shallwe.domain.shopowner.dto.ShopOwnerIdentificationReq;
 
@@ -46,10 +46,11 @@ public class ShopOwnerController {
   })
   @PostMapping("/")
   public ResponseCustom<List<ReservationResponse>> createReservation(
-      @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationRequest reservationRequest,
+      @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody OwnerReservationCreate ownerReservationCreate,
       @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
   ){
-    return ResponseCustom.CREATED(reservationManipulationService.addOwnerReservation(reservationRequest,userPrincipal));
+    return ResponseCustom.CREATED(reservationManipulationService.addOwnerReservation(
+        ownerReservationCreate,userPrincipal));
   }
 
   @Operation(summary = "사장 탈퇴", description = "사장 탈퇴를 수행합니다.")

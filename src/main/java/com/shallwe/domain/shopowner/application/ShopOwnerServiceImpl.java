@@ -12,7 +12,7 @@ import com.shallwe.domain.experiencegift.domain.repository.ExperienceGiftReposit
 import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
-import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
+import com.shallwe.domain.reservation.dto.response.ValidTimeSlotRes;
 import com.shallwe.domain.reservation.exception.InvalidAvailableTimeException;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;

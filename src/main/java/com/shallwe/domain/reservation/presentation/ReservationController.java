@@ -2,12 +2,12 @@ package com.shallwe.domain.reservation.presentation;
 
 import com.shallwe.domain.reservation.application.ReservationCheckService;
 import com.shallwe.domain.reservation.application.ReservationManipulationService;
-import com.shallwe.domain.reservation.dto.DeleteReservationRes;
-import com.shallwe.domain.reservation.dto.ReservationIdUserRes;
-import com.shallwe.domain.reservation.dto.ReservationResponse;
-import com.shallwe.domain.reservation.dto.ReservationUserReq;
-import com.shallwe.domain.reservation.dto.UpdateReservationReq;
-import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
+import com.shallwe.domain.reservation.dto.response.DeleteReservationRes;
+import com.shallwe.domain.reservation.dto.response.ReservationIdUserRes;
+import com.shallwe.domain.reservation.dto.response.ReservationResponse;
+import com.shallwe.domain.reservation.dto.request.UserReservationCreate;
+import com.shallwe.domain.reservation.dto.request.UpdateReservationReq;
+import com.shallwe.domain.reservation.dto.response.ValidTimeSlotRes;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.ErrorResponse;
@@ -122,7 +122,7 @@ public class ReservationController {
   })
   @PostMapping("/user")
   public ResponseCustom<ReservationResponse> createUserReservation(
-      @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationUserReq reservationRequest,
+      @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody UserReservationCreate reservationRequest,
       @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
   ) {
     return ResponseCustom.CREATED(

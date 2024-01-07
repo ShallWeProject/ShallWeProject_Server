@@ -1,9 +1,9 @@
 package com.shallwe.domain.reservation.application;
 
-import com.shallwe.domain.reservation.dto.ReservationIdOwnerRes;
-import com.shallwe.domain.reservation.dto.ReservationIdUserRes;
-import com.shallwe.domain.reservation.dto.ReservationResponse;
-import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
+import com.shallwe.domain.reservation.dto.response.ReservationIdOwnerRes;
+import com.shallwe.domain.reservation.dto.response.ReservationIdUserRes;
+import com.shallwe.domain.reservation.dto.response.ReservationResponse;
+import com.shallwe.domain.reservation.dto.response.ValidTimeSlotRes;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import java.time.LocalDate;
 import java.util.List;

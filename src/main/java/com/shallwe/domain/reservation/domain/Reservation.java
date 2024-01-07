@@ -4,8 +4,8 @@ package com.shallwe.domain.reservation.domain;
 import com.shallwe.domain.common.BaseEntity;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.memoryphoto.domain.MemoryPhoto;
-import com.shallwe.domain.reservation.dto.ReservationUserReq;
-import com.shallwe.domain.reservation.dto.UpdateReservationReq;
+import com.shallwe.domain.reservation.dto.request.UserReservationCreate;
+import com.shallwe.domain.reservation.dto.request.UpdateReservationReq;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -96,14 +96,14 @@ public class Reservation extends BaseEntity {
     this.time = Optional.ofNullable(updateReq.getTime()).orElse(this.time);
   }
 
-  public void updateUserReservationRequest(ReservationUserReq reservationRequest, User sender,
+  public void updateUserReservationRequest(UserReservationCreate reservationRequest, User sender,
       User receiver) {
     this.sender = sender;
     this.receiver = receiver;
     this.phoneNumber = reservationRequest.getPhoneNumber();
     this.invitationComment = reservationRequest.getInvitationComment();
     this.persons = reservationRequest.getPersons();
-    this.invitationImg = reservationRequest.getImageKey();
+    this.invitationImg = reservationRequest.getImageURL();
   }
 
   public void updateStatus(ReservationStatus status) {

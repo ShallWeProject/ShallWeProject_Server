@@ -1,11 +1,7 @@
 package com.shallwe.domain.shopowner.application;
 
 
-import com.shallwe.domain.reservation.domain.Reservation;
-import com.shallwe.domain.reservation.dto.ReservationResponse;
-
-
-import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
+import com.shallwe.domain.reservation.dto.response.ValidTimeSlotRes;
 import com.shallwe.domain.shopowner.dto.ShopOwnerIdentificationReq;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.payload.Message;
