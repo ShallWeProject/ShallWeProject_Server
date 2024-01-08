@@ -14,15 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShopOwnerExperienceReq {
+
     @Schema(type = "String", description = "지역", maxLength = 30)
     @NotBlank(message = "지역은 필수 입력 값입니다.")
     private String subtitle;
 
     @Schema(type = "String", description = "경험 카테고리")
     private String expCategory;
-
-    @Schema(type = "String", description = "상황 카테고리")
-    private String sttCategory;
 
     @Schema(type = "String", description = "상품명", maxLength = 100)
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
@@ -49,6 +47,5 @@ public class ShopOwnerExperienceReq {
 
     @Schema(type = "String", description = "유의사항", maxLength = 255)
     private String note;
-
 
 }

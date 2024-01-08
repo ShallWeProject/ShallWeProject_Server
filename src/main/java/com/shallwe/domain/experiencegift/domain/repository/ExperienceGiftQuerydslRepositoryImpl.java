@@ -11,8 +11,6 @@ import java.util.List;
 
 import static com.shallwe.domain.experiencegift.domain.QExperienceGift.experienceGift;
 
-//import com.shallwe.domain.experiencegift.domain.QExperienceGift.ExperienceGift;
-
 
 @RequiredArgsConstructor
 @Repository
@@ -23,7 +21,7 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
     @Override
     public List<ExperienceGift> findGiftsBySttCategoryIdOrderByPriceDesc(Long SttCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.sttCategory.sttCategoryId.eq(SttCategoryId)
+                .where(experienceGift.situationCategory.id.eq(SttCategoryId)
                         .and(experienceGift.status.eq(Status.ACTIVE)))
                 .orderBy(experienceGift.price.desc())
                 .fetch();
@@ -32,7 +30,7 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
     @Override
     public List<ExperienceGift> findGiftsBySttCategoryIdOrderByPriceAsc(Long SttCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.sttCategory.sttCategoryId.eq(SttCategoryId)
+                .where(experienceGift.situationCategory.id.eq(SttCategoryId)
                         .and(experienceGift.status.eq(Status.ACTIVE)))
                 .orderBy(experienceGift.price.asc())
                 .fetch();
@@ -41,7 +39,7 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
     @Override
     public List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceDesc(Long ExpCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.expCategory.expCategoryId.eq(ExpCategoryId)
+                .where(experienceGift.experienceCategory.id.eq(ExpCategoryId)
                         .and(experienceGift.status.eq(Status.ACTIVE)))
                 .orderBy(experienceGift.price.desc())
                 .fetch();
@@ -50,7 +48,7 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
     @Override
     public List<ExperienceGift> findGiftsByExpCategoryIdOrderByPriceAsc(Long ExpCategoryId) {
         return queryFactory.selectFrom(experienceGift)
-                .where(experienceGift.expCategory.expCategoryId.eq(ExpCategoryId)
+                .where(experienceGift.experienceCategory.id.eq(ExpCategoryId)
                         .and(experienceGift.status.eq(Status.ACTIVE)))
                 .orderBy(experienceGift.price.asc())
                 .fetch();
@@ -61,10 +59,10 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
         QReservation reservation = QReservation.reservation;
 
         return queryFactory.selectFrom(experienceGift)
-                .leftJoin(reservation).on(experienceGift.experienceGiftId.eq(reservation.experienceGift.experienceGiftId))
-                .where(experienceGift.sttCategory.sttCategoryId.eq(sttCategoryId)
+                .leftJoin(reservation).on(experienceGift.id.eq(reservation.experienceGift.id))
+                .where(experienceGift.situationCategory.id.eq(sttCategoryId)
                         .and(experienceGift.status.eq(Status.ACTIVE)))
-                .groupBy(experienceGift.experienceGiftId)
+                .groupBy(experienceGift.id)
                 .orderBy(reservation.id.count().desc())
                 .fetch();
     }
@@ -74,10 +72,10 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
         QReservation reservation = QReservation.reservation;
 
         return queryFactory.selectFrom(experienceGift)
-                .leftJoin(reservation).on(experienceGift.experienceGiftId.eq(reservation.experienceGift.experienceGiftId))
-                .where(experienceGift.expCategory.expCategoryId.eq(ExpCategoryId)
+                .leftJoin(reservation).on(experienceGift.id.eq(reservation.experienceGift.id))
+                .where(experienceGift.experienceCategory.id.eq(ExpCategoryId)
                         .and(experienceGift.status.eq(Status.ACTIVE)))
-                .groupBy(experienceGift.experienceGiftId)
+                .groupBy(experienceGift.id)
                 .orderBy(reservation.id.count().desc())
                 .fetch();
     }
@@ -87,12 +85,11 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
         QReservation reservation = QReservation.reservation;
 
         return queryFactory.selectFrom(experienceGift)
-                .leftJoin(reservation).on(experienceGift.experienceGiftId.eq(reservation.experienceGift.experienceGiftId))
+                .leftJoin(reservation).on(experienceGift.id.eq(reservation.experienceGift.id))
                 .where(experienceGift.status.eq(Status.ACTIVE))
-                .groupBy(experienceGift.experienceGiftId)
+                .groupBy(experienceGift.id)
                 .orderBy(reservation.id.count().desc())
                 .fetch();
     }
-
 
 }

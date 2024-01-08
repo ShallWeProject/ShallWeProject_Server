@@ -1,10 +1,13 @@
 package com.shallwe.domain.reservation.dto.response;
 
+
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalTime;
 import java.util.Optional;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,7 +36,7 @@ public class ReservationIdOwnerRes {
 
   @Builder
   public ReservationIdOwnerRes(Long reservationId, ReservationStatus status, String sender,
-      LocalTime time, String phoneNum,Long person) {
+      LocalTime time, String phoneNum, Long person) {
     this.reservationId = reservationId;
     this.status = status;
     this.sender = sender;
@@ -53,4 +56,5 @@ public class ReservationIdOwnerRes {
         .person(reservation.getPersons())
         .build();
   }
+
 }

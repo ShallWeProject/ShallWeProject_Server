@@ -10,35 +10,33 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 public class ExperienceGift extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long experienceGiftId;
+    private Long id;
 
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subtitle_id")
-    private Subtitle subtitle; //fk
+    private Subtitle subtitle;
 
-    private String thumbnail;
     private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exp_category_id")
-    private ExpCategory expCategory;
+    @JoinColumn(name = "experience_category_id")
+    private ExperienceCategory experienceCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stt_category_id")
-    private SttCategory sttCategory;
+    @JoinColumn(name = "situation_category_id")
+    private SituationCategory situationCategory;
 
     private String description;
+
     private String giftImgKey;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,15 +48,14 @@ public class ExperienceGift extends BaseEntity {
     private String note;
 
     @OneToMany(mappedBy = "experienceGift")
-    private List<ExperienceGiftImg> imgList=new ArrayList<>();
+    private List<ExperienceGiftImage> imgList = new ArrayList<>();
 
-    public static ExperienceGift toDto(ShopOwnerExperienceReq req, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
+    public static ExperienceGift toDto(ShopOwnerExperienceReq req, Subtitle subtitle, ExperienceCategory experienceCategory, ShopOwner shopOwner) {
         return ExperienceGift.builder()
                 .title(req.getTitle())
                 .subtitle(subtitle)
                 .price(req.getPrice())
-                .expCategory(expCategory)
-                .sttCategory(sttCategory)
+                .experienceCategory(experienceCategory)
                 .description(req.getDescription())
                 .shopOwner(shopOwner)
                 .location(req.getLocation())
@@ -66,14 +63,30 @@ public class ExperienceGift extends BaseEntity {
                 .build();
     }
 
-    public void update(ShopOwnerExperienceReq shopOwnerExperienceReq, Subtitle subtitle, ExpCategory expCategory, SttCategory sttCategory, ShopOwner shopOwner) {
+    public void update(ShopOwnerExperienceReq shopOwnerExperienceReq, Subtitle subtitle, ExperienceCategory experienceCategory, ShopOwner shopOwner) {
         this.title = shopOwnerExperienceReq.getTitle();
-        this.description= shopOwnerExperienceReq.getDescription();
-        this.location= shopOwnerExperienceReq.getLocation();
-        this.price= shopOwnerExperienceReq.getPrice();
+        this.description = shopOwnerExperienceReq.getDescription();
+        this.location = shopOwnerExperienceReq.getLocation();
+        this.price = shopOwnerExperienceReq.getPrice();
         this.subtitle = subtitle;
-        this.expCategory = expCategory;
-        this.sttCategory = sttCategory;
+        this.experienceCategory = experienceCategory;
         this.shopOwner = shopOwner;
+        this.note=shopOwnerExperienceReq.getNote();
     }
+
+    @Builder
+    public ExperienceGift(String title, Subtitle subtitle, Long price, ExperienceCategory experienceCategory, SituationCategory situationCategory, String description, String giftImgKey, ShopOwner shopOwner, String location, String note, List<ExperienceGiftImage> imgList) {
+        this.title = title;
+        this.subtitle = subtitle;
+        this.price = price;
+        this.experienceCategory = experienceCategory;
+        this.situationCategory = situationCategory;
+        this.description = description;
+        this.giftImgKey = giftImgKey;
+        this.shopOwner = shopOwner;
+        this.location = location;
+        this.note = note;
+        this.imgList = imgList;
+    }
+
 }

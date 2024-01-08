@@ -20,7 +20,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.time.LocalDate;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +37,12 @@ public class ReservationController {
   private final ReservationCheckService reservationCheckService;
   private final ReservationManipulationService reservationManipulationService;
 
-  @Operation(summary = "예약 정보 불러오기 ", description = "저장된 모든 예약 정보")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "예약 정보 조회 성공", content = {
-          @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
-      @ApiResponse(responseCode = "400", description = "예약 정보 조회 실패", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    @Operation(summary = "예약 정보 불러오기 ", description = "저장된 모든 예약 정보")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "예약 정보 조회 성공", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
+            @ApiResponse(responseCode = "400", description = "예약 정보 조회 실패", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
 
   })
   @GetMapping
@@ -48,12 +50,12 @@ public class ReservationController {
     return ResponseCustom.OK(reservationCheckService.getAllReservation());
   }
 
-  @Operation(summary = "예약 정보 불러오기", description = "유저 ID로 검색")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "해당 유저 예약 정보 조회 성공", content = {
-          @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
-      @ApiResponse(responseCode = "400", description = "해당 유저 예약 정보 조회 실패", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    @Operation(summary = "예약 정보 불러오기", description = "유저 ID로 검색")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "해당 유저 예약 정보 조회 성공", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
+            @ApiResponse(responseCode = "400", description = "해당 유저 예약 정보 조회 실패", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
 
   })
   @GetMapping("/user")
@@ -63,13 +65,13 @@ public class ReservationController {
     return ResponseCustom.OK(reservationCheckService.findUserReservation(userPrincipal));
   }
 
-  @Operation(summary = "가능한 예약 불러오기", description = "상품 ID로 검색")
-  @ApiResponses(value = {
+    @Operation(summary = "가능한 예약 불러오기", description = "상품 ID로 검색")
+    @ApiResponses(value = {
 
-      @ApiResponse(responseCode = "200", description = "해당 유저 예약 정보 조회 성공", content = {
-          @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ValidTimeSlotRes.class)))}),
-      @ApiResponse(responseCode = "400", description = "해당 유저 예약 정보 조회 실패", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "200", description = "해당 유저 예약 정보 조회 성공", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ValidTimeSlotRes.class)))}),
+            @ApiResponse(responseCode = "400", description = "해당 유저 예약 정보 조회 실패", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
 
   })
   @GetMapping("/validTimes")
@@ -80,15 +82,15 @@ public class ReservationController {
     return ResponseCustom.OK(reservationCheckService.getValidReservationTime(userPrincipal, giftId));
   }
 
-  @Operation(summary = "날짜로 예약 조회", description = "등록한 상품의 ID와 날짜로 이용 가능한 예약을 조회 합니다.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
-          @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
-      @ApiResponse(responseCode = "400", description = "상품 예약 조회 실패", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-  })
-  @GetMapping("/date")
-  public ResponseCustom<List<ReservationIdUserRes>> getReservationWithDate(
+    @Operation(summary = "날짜로 예약 조회", description = "등록한 상품의 ID와 날짜로 이용 가능한 예약을 조회 합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
+            @ApiResponse(responseCode = "400", description = "상품 예약 조회 실패", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/date")
+    public ResponseCustom<List<ReservationIdUserRes>> getReservationWithDate(
 
       @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
       @Parameter(description = "상품 ID를 입력해주세요", required = true) @RequestParam Long giftId,
@@ -98,12 +100,12 @@ public class ReservationController {
         reservationCheckService.getReservationByDateUser(userPrincipal, giftId, date));
   }
 
-  @Operation(summary = "해당 경험 선물에 생성된 예약 조회 ", description = "경험 ID로 검색")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "예약 정보 조회 성공", content = {
-          @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
-      @ApiResponse(responseCode = "400", description = "예약 정보 조회 실패", content = {
-          @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    @Operation(summary = "해당 경험 선물에 생성된 예약 조회 ", description = "경험 ID로 검색")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "예약 정보 조회 성공", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
+            @ApiResponse(responseCode = "400", description = "예약 정보 조회 실패", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
 
   })
   @GetMapping("/giftId")
@@ -144,7 +146,7 @@ public class ReservationController {
     return ResponseCustom.OK(
         reservationManipulationService.updateReservation(updateReq, userPrincipal));
 
-  }
+    }
 
   @Operation(summary = "예약 삭제하기", description = "예약을 삭제합니다")
   @ApiResponses(value = {

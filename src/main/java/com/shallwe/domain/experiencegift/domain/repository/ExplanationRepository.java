@@ -8,8 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ExplanationRepository extends JpaRepository<Explanation,Long> {
-List<Explanation> findByExperienceGift(ExperienceGift experienceGift);
+public interface ExplanationRepository extends JpaRepository<Explanation, Long> {
 
+    List<Explanation> findByExperienceGift(ExperienceGift experienceGift);
     void deleteByExperienceGift(ExperienceGift experienceGift);
+
 }

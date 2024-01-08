@@ -2,7 +2,6 @@ package com.shallwe.domain.experiencegift.dto.response;
 
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.experiencegift.domain.Explanation;
-import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,32 +23,19 @@ public class ExperienceDetailRes {
     private Long price;
     private List<ExplanationRes> explanation;
     private String description;
-    private String expCategory;
-    private String sttCategory;
-
-    public static ExperienceDetailRes toDto(ExperienceGift experienceGift,List<String> giftImgUrl){
-        return ExperienceDetailRes.builder()
-                .ExperienceGiftId(experienceGift.getExperienceGiftId())
-                .title(experienceGift.getTitle())
-                .price(experienceGift.getPrice())
-                .description(experienceGift.getDescription())
-                .subtitle(experienceGift.getSubtitle().getTitle())
-                .expCategory(experienceGift.getExpCategory().getExpCategory())
-                .sttCategory(experienceGift.getSttCategory().getSttCategory())
-                .giftImgUrl(giftImgUrl)
-                .build();
-    }
+    private String location;
 
     public static ExperienceDetailRes toDetailDto(ExperienceGift experienceGift, List<Explanation> explanations,List<String> giftImgUrl){
         ExperienceDetailRes experienceDetailRes=new ExperienceDetailRes();
-        experienceDetailRes.ExperienceGiftId=experienceGift.getExperienceGiftId();
+        experienceDetailRes.ExperienceGiftId=experienceGift.getId();
         experienceDetailRes.giftImgUrl= giftImgUrl;
         experienceDetailRes.title=experienceGift.getTitle();
         experienceDetailRes.subtitle=experienceGift.getSubtitle().getTitle();
         experienceDetailRes.price=experienceGift.getPrice();
+        experienceDetailRes.description=experienceGift.getDescription();
+        experienceDetailRes.location=experienceGift.getLocation();
         experienceDetailRes.explanation=explanations.stream().map(m -> ExplanationRes.toDto(m.getStage(),m.getDescription(), m.getExplanationKey())).collect(Collectors.toList());
         return experienceDetailRes;
-
     }
 
 }

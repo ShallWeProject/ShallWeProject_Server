@@ -4,11 +4,13 @@ import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import lombok.*;
 
 import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
@@ -39,18 +41,18 @@ public class OwnerReservationCreate {
       LocalDate date = entry.getKey();
       List<LocalTime> times = entry.getValue();
 
-      for (LocalTime time : times) {
-        Reservation toEntity = Reservation.builder()
-            .experienceGift(experienceGift)
-            .date(date)
-            .time(time)
-            .owner(owner)
-            .reservationStatus(WAITING)
-            .build();
-        reservations.add(toEntity);
-      }
+            for (LocalTime time : times) {
+                Reservation toEntity = Reservation.builder()
+                        .experienceGift(experienceGift)
+                        .date(date)
+                        .time(time)
+                        .owner(owner)
+                        .reservationStatus(WAITING)
+                        .build();
+                reservations.add(toEntity);
+            }
+        }
+        return reservations;
     }
-    return reservations;
-  }
 }
 

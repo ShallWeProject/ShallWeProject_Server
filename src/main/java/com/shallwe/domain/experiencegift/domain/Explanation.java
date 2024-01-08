@@ -7,30 +7,23 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @Entity
 public class Explanation extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long explanationId;
+    private Long id;
 
     private String stage;
+
     private String explanationKey;
+
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="experienceGiftId")
     private ExperienceGift experienceGift;
-
-    @Builder
-    public Explanation(ExperienceGift experienceGift,String stage,String description, String explanationUrl){
-        this.experienceGift=experienceGift;
-        this.stage=stage;
-        this.description=description;
-        this.explanationKey=explanationUrl;
-    }
 
     public static Explanation toDto(ExplanationReq explanationReq, ExperienceGift experienceGift) {
         return Explanation.builder()
@@ -39,6 +32,14 @@ public class Explanation extends BaseEntity {
                 .description(explanationReq.getDescription())
                 .explanationUrl(AwsS3ImageUrlUtil.toUrl(explanationReq.getExplanationKey()))
                 .build();
+    }
+
+    @Builder
+    public Explanation(ExperienceGift experienceGift,String stage,String description, String explanationUrl){
+        this.experienceGift=experienceGift;
+        this.stage=stage;
+        this.description=description;
+        this.explanationKey=explanationUrl;
     }
 
 }

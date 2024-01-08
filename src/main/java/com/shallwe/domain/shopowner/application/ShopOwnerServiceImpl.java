@@ -61,7 +61,7 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
   @Override
   public List<ValidTimeSlotRes> getShopOwnerReservation(UserPrincipal userPrincipal,
       Long giftId) {
-    ExperienceGift experienceGift = experienceGiftRepository.findByExperienceGiftId(giftId)
+    ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
         .orElseThrow(ExperienceGiftNotFoundException::new);
     List<Reservation> reservationList = reservationRepository.findAllByExperienceGift(
         experienceGift).orElseThrow(InvalidAvailableTimeException::new);

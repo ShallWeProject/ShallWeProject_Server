@@ -4,7 +4,6 @@ import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
 import com.shallwe.domain.common.Status;
 import com.shallwe.domain.reservation.domain.Reservation;
-import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.user.domain.Complain;
 import com.shallwe.domain.user.domain.User;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor

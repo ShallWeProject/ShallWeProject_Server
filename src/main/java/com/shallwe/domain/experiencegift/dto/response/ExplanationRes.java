@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class ExplanationRes {
+
     private String stage;
     private String description;
     private String explanationUrl;

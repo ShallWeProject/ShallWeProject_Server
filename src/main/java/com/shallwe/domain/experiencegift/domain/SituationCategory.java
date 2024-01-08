@@ -5,21 +5,21 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @Entity
-public class ExpCategory extends BaseEntity {
+public class SituationCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long expCategoryId;
+    private Long id;
 
-    private String expCategory;
+    private String sttCategory;
+
     private String imageKey;
 
     @Builder
-    public ExpCategory(String expCategory,String imageKey){
-        this.expCategory=expCategory;
+    public SituationCategory(String sttCategory, String imageKey){
+        this.sttCategory=sttCategory;
         this.imageKey=imageKey;
     }
 

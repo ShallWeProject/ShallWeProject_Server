@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExplanationReq {
+
     private String stage;
     private String description;
     private String explanationKey;
+
 }

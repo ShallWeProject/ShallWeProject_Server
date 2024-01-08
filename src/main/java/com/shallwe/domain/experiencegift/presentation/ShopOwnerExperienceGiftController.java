@@ -73,9 +73,9 @@ public class ShopOwnerExperienceGiftController {
             @ApiResponse(responseCode = "200", description = "사장님 경험 선물 수정 성공"),
             @ApiResponse(responseCode = "400", description = "사장님 경험 선물 수정 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @PutMapping("/{experienceGiftId}")
+    @PutMapping("/{experience-gift-id}")
     public ResponseCustom<Void> modifyExperienceGift(
-            @PathVariable Long experienceGiftId,
+            @PathVariable(name = "experience-gift-id") Long experienceGiftId,
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @RequestBody ShopOwnerExperienceReq shopOwnerExperienceReq
     ) {
@@ -88,9 +88,9 @@ public class ShopOwnerExperienceGiftController {
             @ApiResponse(responseCode = "200", description = "사장님 경험 선물 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "사장님 경험 선물 삭제 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @PatchMapping("/{experienceGiftId}")
+    @PatchMapping("/{experience-gift-id}")
     public ResponseCustom<Void> deleteExperienceGift(
-            @PathVariable Long experienceGiftId,
+            @PathVariable(name = "experience-gift-id") Long experienceGiftId,
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
         experienceGiftService.deleteExperienceGift(experienceGiftId, userPrincipal);

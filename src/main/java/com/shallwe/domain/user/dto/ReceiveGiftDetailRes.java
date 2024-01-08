@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.shallwe.domain.reservation.domain.ReservationStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class ReceiveGiftDetailRes {
 
     private Long reservationId;
     private ReservationStatus reservationStatus;
+    private Long experienceGiftId;
     private String experienceTitle;
     private String experienceSubTitle;
     private LocalDate date;
@@ -30,6 +32,7 @@ public class ReceiveGiftDetailRes {
         return ReceiveGiftDetailRes.builder()
                 .reservationId(reservation.getId())
                 .reservationStatus(reservation.getReservationStatus())
+                .experienceGiftId(reservation.getExperienceGift().getId())
                 .experienceTitle(reservation.getExperienceGift().getTitle())
                 .experienceSubTitle(reservation.getExperienceGift().getSubtitle().getTitle())
                 .date(reservation.getDate())
