@@ -42,7 +42,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
   public List<ReservationResponse> addOwnerReservation(
       OwnerReservationCreate ownerReservationCreate,
       UserPrincipal userPrincipal) {
-    ExperienceGift experienceGift = experienceGiftRepository.findByExperienceGiftId(
+    ExperienceGift experienceGift = experienceGiftRepository.findById(
             ownerReservationCreate.getExperienceGiftId())
         .orElseThrow(ExperienceGiftNotFoundException::new);
 
