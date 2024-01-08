@@ -8,7 +8,7 @@ import com.shallwe.domain.experiencegift.dto.response.*;
 import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.experiencegift.exception.*;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
-import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
+import com.shallwe.domain.reservation.domain.repository.ReservationShopOwnerRepository;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.shopowner.exception.InvalidPhoneNumberException;
@@ -38,8 +38,9 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
     private final SubtitleRepository subtitleRepository;
     private final ExplanationRepository explanationRepository;
     private final ShopOwnerRepository shopOwnerRepository;
-    private final ReservationRepository reservationRepository;
-    private final ExperienceGiftImageRepository experienceGiftImageRepository;
+    private final ReservationShopOwnerRepository reservationRepository;
+    private final ExperienceGiftImgRepository experienceGiftImgRepository;
+
 
     @Override
     public ExperienceMainRes mainPage(UserPrincipal userPrincipal) {

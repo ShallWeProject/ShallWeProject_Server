@@ -7,7 +7,7 @@ import com.shallwe.domain.memoryphoto.dto.MemoryPhotoDetailRes;
 import com.shallwe.domain.memoryphoto.dto.UploadMemoryPhotoReq;
 import com.shallwe.domain.memoryphoto.exception.MemoryPhotoUploaderMismatchException;
 import com.shallwe.domain.reservation.domain.Reservation;
-import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
+import com.shallwe.domain.reservation.domain.repository.ReservationMemoryPhotoRepository;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.reservation.exception.InvalidUserException;
 import com.shallwe.domain.user.domain.User;
@@ -27,7 +27,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MemoryPhotoServiceImpl implements MemoryPhotoService{
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationMemoryPhotoRepository reservationRepository;
     private final UserRepository userRepository;
     private final MemoryPhotoRepository memoryPhotoRepository;
 

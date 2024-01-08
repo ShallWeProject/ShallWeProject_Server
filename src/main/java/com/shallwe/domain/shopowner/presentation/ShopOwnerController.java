@@ -1,12 +1,13 @@
 package com.shallwe.domain.shopowner.presentation;
 
 
-import com.shallwe.domain.reservation.application.ReservationServiceImpl;
-import com.shallwe.domain.reservation.dto.ReservationIdOwnerRes;
+import com.shallwe.domain.reservation.application.ReservationCheckService;
+import com.shallwe.domain.reservation.application.ReservationManipulationService;
+import com.shallwe.domain.reservation.dto.response.ReservationIdOwnerRes;
 
-import com.shallwe.domain.reservation.dto.ReservationRequest;
-import com.shallwe.domain.reservation.dto.ReservationResponse;
-import com.shallwe.domain.reservation.dto.ValidTimeSlotRes;
+import com.shallwe.domain.reservation.dto.request.OwnerReservationCreate;
+import com.shallwe.domain.reservation.dto.response.ReservationResponse;
+import com.shallwe.domain.reservation.dto.response.ValidTimeSlotRes;
 import com.shallwe.domain.shopowner.application.ShopOwnerServiceImpl;
 import com.shallwe.domain.shopowner.dto.ShopOwnerIdentificationReq;
 
@@ -36,21 +37,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/shop-owners")
 public class ShopOwnerController {
 
-    private final ShopOwnerServiceImpl shopOwnerService;
-    private final ReservationServiceImpl reservationService;
+  private final ShopOwnerServiceImpl shopOwnerService;
+  private final ReservationCheckService reservationCheckServiceService;
+  private final ReservationManipulationService reservationManipulationService;
 
-    @Operation(summary = "예약 추가하기", description = "현재 유저, 경험을 가져와 예약을 추가합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "예약 생성 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ReservationResponse.class))}),
-            @ApiResponse(responseCode = "400", description = "예약 생성 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
-    })
-    @PostMapping
-    public ResponseCustom<List<ReservationResponse>> createReservation(
-            @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody ReservationRequest reservationRequest,
-            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
-    ) {
-        return ResponseCustom.CREATED(reservationService.addOwnerReservation(reservationRequest, userPrincipal));
-    }
+  @Operation(summary ="예약 추가하기", description = "현재 유저, 경험을 가져와 예약을 추가합니다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "예약 생성 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ReservationResponse.class))}),
+      @ApiResponse(responseCode = "400", description = "예약 생성 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))} )
+  })
+  @PostMapping("/")
+  public ResponseCustom<List<ReservationResponse>> createReservation(
+      @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody OwnerReservationCreate ownerReservationCreate,
+      @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+  ){
+    return ResponseCustom.CREATED(reservationManipulationService.addOwnerReservation(
+        ownerReservationCreate,userPrincipal));
+  }
 
     @Operation(summary = "사장 탈퇴", description = "사장 탈퇴를 수행합니다.")
     @ApiResponses(value = {
@@ -96,20 +99,20 @@ public class ShopOwnerController {
         return ResponseCustom.OK(shopOwnerService.getShopOwnerReservation(userPrincipal, giftId));
     }
 
-    @Operation(summary = "날짜로 이용 가능한 예약 조회", description = "사장이 등록한 상품의 예약을 조회 합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
-                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
-            @ApiResponse(responseCode = "400", description = "상품 예약 조회 실패", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-    })
-    @GetMapping("/date")
-    public ResponseCustom<List<ReservationIdOwnerRes>> getReservationWithDate(
-            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "상품 ID를 입력해주세요", required = true) @RequestParam Long giftId,
-            @Parameter(description = "조회하려는 날짜를 입력해주세요 YYYY-MM-DD ", required = true) @RequestParam LocalDate date
-    ) {
-        return ResponseCustom.OK(reservationService.getReservationByDateOwner(userPrincipal, giftId, date));
+  @Operation(summary = "날짜로 이용 가능한 예약 조회", description = "사장이 등록한 상품의 예약을 조회 합니다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "상품 예약 조회 성공", content = {
+          @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
+      @ApiResponse(responseCode = "400", description = "상품 예약 조회 실패", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+  })
+  @GetMapping("/date")
+  public ResponseCustom<List<ReservationIdOwnerRes>> getReservationWithDate(
+      @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+      @Parameter(description = "상품 ID를 입력해주세요", required = true) @RequestParam Long giftId,
+      @Parameter(description = "조회하려는 날짜를 입력해주세요 YYYY-MM-DD ", required = true) @RequestParam LocalDate date
+  ) {
+    return ResponseCustom.OK(reservationCheckServiceService.getReservationByDateOwner(userPrincipal, giftId,date));
 
     }
 

@@ -24,7 +24,7 @@ import java.util.Optional;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationQuerydslRepository {
 
-    List<Reservation> findAllBySenderId(Long userId);
+    Optional<List<Reservation>> findAllBySenderId(Long userId);
 
     Optional<List<Reservation>> findAllByExperienceGift(ExperienceGift experienceGift);
 
@@ -33,7 +33,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
 
     Optional<List<Reservation>> findAllByExperienceGiftAndDate(ExperienceGift experienceGift, LocalDate date);
-
-    Long countByExperienceGift_ShopOwnerAndReservationStatus(ShopOwner shopOwner, ReservationStatus status);
-
 }

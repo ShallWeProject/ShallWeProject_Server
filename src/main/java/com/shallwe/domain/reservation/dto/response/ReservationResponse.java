@@ -1,4 +1,4 @@
-package com.shallwe.domain.reservation.dto;
+package com.shallwe.domain.reservation.dto.response;
 
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;

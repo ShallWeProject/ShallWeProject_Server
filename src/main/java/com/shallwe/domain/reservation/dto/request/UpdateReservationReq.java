@@ -1,4 +1,4 @@
-package com.shallwe.domain.reservation.dto;
+package com.shallwe.domain.reservation.dto.request;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,5 +19,4 @@ public class UpdateReservationReq {
 
     @Schema(type = "string", example = "13:00", description = "예약 시간")
     private LocalTime time;
-
 }
