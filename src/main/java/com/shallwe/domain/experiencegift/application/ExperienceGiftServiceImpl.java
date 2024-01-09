@@ -39,7 +39,7 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
     private final ExplanationRepository explanationRepository;
     private final ShopOwnerRepository shopOwnerRepository;
     private final ReservationShopOwnerRepository reservationRepository;
-    private final ExperienceGiftImgRepository experienceGiftImgRepository;
+    private final ExperienceGiftImageRepository experienceGiftImageRepository;
 
 
     @Override
