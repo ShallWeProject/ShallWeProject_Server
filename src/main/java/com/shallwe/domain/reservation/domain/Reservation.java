@@ -47,7 +47,7 @@ public class Reservation extends BaseEntity {
   @Schema(description = "보내는이 ID")
   private User sender;
 
-  @Column(name = "person")
+  @Column(name = "persons")
   private Long persons;
 
   @Schema(description = "예약 날짜, YYYY-DD-MM ")
