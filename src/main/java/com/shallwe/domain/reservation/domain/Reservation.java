@@ -62,7 +62,7 @@ public class Reservation extends BaseEntity {
   @JoinColumn(name = "receiver_id")
   private User receiver;
 
-  @Column(name = "phone_umber")
+  @Column(name = "phone_number")
   private String phoneNumber;
 
   @Column(name = "invitation_img")
