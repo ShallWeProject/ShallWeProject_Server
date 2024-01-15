@@ -57,6 +57,7 @@ jobs:
           docker push ${{ secrets.DOCKER_REPO }}/shallwe-dev
 
   CD:
+    needs: CI
     runs-on: ubuntu-latest
     ## deploy to develop
     steps:
