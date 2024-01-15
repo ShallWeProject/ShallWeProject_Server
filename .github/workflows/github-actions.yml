@@ -5,78 +5,79 @@ name: CI/CD
 on:
   push:
     branches:
-      - main
       - develop
 
 permissions:
   contents: read
 
 jobs:
-  CI-CD:
+  CI:
     runs-on: ubuntu-latest
 
     ## jdk setting
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-      ## gradle caching
-    - name: Gradle Caching
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
+        ## gradle caching
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-    ## create application-dev.yml
-    - name: make application-dev.yml
-      if: contains(github.ref, 'develop')
-      run: |
-        cd ./src/main/resources
-        touch ./application-dev.yml
-        echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
-      shell: bash
+      ## create application-dev.yml
+      - name: make application-dev.yml
+        if: contains(github.ref, 'develop')
+        run: |
+          cd ./src/main/resources
+          touch ./application-dev.yml
+          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
+        shell: bash
 
-    ## gradle build
-    - name: Build with Gradle
-      run: ./gradlew build -x test
+      ## gradle build
+      - name: Build with Gradle
+        run: ./gradlew build -x test
 
-      ## docker build & push to production
-      ## docker build & push to develop
-    - name: Docker build & push to dev
-      if: contains(github.ref, 'develop')
-      run: |
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/shallwe-dev .
-        docker push ${{ secrets.DOCKER_REPO }}/shallwe-dev
+        ## docker build & push to production
+        ## docker build & push to develop
+      - name: Docker build & push to dev
+        if: contains(github.ref, 'develop')
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/shallwe-dev .
+          docker push ${{ secrets.DOCKER_REPO }}/shallwe-dev
 
-      ## deploy to develop
-    - name: Deploy to dev
-      uses: appleboy/ssh-action@master
-      id: deploy-dev
-      if: contains(github.ref, 'develop')
-      with:
-        host: ${{ secrets.HOST_DEV }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: 22
-        #key: ${{ secrets.PRIVATE_KEY }}
-        script: |
-          sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPO }}/shallwe-dev
-          docker-compose up -d
-          docker image prune -f
+  CD:
+    runs-on: ubuntu-latest
+    ## deploy to develop
+    steps:
+      - name: Deploy to dev
+        uses: appleboy/ssh-action@master
+        id: deploy-dev
+        if: contains(github.ref, 'develop')
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          #key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            ssh dev sudo docker rm -f $(ssh dev sudo docker ps -qa)
+            ssh dev sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}/shallwe-dev
+            ssh dev sudo docker run -dp 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
 
     ## time ##
   current-time:
-    needs: CI-CD
+    needs: CD
     runs-on: ubuntu-latest
     steps:
       - name: Get Current Time
