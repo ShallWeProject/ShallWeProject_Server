@@ -73,7 +73,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
             ssh dev sudo docker rm -f $(ssh dev sudo docker ps -qa)
-            ssh dev sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}/shallwe-dev
+            ssh dev sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
             ssh dev sudo docker run -dp 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
 
     ## time ##
