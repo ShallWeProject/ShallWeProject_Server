@@ -62,7 +62,7 @@ jobs:
     ## deploy to develop
     steps:
       - name: Deploy to dev
-        uses: appleboy/ssh-action@0.1.4
+        uses: appleboy/ssh-action@master
         id: deploy-dev
         if: contains(github.ref, 'develop')
         with:
