@@ -42,4 +42,5 @@ public interface ExperienceGiftService {
 
     void deleteExperienceGift(Long experienceGiftId, UserPrincipal userPrincipal);
 
+    ShopOwnerExperienceDetailsRes getExperienceGiftDetails(UserPrincipal userPrincipal, Long experienceGiftId);
 }
