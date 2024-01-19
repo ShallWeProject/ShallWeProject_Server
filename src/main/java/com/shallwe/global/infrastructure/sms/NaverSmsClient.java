@@ -95,7 +95,7 @@ public class NaverSmsClient implements SmsClient {
         HttpEntity<String> httpBody = new HttpEntity<>(body, headers);
 
         naverSmsTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        return naverSmsTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + SERVICE_ID + "/messages"), httpBody, SmsResponseDto.class);
+        return naverSmsTemplate.postForEntity("/" + SERVICE_ID + "/messages", httpBody, SmsResponseDto.class).getBody();
     }
 
     @Transactional
