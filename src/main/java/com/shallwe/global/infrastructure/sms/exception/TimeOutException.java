@@ -1,4 +1,4 @@
-package com.shallwe.domain.auth.exception;
+package com.shallwe.global.infrastructure.sms.exception;
 
 public class TimeOutException extends RuntimeException{
 

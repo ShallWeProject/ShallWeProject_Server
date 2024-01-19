@@ -1,8 +1,9 @@
 package com.shallwe.domain.auth.presentation;
 
 
-import com.shallwe.domain.auth.application.SmsService;
 import com.shallwe.domain.auth.dto.ShopOwnerChangePasswordReq;
+import com.shallwe.global.infrastructure.sms.NaverSmsClient;
+import com.shallwe.global.infrastructure.sms.dto.NaverVerifySmsReq;
 import com.shallwe.global.payload.ResponseCustom;
 import jakarta.validation.Valid;
 
@@ -32,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AuthService authService;
-    private final SmsService smsService;
+    private final NaverSmsClient naverSmsClient;
 
     @Operation(summary = "유저 회원가입", description = "유저 회원가입을 수행합니다.")
     @ApiResponses(value = {
@@ -90,9 +91,9 @@ public class AuthController {
     })
     @PostMapping("/send-one")
     public ResponseCustom<SmsResponseDto> sendOne(
-            @Parameter(description = "SmsReq Schema를 참고해주세요", required = true) @RequestBody SmsReq smsReq
+            @Parameter(description = "SmsReq Schema를 참고해주세요", required = true) @RequestBody NaverVerifySmsReq naverVerifySmsReq
     ) throws Exception {
-        return ResponseCustom.OK(smsService.sendOne(smsReq.getPhoneNumber()));
+        return ResponseCustom.OK(naverSmsClient.send(naverVerifySmsReq.getReceivePhoneNumber()));
     }
 
     @Operation(summary = "인증 번호 검증", description = "인증번호를 검증합니다.")
@@ -104,7 +105,7 @@ public class AuthController {
     public ResponseCustom<Message> validVerificationCode(
             @Parameter(description = "ValidVerificationCodeReq Schema를 참고해주세요") @RequestBody ValidVerificationCodeReq validVerificationCodeReq
     ) {
-        return ResponseCustom.OK(smsService.validVerificationCode(validVerificationCodeReq));
+        return ResponseCustom.OK(naverSmsClient.validVerificationCode(validVerificationCodeReq));
     }
 
     @Operation(summary = "사장 회원가입", description = "사장 회원가입을 수행합니다.")
