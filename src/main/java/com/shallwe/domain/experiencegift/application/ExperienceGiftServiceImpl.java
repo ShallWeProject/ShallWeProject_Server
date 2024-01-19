@@ -191,6 +191,25 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
     }
 
     @Override
+    public ShopOwnerExperienceDetailsRes getExperienceGiftDetails(UserPrincipal userPrincipal, Long experienceGiftId) {
+        ShopOwner shopOwner = shopOwnerRepository.findById(userPrincipal.getId())
+                .orElseThrow(InvalidUserException::new);
+
+        ExperienceGift experienceGift = experienceGiftRepository.findByIdAndShopOwner(experienceGiftId, shopOwner)
+                .orElseThrow(InvalidUserException::new);
+
+        ExperienceCategory expCategory = experienceGift.getExperienceCategory();
+
+        List<Explanation> explanations = explanationRepository.findByExperienceGift(experienceGift);
+
+        List<String> imgUrls = experienceGift.getImgList().stream()
+                .map(ExperienceGiftImage::getImgKey)
+                .collect(Collectors.toList());
+
+        return ShopOwnerExperienceDetailsRes.toDto(experienceGift, expCategory, explanations, imgUrls);
+    }
+
+    @Override
     public List<ExperienceRes> searchExperience(UserPrincipal userPrincipal, String title) {
         userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
         List<ExperienceGift> experienceGifts = experienceGiftRepository.findByTitleContainsAndStatus(title, Status.ACTIVE);

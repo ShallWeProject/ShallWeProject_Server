@@ -2,6 +2,7 @@ package com.shallwe.domain.experiencegift.presentation;
 
 import com.shallwe.domain.experiencegift.application.ExperienceGiftServiceImpl;
 import com.shallwe.domain.experiencegift.dto.request.ShopOwnerExperienceReq;
+import com.shallwe.domain.experiencegift.dto.response.ShopOwnerExperienceDetailsRes;
 import com.shallwe.domain.experiencegift.dto.response.ShopOwnerMainRes;
 import com.shallwe.domain.experiencegift.dto.response.ShopOwnerExperienceRes;
 import com.shallwe.global.config.security.token.CurrentUser;
@@ -96,5 +97,19 @@ public class ShopOwnerExperienceGiftController {
         experienceGiftService.deleteExperienceGift(experienceGiftId, userPrincipal);
         return ResponseCustom.OK();
     }
+
+    @Operation(summary = "사장님 경험 선물 상세 조회", description = "사장님 경험 선물 상세 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사장님 경험 선물 상세 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ShopOwnerExperienceRes.class))}),
+            @ApiResponse(responseCode = "400", description = "사장님 경험 선물 상세 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/{experienceGiftId}")
+    public ResponseCustom<ShopOwnerExperienceDetailsRes> getExperienceGiftDetails(
+            @Parameter(description = "Experience Gift ID", required = true) @PathVariable Long experienceGiftId,
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ) {
+        return ResponseCustom.OK(experienceGiftService.getExperienceGiftDetails(userPrincipal, experienceGiftId));
+    }
+
 
 }
