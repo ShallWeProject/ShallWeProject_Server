@@ -38,16 +38,16 @@ import java.util.Random;
 public class NaverSmsClient implements SmsClient {
 
     @Value("${sms.naver-cloud.service-id}")
-    private static String SERVICE_ID;
+    private String SERVICE_ID;
 
     @Value("${sms.naver-cloud.access-key}")
-    private static String ACCESS_KEY;
+    private String ACCESS_KEY;
 
     @Value("${sms.naver-cloud.secret-key}")
-    private static String SECRET_KEY;
+    private String SECRET_KEY;
 
     @Value("${sms.naver-cloud.sender-phone}")
-    private static String PHONE_NUMBER;
+    private String PHONE_NUMBER;
 
     private final RestTemplate naverSmsTemplate;
     private final VerificationCodeRepository verificationCodeRepository;
