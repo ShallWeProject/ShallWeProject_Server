@@ -53,8 +53,8 @@ jobs:
         if: contains(github.ref, 'develop')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/shallwe-dev .
-          docker push ${{ secrets.DOCKER_REPO }}/shallwe-dev
+          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }} .
+          docker push ${{ secrets.DOCKER_REPO }}
 
   CD:
     needs: CI
