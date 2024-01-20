@@ -52,6 +52,9 @@ dependencies {
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+
+	//jsch 로컬 개발용 DB SSH Tunneling
+	implementation 'com.jcraft:jsch:0.1.55'
 }
 
 tasks.named('test') {
