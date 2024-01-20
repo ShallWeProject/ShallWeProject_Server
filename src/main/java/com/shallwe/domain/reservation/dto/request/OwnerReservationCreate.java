@@ -22,9 +22,6 @@ public class OwnerReservationCreate {
   @Schema(description = "경험 선물 ID ", example = "1")
   private Long experienceGiftId;
 
-  @Schema(description = "사장님 ID", example = "1")
-  private Long ownerId;
-
   @Schema(description = "이용 가능 시간 map. \" 날짜1 \": \"시간1\", \"시간2\", \"시간3\" 형식",
       example = "\"dateTimeMap\": {\n"
           + "        \"2023-12-25\": [\"10:00\", \"13:00\"],\n"
