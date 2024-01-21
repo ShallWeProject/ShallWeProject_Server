@@ -1,0 +1,106 @@
+# github repository Actions 페이지에 나타낼 이름
+name: CI/CD
+
+# event trigger
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+
+    ## jdk setting
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+        ## gradle caching
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      ## create application-dev.yml
+      - name: make application-dev.yml
+        if: contains(github.ref, 'develop')
+        run: |
+          mkdir -p ./src/main/resources
+          cd ./src/main/resources
+          touch ./application-dev.yml
+          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
+        shell: bash
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+      # Spring Boot 애플리케이션 빌드
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: clean bootJar
+
+      # DockerHub 로그인
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Docker 이미지 빌드
+      - name: docker image build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile-dev
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/shallwe-dev
+
+  CD:
+    needs: CI
+    runs-on: ubuntu-latest
+    ## deploy to develop
+    steps:
+      - name: Deploy to dev
+        uses: appleboy/ssh-action@v0.1.4
+        id: deploy-dev
+        if: contains(github.ref, 'develop')
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.USERNAME }}
+          port: 22
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            ssh dev sudo docker rm -f $(ssh dev sudo docker ps -qa)
+            ssh dev sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+            ssh dev sudo docker run -dp 80:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+
+    ## time ##
+  current-time:
+    needs: CD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Current Time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DDTHH:mm:ss
+          utcOffset: "+09:00" # 기준이 UTC이기 때문에 한국시간인 KST를 맞추기 위해 +9시간 추가
+
+      - name: Print Current Time
+        run: echo "Current Time=${{steps.current-time.outputs.formattedTime}}" # current-time 에서 지정한 포맷대로 현재 시간 출력
+        shell: bash

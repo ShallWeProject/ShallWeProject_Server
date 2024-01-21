@@ -5,7 +5,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - develop
+      - main
 
 permissions:
   contents: read
@@ -34,14 +34,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      ## create application-dev.yml
-      - name: make application-dev.yml
-        if: contains(github.ref, 'develop')
+      ## create application-prod.yml
+      - name: make application-prod.yml
+        if: contains(github.ref, 'main')
         run: |
           mkdir -p ./src/main/resources
           cd ./src/main/resources
-          touch ./application-dev.yml
-          echo "${{ secrets.PROPERTIES_DEV }}" > ./application-dev.yml
+          touch ./application-prod.yml
+          echo "${{ secrets.PROPERTIES_PROD }}" > ./application-prod.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
@@ -66,29 +66,28 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile-dev
+          file: ./Dockerfile-prod
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/shallwe-dev
+          tags: ${{ secrets.DOCKER_USERNAME }}/shallwe-prod
 
   CD:
     needs: CI
     runs-on: ubuntu-latest
-    ## deploy to develop
+    ## deploy to prod
     steps:
-      - name: Deploy to dev
+      - name: Deploy to prod
         uses: appleboy/ssh-action@v0.1.4
-        id: deploy-dev
-        if: contains(github.ref, 'develop')
+        id: deploy-prod
+        if: contains(github.ref, 'main')
         with:
           host: ${{ secrets.HOST_DEV }}
           username: ${{ secrets.USERNAME }}
-          #password: ${{ secrets.PASSWORD }}
           port: 22
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            ssh dev sudo docker rm -f $(ssh dev sudo docker ps -qa)
-            ssh dev sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-            ssh dev sudo docker run -dp 80:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+            ssh prod sudo docker rm -f $(ssh prod sudo docker ps -qa)
+            ssh prod sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO_PROD }}
+            ssh prod sudo docker run -dp 80:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO_PROD }}
 
     ## time ##
   current-time:
