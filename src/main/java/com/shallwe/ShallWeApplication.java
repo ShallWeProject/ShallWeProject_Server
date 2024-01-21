@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @PropertySource(value = "classpath:application-dev.yml", factory = YamlPropertySourceFactory.class)
+@PropertySource(value = "classpath:application-prod.yml", factory = YamlPropertySourceFactory.class)
 public class ShallWeApplication {
 
 	public static void main(String[] args) {
