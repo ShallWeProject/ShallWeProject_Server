@@ -1,5 +1,6 @@
 package com.shallwe.global.config;
 
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
+import java.util.List;
+
 @Configuration
 public class SwaggerConfig {
 
@@ -19,6 +22,9 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI(@Value("OpenAPI") String appVersion) {
+        Server prodServer = new Server().url("https://api.shallwes.com").description("운영 서버");
+        Server devServer = new Server().url("https://api.shallwes.com/dev").description("개발 서버");
+        Server localServer = new Server().url("http://localhost:8080").description("로컬 서버");
         Info info = new Info().title("Shall We API").version(appVersion)
                 .description("Shall We API입니다.")
                 .termsOfService("https://shallews.com")
@@ -38,7 +44,8 @@ public class SwaggerConfig {
                                                 .bearerFormat("JWT")
                                 )
                 )
-                .info(info);
+                .info(info)
+                .servers(List.of(prodServer, devServer, localServer));
     }
 
 }
