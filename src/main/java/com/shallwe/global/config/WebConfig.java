@@ -18,6 +18,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name(),
                         HttpMethod.HEAD.name(), HttpMethod.TRACE.name(), HttpMethod.OPTIONS.name()) // 허용 method
                 .allowedHeaders("Authorization", "Content-Type"); // 허용 header
-                .allowCredentials(true);
     }
 }
