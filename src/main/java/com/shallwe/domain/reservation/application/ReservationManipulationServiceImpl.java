@@ -46,7 +46,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
             ownerReservationCreate.getExperienceGiftId())
         .orElseThrow(ExperienceGiftNotFoundException::new);
 
-    ShopOwner owner = shopOwnerRepository.findById(userPrincipal.getUser().getId())
+    ShopOwner owner = shopOwnerRepository.findById(userPrincipal.getShopOwner().getId())
         .orElseThrow(InvalidShopOwnerException::new);
 
     List<Reservation> reservations = OwnerReservationCreate.toEntityForOwner(ownerReservationCreate,
