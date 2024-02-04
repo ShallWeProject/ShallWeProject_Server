@@ -103,7 +103,7 @@ public class ReservationController {
     @Operation(summary = "해당 경험 선물에 생성된 예약 조회 ", description = "경험 ID로 검색")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "예약 정보 조회 성공", content = {
-                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationResponse.class)))}),
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReservationIdUserRes.class)))}),
             @ApiResponse(responseCode = "400", description = "예약 정보 조회 실패", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
 
