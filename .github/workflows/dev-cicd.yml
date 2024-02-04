@@ -88,9 +88,9 @@ jobs:
           port: 22
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            ssh dev sudo docker rm -f $(ssh dev sudo docker ps -qa) Shallwe-application
+            ssh dev sudo docker rm -f $(ssh dev sudo docker ps -qa) Shallwe-Application
             ssh dev sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-            ssh dev sudo docker run -dp 80:8080 --name Shallwe-application ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+            ssh dev sudo docker run -dp 80:8080 --name Shallwe-Application ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
 
     ## time ##
   current-time:
