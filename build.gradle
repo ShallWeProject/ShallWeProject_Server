@@ -55,6 +55,11 @@ dependencies {
 
 	//jsch 로컬 개발용 DB SSH Tunneling
 	implementation 'com.jcraft:jsch:0.1.55'
+
+	//Monitoring
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 }
 
 tasks.named('test') {
