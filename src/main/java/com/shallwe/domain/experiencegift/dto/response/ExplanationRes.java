@@ -1,6 +1,5 @@
 package com.shallwe.domain.experiencegift.dto.response;
 
-import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +23,8 @@ public class ExplanationRes {
         return ExplanationRes.builder()
                 .stage(stage)
                 .description(description)
-                .explanationUrl(AwsS3ImageUrlUtil.toUrl(explanationUrl))
+                .explanationUrl(explanationUrl)
                 .build();
-
     }
 
 }
