@@ -26,16 +26,15 @@ public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRep
 
     private final JPAQueryFactory queryFactory;
 
-
     @Override
     public List<Reservation> findReservationsByPhoneNumberAndReservationStatusIn(String phoneNumber) {
         return queryFactory
             .selectFrom(reservation)
-            .leftJoin(reservation.experienceGift, experienceGift).fetchJoin()
-            .leftJoin(reservation.experienceGift.subtitle, subtitle).fetchJoin()
-            .leftJoin(reservation.experienceGift.experienceCategory, experienceCategory).fetchJoin()
-            .leftJoin(reservation.experienceGift.situationCategory, situationCategory).fetchJoin()
-            .leftJoin(reservation.sender, new QUser("sender")).fetchJoin()
+            .leftJoin(reservation.experienceGift, experienceGift)
+            .leftJoin(reservation.experienceGift.subtitle, subtitle)
+            .leftJoin(reservation.experienceGift.experienceCategory, experienceCategory)
+            .leftJoin(reservation.experienceGift.situationCategory, situationCategory)
+            .leftJoin(reservation.sender, new QUser("sender"))
             .where(
                 reservation.phoneNumber.eq(phoneNumber)
                     .and(reservation.reservationStatus.in(ReservationStatus.BOOKED, ReservationStatus.COMPLETED))

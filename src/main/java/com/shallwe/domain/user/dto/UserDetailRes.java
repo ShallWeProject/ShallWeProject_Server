@@ -1,5 +1,6 @@
 package com.shallwe.domain.user.dto;
 
+import com.shallwe.domain.common.Status;
 import com.shallwe.domain.user.domain.Gender;
 import com.shallwe.domain.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,8 @@ public class UserDetailRes {
 
     private Gender gender;
 
+    private Status status;
+
     public static UserDetailRes toDto(User user) {
         return UserDetailRes.builder()
                 .id(user.getId())
@@ -39,6 +42,7 @@ public class UserDetailRes {
                 .phoneNumber(user.getPhoneNumber())
                 .profileImgUrl(user.getProfileImgUrl())
                 .gender(user.getGender())
+                .status(user.getStatus())
                 .build();
     }
 
