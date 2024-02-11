@@ -73,24 +73,16 @@ public class UserServiceImpl implements UserService {
     public List<SendGiftDetailRes> findSendGiftsByUser(UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
-        List<Reservation> reservations = reservationRepository
+        return reservationRepository
                 .findReservationsBySenderAndReservationStatusIn(user);
-
-        return reservations.stream()
-                .map(SendGiftDetailRes::toDto)
-                .toList();
     }
 
     @Override
     public List<ReceiveGiftDetailRes> findReceiveGiftsByUser(UserPrincipal userPrincipal) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
-        List<Reservation> reservations = reservationRepository
+        return reservationRepository
                 .findReservationsByPhoneNumberAndReservationStatusIn(user.getPhoneNumber());
-
-        return reservations.stream()
-                .map(ReceiveGiftDetailRes::toDto)
-                .toList();
     }
 
 }

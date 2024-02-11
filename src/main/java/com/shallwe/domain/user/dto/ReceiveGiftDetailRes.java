@@ -1,5 +1,6 @@
 package com.shallwe.domain.user.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.shallwe.domain.reservation.domain.Reservation;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,8 +14,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
-@Builder
 public class ReceiveGiftDetailRes {
 
     private Long reservationId;
@@ -41,6 +40,21 @@ public class ReceiveGiftDetailRes {
                 .invitationImg(reservation.getInvitationImg())
                 .invitationComment(reservation.getInvitationComment())
                 .build();
+    }
+
+    @Builder
+    @QueryProjection
+    public ReceiveGiftDetailRes(Long reservationId, ReservationStatus reservationStatus, Long experienceGiftId, String experienceTitle, String experienceSubTitle, LocalDate date, LocalTime time, UserDetailRes sender, String invitationImg, String invitationComment) {
+        this.reservationId = reservationId;
+        this.reservationStatus = reservationStatus;
+        this.experienceGiftId = experienceGiftId;
+        this.experienceTitle = experienceTitle;
+        this.experienceSubTitle = experienceSubTitle;
+        this.date = date;
+        this.time = time;
+        this.sender = sender;
+        this.invitationImg = invitationImg;
+        this.invitationComment = invitationComment;
     }
 
 }
