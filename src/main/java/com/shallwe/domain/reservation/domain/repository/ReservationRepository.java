@@ -30,7 +30,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
     Optional<List<Reservation>> findAllByExperienceGiftAndReservationStatus(ExperienceGift experienceGift, ReservationStatus reservationStatus);
 
-    Optional<Reservation> findByDateAndTime(LocalDate date, LocalTime time);
+    @EntityGraph(attributePaths = "experienceGift")
+    Optional<Reservation> findByDateAndTimeAndExperienceGift(LocalDate date, LocalTime time, ExperienceGift experienceGift);
 
     Optional<List<Reservation>> findAllByExperienceGiftAndDate(ExperienceGift experienceGift, LocalDate date);
+
 }
