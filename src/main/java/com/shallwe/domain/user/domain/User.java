@@ -19,7 +19,6 @@ import org.hibernate.annotations.Where;
 @Builder
 @Entity
 @Getter
-@Where(clause = "status = 'ACTIVE'")
 public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
