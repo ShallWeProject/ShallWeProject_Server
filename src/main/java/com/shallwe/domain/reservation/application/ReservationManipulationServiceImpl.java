@@ -62,7 +62,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
         User sender = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(InvalidUserException::new);
 
-        User receiver = userRepository.findByPhoneNumber(reservationRequest.getPhoneNumber())
+        User receiver = userRepository.findByPhoneNumberAndStatus(reservationRequest.getPhoneNumber(), Status.ACTIVE)
                 .orElseThrow(InvalidUserException::new);
 
         ExperienceGift experienceGift = experienceGiftRepository.findById(reservationRequest.getExperienceGiftId())

@@ -19,12 +19,14 @@ import com.shallwe.domain.user.domain.Provider;
 import com.shallwe.domain.user.domain.Role;
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.user.domain.User;
+import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.error.DefaultAuthenticationException;
 import com.shallwe.global.payload.ErrorCode;
 import com.shallwe.global.payload.Message;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class AuthService {
 
     private final CustomTokenProviderService customTokenProviderService;
@@ -66,11 +69,11 @@ public class AuthService {
 
         userRepository.save(newUser);
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        signUpReq.getEmail(),
-                        signUpReq.getProviderId()
-                )
+        UserPrincipal userPrincipal = UserPrincipal.createUser(newUser);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userPrincipal,
+                null,
+                userPrincipal.getAuthorities()
         );
 
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
@@ -94,11 +97,11 @@ public class AuthService {
             throw new InvalidPasswordException();
         }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        signInReq.getEmail(),
-                        signInReq.getProviderId()
-                )
+        UserPrincipal userPrincipal = UserPrincipal.createUser(user);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userPrincipal,
+                null,
+                userPrincipal.getAuthorities()
         );
 
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
@@ -157,7 +160,7 @@ public class AuthService {
 
     @Transactional
     public AuthRes shopOwnerSignUp(final ShopOwnerSignUpReq shopOwnerSignUpReq) {
-        if (shopOwnerRepository.existsByPhoneNumber(shopOwnerSignUpReq.getPhoneNumber())) {
+        if (shopOwnerRepository.existsByPhoneNumberAndStatus(shopOwnerSignUpReq.getPhoneNumber(), Status.ACTIVE)) {
             throw new AlreadyExistPhoneNumberException();
         }
 
@@ -170,11 +173,11 @@ public class AuthService {
 
         shopOwnerRepository.save(shopOwner);
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        shopOwnerSignUpReq.getPhoneNumber(),
-                        shopOwnerSignUpReq.getPassword()
-                )
+        UserPrincipal userPrincipal = UserPrincipal.createShopOwner(shopOwner);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userPrincipal,
+                null,
+                userPrincipal.getAuthorities()
         );
 
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
@@ -195,18 +198,18 @@ public class AuthService {
 
     @Transactional
     public AuthRes shopOwnerSignIn(final ShopOwnerSignInReq shopOwnerSignInReq) {
-        ShopOwner shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumber(shopOwnerSignInReq.getPhoneNumber())
+        ShopOwner shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumberAndStatus(shopOwnerSignInReq.getPhoneNumber(), Status.ACTIVE)
                 .orElseThrow(InvalidPhoneNumberException::new);
 
         if (!passwordEncoder.matches(shopOwnerSignInReq.getPassword(), shopOwner.getPassword())) {
             throw new InvalidPasswordException();
         }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        shopOwnerSignInReq.getPhoneNumber(),
-                        shopOwnerSignInReq.getPassword()
-                )
+        UserPrincipal userPrincipal = UserPrincipal.createShopOwner(shopOwner);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userPrincipal,
+                null,
+                userPrincipal.getAuthorities()
         );
 
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
@@ -227,7 +230,7 @@ public class AuthService {
 
     @Transactional
     public Message shopOwnerChangePassword(final ShopOwnerChangePasswordReq shopOwnerChangePasswordReq) {
-        ShopOwner shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumber(shopOwnerChangePasswordReq.getPhoneNumber())
+        ShopOwner shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumberAndStatus(shopOwnerChangePasswordReq.getPhoneNumber(), Status.ACTIVE)
                 .orElseThrow(InvalidShopOwnerException::new);
 
         shopOwner.changePassword(

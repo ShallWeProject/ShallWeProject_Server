@@ -6,17 +6,17 @@ import com.shallwe.domain.common.Status;
 import com.shallwe.domain.user.domain.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByEmailAndStatus(String email, Status status);
-
     Boolean existsByEmailAndStatus(String email, Status status);
 
-    Optional<User> findByPhoneNumber(String phoneNumber);
+    Optional<User> findByPhoneNumberAndStatus(String phoneNumber, Status status);
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmailAndStatus(String email, Status status);
 
 }
