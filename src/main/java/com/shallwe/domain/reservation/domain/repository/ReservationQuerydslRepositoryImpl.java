@@ -5,20 +5,19 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
-import com.shallwe.domain.user.domain.QUser;
 import com.shallwe.domain.user.domain.User;
+import com.shallwe.domain.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.shallwe.domain.experiencegift.domain.QExperienceCategory.*;
 import static com.shallwe.domain.experiencegift.domain.QExperienceGift.*;
-import static com.shallwe.domain.experiencegift.domain.QSituationCategory.*;
 import static com.shallwe.domain.experiencegift.domain.QSubtitle.*;
 import static com.shallwe.domain.memoryphoto.domain.QMemoryPhoto.memoryPhoto;
 import static com.shallwe.domain.reservation.domain.QReservation.*;
+import static com.shallwe.domain.user.domain.QUser.*;
 
 @RequiredArgsConstructor
 @Repository
@@ -26,38 +25,77 @@ public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRep
 
     private final JPAQueryFactory queryFactory;
 
-    @Override
-    public List<Reservation> findReservationsByPhoneNumberAndReservationStatusIn(String phoneNumber) {
+    public List<ReceiveGiftDetailRes> findReservationsByPhoneNumberAndReservationStatusIn(String phoneNumber) {
         return queryFactory
-            .selectFrom(reservation)
-            .leftJoin(reservation.experienceGift, experienceGift)
-            .leftJoin(reservation.experienceGift.subtitle, subtitle)
-            .leftJoin(reservation.experienceGift.experienceCategory, experienceCategory)
-            .leftJoin(reservation.experienceGift.situationCategory, situationCategory)
-            .leftJoin(reservation.sender, new QUser("sender"))
-            .where(
-                reservation.phoneNumber.eq(phoneNumber)
-                    .and(reservation.reservationStatus.in(ReservationStatus.BOOKED, ReservationStatus.COMPLETED))
-            )
-            .orderBy(reservation.reservationStatus.asc()).orderBy(reservation.date.desc())
-            .fetch();
+                .select(new QReceiveGiftDetailRes(
+                        reservation.id,
+                        reservation.reservationStatus,
+                        experienceGift.id,
+                        experienceGift.title,
+                        experienceGift.subtitle.title,
+                        reservation.date,
+                        reservation.time,
+                        new QUserDetailRes(
+                                user.id,
+                                user.name,
+                                user.birthDay,
+                                user.age,
+                                user.phoneNumber,
+                                user.email,
+                                user.profileImgUrl,
+                                user.gender,
+                                user.status
+                                ),
+                        reservation.invitationImg,
+                        reservation.invitationComment
+                ))
+                .from(reservation)
+                .leftJoin(experienceGift).on(reservation.experienceGift.eq(experienceGift))
+                .leftJoin(experienceGift.subtitle).on(experienceGift.subtitle.eq(subtitle))
+                .leftJoin(user).on(reservation.sender.eq(user))
+                .where(
+                        reservation.phoneNumber.eq(phoneNumber)
+                                .and(reservation.reservationStatus.in(ReservationStatus.BOOKED, ReservationStatus.COMPLETED))
+                )
+                .orderBy(reservation.reservationStatus.asc()).orderBy(reservation.date.desc())
+                .fetch();
     }
 
     @Override
-    public List<Reservation> findReservationsBySenderAndReservationStatusIn(User sender) {
+    public List<SendGiftDetailRes> findReservationsBySenderAndReservationStatusIn(User sender) {
         return queryFactory
-            .selectFrom(reservation)
-            .leftJoin(reservation.experienceGift, experienceGift).fetchJoin()
-            .leftJoin(reservation.experienceGift.subtitle, subtitle).fetchJoin()
-            .leftJoin(reservation.experienceGift.experienceCategory, experienceCategory).fetchJoin()
-            .leftJoin(reservation.experienceGift.situationCategory, situationCategory).fetchJoin()
-            .leftJoin(reservation.receiver, new QUser("receiver")).fetchJoin()
-            .where(
-                reservation.sender.eq(sender)
-                    .and(reservation.reservationStatus.in(ReservationStatus.BOOKED, ReservationStatus.COMPLETED))
-            )
-            .orderBy(reservation.reservationStatus.asc()).orderBy(reservation.date.desc())
-            .fetch();
+                .select(new QSendGiftDetailRes(
+                        reservation.id,
+                        reservation.reservationStatus,
+                        experienceGift.id,
+                        experienceGift.title,
+                        experienceGift.subtitle.title,
+                        reservation.date,
+                        reservation.time,
+                        new QUserDetailRes(
+                                user.id,
+                                user.name,
+                                user.birthDay,
+                                user.age,
+                                user.phoneNumber,
+                                user.email,
+                                user.profileImgUrl,
+                                user.gender,
+                                user.status
+                        ),
+                        reservation.invitationImg,
+                        reservation.invitationComment
+                ))
+                .from(reservation)
+                .leftJoin(experienceGift).on(reservation.experienceGift.eq(experienceGift))
+                .leftJoin(experienceGift.subtitle).on(experienceGift.subtitle.eq(subtitle))
+                .leftJoin(user).on(reservation.sender.eq(user))
+                .where(
+                        reservation.sender.eq(sender)
+                                .and(reservation.reservationStatus.in(ReservationStatus.BOOKED, ReservationStatus.COMPLETED))
+                )
+                .orderBy(reservation.reservationStatus.asc()).orderBy(reservation.date.desc())
+                .fetch();
     }
 
     @Override
