@@ -4,10 +4,8 @@ import com.querydsl.core.annotations.QueryProjection;
 import com.shallwe.domain.common.Status;
 import com.shallwe.domain.user.domain.Gender;
 import com.shallwe.domain.user.domain.User;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 public class UserDetailRes {

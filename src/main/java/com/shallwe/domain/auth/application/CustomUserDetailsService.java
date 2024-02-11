@@ -2,6 +2,7 @@ package com.shallwe.domain.auth.application;
 
 import java.util.Optional;
 
+import com.shallwe.domain.common.Status;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -28,12 +29,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmailAndStatus(email, Status.ACTIVE);
         if (user.isPresent()) {
             return UserPrincipal.createUser(user.get());
         }
 
-        Optional<ShopOwner> shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumber(email);
+        Optional<ShopOwner> shopOwner = shopOwnerRepository.findShopOwnerByPhoneNumberAndStatus(email, Status.ACTIVE);
         if (shopOwner.isPresent()) {
             return UserPrincipal.createShopOwner(shopOwner.get());
         }
