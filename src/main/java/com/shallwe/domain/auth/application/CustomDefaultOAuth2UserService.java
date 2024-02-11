@@ -2,6 +2,7 @@ package com.shallwe.domain.auth.application;
 
 import java.util.Optional;
 
+import com.shallwe.domain.common.Status;
 import com.shallwe.global.DefaultAssert;
 import com.shallwe.global.config.security.auth.OAuth2UserInfo;
 import com.shallwe.global.config.security.auth.OAuth2UserInfoFactory;
@@ -40,7 +41,7 @@ public class CustomDefaultOAuth2UserService extends DefaultOAuth2UserService{
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
         DefaultAssert.isAuthentication(!oAuth2UserInfo.getEmail().isEmpty());
         
-        Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
+        Optional<User> userOptional = userRepository.findByEmailAndStatus(oAuth2UserInfo.getEmail(), Status.ACTIVE);
         User user;
         if(userOptional.isPresent()) {
             user = userOptional.get();
