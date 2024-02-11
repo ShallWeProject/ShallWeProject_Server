@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.shallwe.domain.auth.dto.*;
 import com.shallwe.domain.auth.exception.AlreadyExistEmailException;
 import com.shallwe.domain.auth.exception.InvalidPasswordException;
+import com.shallwe.domain.common.Status;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.auth.dto.ShopOwnerChangePasswordReq;
@@ -50,7 +51,7 @@ public class AuthService {
 
     @Transactional
     public AuthRes signUp(final SignUpReq signUpReq) {
-        if (userRepository.existsByEmail(signUpReq.getEmail()))
+        if (userRepository.existsByEmailAndStatus(signUpReq.getEmail(), Status.ACTIVE))
             throw new AlreadyExistEmailException();
 
         User newUser = User.builder()
@@ -87,7 +88,7 @@ public class AuthService {
 
     @Transactional
     public AuthRes signIn(final SignInReq signInReq) {
-        User user = userRepository.findByEmail(signInReq.getEmail())
+        User user = userRepository.findByEmailAndStatus(signInReq.getEmail(), Status.ACTIVE)
                 .orElseThrow(InvalidUserException::new);
         if (!user.getProviderId().equals(signInReq.getProviderId())) {
             throw new InvalidPasswordException();
