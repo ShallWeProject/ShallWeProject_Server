@@ -23,6 +23,7 @@ public class ExperienceDetailRes {
     private Long price;
     private List<ExplanationRes> explanation;
     private String description;
+    private String note;
     private String location;
 
     public static ExperienceDetailRes toDetailDto(ExperienceGift experienceGift, List<Explanation> explanations,List<String> giftImgUrl){
@@ -35,6 +36,7 @@ public class ExperienceDetailRes {
         experienceDetailRes.description=experienceGift.getDescription();
         experienceDetailRes.location=experienceGift.getLocation();
         experienceDetailRes.explanation=explanations.stream().map(m -> ExplanationRes.toDto(m.getStage(),m.getDescription(), m.getExplanationKey())).collect(Collectors.toList());
+        experienceDetailRes.note=experienceGift.getNote();
         return experienceDetailRes;
     }
 

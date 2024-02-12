@@ -15,8 +15,6 @@ import org.hibernate.annotations.Where;
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 @Entity
 @Getter
 public class User extends BaseEntity {
@@ -74,6 +72,22 @@ public class User extends BaseEntity {
 
     public void updatePhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @Builder
+    public User(String name, String birthDay, Integer age, String phoneNumber, String email, String password, String profileImgUrl, Gender gender, Boolean marketingConsent, Provider provider, String providerId, Role role) {
+        this.name = name;
+        this.birthDay = birthDay;
+        this.age = age;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.password = password;
+        this.profileImgUrl = profileImgUrl;
+        this.gender = gender;
+        this.marketingConsent = marketingConsent;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.role = role;
     }
 
 }
