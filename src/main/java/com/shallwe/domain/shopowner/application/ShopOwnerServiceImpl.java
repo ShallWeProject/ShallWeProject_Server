@@ -3,6 +3,7 @@ package com.shallwe.domain.shopowner.application;
 
 import static com.shallwe.domain.reservation.domain.ReservationStatus.BOOKED;
 import static com.shallwe.domain.reservation.domain.ReservationStatus.CONFIRMED;
+import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
 
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
@@ -78,7 +79,7 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
   public Message confirmPayment(UserPrincipal userPrincipal, Long reservationId) {
     Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
         InvalidReservationException::new);
-    if (!reservation.getReservationStatus().equals(BOOKED)) {
+    if (!reservation.getReservationStatus().equals(WAITING)) {
       return Message.builder()
           .message("올바르지 않은 시도입니다.")
           .build();
