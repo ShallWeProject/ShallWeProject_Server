@@ -18,6 +18,8 @@ import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -327,6 +329,12 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
 
             return ExperienceExpCategoryRes.toDto(experienceGift, imgUrls);
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Slice<ExperienceGiftRes> getPagedExperienceGifts(final Pageable pageable, final String sttCategory,
+                                                            final String searchCondition, final String expCategory, final String sortCondition) {
+        return experienceGiftRepository.findPagedExperienceGifts(pageable, sttCategory, searchCondition, expCategory, sortCondition);
     }
 
 }
