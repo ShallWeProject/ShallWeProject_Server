@@ -6,9 +6,6 @@ import lombok.Data;
 @Data
 public class AppleSignInReq {
 
-    @Schema(type = "string", description = "애플 로그인을 위한 AuthorizationCode")
-    private String authorizationCode;
-
     @Schema(type = "string", description = "애플 로그인을 위한 IdentityToken")
     private String identityToken;
 
