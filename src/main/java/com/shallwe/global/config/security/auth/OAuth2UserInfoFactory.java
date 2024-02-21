@@ -9,7 +9,7 @@ import com.shallwe.domain.user.domain.Provider;
 public class OAuth2UserInfoFactory {
 
     public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) {
-        if(registrationId.equalsIgnoreCase(Provider.kakao.toString())) {
+        if(registrationId.equalsIgnoreCase(Provider.KAKAO.toString())) {
             return new Kakao(attributes);
         } else {
             DefaultAssert.isAuthentication("해당 oauth2 기능은 지원하지 않습니다.");

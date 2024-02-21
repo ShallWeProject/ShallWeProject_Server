@@ -49,7 +49,7 @@ public class Kakao extends OAuth2UserInfo {
 
     @Override
     public String getProvider(){
-        return Provider.kakao.toString();
+        return Provider.KAKAO.toString();
     }
 
     @Override
