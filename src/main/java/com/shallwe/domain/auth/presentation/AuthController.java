@@ -65,7 +65,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "애플 로그인 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping(value="/sign-in/apple")
-    public ResponseCustom<AppleSignInRes> appleSignIn(
+    public ResponseCustom<AuthRes> appleSignIn(
             @Parameter(description = "SignInReq Schema를 확인해주세요.", required = true) @RequestBody AppleSignInReq appleSignInReq
     ) {
         return ResponseCustom.OK(authService.appleSignIn(appleSignInReq));

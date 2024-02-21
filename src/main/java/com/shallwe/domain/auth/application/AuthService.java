@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.shallwe.domain.auth.dto.*;
 import com.shallwe.domain.auth.exception.AlreadyExistEmailException;
 import com.shallwe.domain.auth.exception.InvalidPasswordException;
+import com.shallwe.domain.auth.exception.UnRegisteredUserException;
 import com.shallwe.domain.common.Status;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
@@ -21,11 +22,14 @@ import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.error.DefaultAuthenticationException;
+import com.shallwe.global.infrastructure.feign.apple.AppleClient;
 import com.shallwe.global.payload.ErrorCode;
 import com.shallwe.global.payload.Message;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 
+import com.shallwe.global.utils.AppleJwtUtils;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,16 +43,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.client.RestTemplate;
 
 
-@RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
+@RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final CustomTokenProviderService customTokenProviderService;
+    private final AppleJwtUtils appleJwtUtils;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final RestTemplate appleSignInTemplate;
 
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
@@ -61,7 +64,7 @@ public class AuthService {
 
         User newUser = User.builder()
                 .providerId(signUpReq.getProviderId())
-                .provider(Provider.kakao)
+                .provider(signUpReq.getProvider())
                 .name(signUpReq.getNickname())
                 .email(signUpReq.getEmail())
                 .profileImgUrl(signUpReq.getProfileImgUrl())
@@ -258,8 +261,36 @@ public class AuthService {
         return true;
     }
 
-    public AppleSignInRes appleSignIn(AppleSignInReq appleSignInReq) {
-        return null;
+    @Transactional
+    public AuthRes appleSignIn(AppleSignInReq appleSignInReq) {
+        Claims claims = appleJwtUtils.getClaimsBy(appleSignInReq.getIdentityToken());
+        Long userId = Long.parseLong(claims.getId());
+
+        User user = userRepository.findById(userId).orElseThrow(InvalidUserException::new);
+        if(user.getName() == null || user.getPhoneNumber() == null || user.getAge() == null || user.getGender() == null) {
+            throw new UnRegisteredUserException();
+        }
+
+        UserPrincipal userPrincipal = UserPrincipal.createUser(user);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userPrincipal,
+                null,
+                userPrincipal.getAuthorities()
+        );
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
+                .build();
+        tokenRepository.save(token);
+
+        AuthRes authRes = AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(token.getRefreshToken())
+                .build();
+
+        return authRes;
     }
 
 }
