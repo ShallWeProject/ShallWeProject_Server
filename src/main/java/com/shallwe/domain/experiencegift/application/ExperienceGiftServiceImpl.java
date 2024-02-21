@@ -69,11 +69,6 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
     }
 
     @Override
-    public Slice<ExperienceGiftRes> getPagedPopularGift(final Pageable pageable) {
-        return experienceGiftRepository.findPagedPopularGifts(pageable);
-    }
-
-    @Override
     @Transactional
     public void registerExperienceGift(UserPrincipal userPrincipal, ShopOwnerExperienceReq shopOwnerExperienceReq) {
         ShopOwner shopOwner = shopOwnerRepository.findById(userPrincipal.getId())
@@ -334,6 +329,11 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
 
             return ExperienceExpCategoryRes.toDto(experienceGift, imgUrls);
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Slice<ExperienceGiftRes> getPagedExperienceGifts(Pageable pageable, String sttCategory, String expCategory, String sortCondition) {
+        return experienceGiftRepository.findPagedExperienceGifts(pageable, sttCategory, expCategory, sortCondition);
     }
 
 }

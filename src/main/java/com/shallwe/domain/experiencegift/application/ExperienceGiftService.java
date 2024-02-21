@@ -34,8 +34,6 @@ public interface ExperienceGiftService {
 
     List<ExperienceRes> getAllPopularGift(UserPrincipal userPrincipal);
 
-    Slice<ExperienceGiftRes> getPagedPopularGift(Pageable pageable);
-
     void registerExperienceGift(UserPrincipal userPrincipal, ShopOwnerExperienceReq shopOwnerExperienceReq);
 
     ShopOwnerMainRes mainAdminExperienceGift(UserPrincipal userPrincipal);
@@ -47,4 +45,7 @@ public interface ExperienceGiftService {
     void deleteExperienceGift(Long experienceGiftId, UserPrincipal userPrincipal);
 
     ShopOwnerExperienceDetailsRes getExperienceGiftDetails(UserPrincipal userPrincipal, Long experienceGiftId);
+
+    Slice<ExperienceGiftRes> getPagedExperienceGifts(Pageable pageable, String sttCategory, String expCategory, String sortCondition);
+
 }

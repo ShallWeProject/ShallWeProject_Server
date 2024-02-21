@@ -22,13 +22,13 @@ public class ExperienceGiftExperienceCategory extends BaseEntity {
     private ExperienceGift experienceGift;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(nullable = false, name = "situation_category_id")
-    private SituationCategory situationCategory;
+    @JoinColumn(nullable = false, name = "experience_category_id")
+    private ExperienceCategory experienceCategory;
 
     @Builder
-    public ExperienceGiftExperienceCategory(ExperienceGift experienceGift, SituationCategory situationCategory) {
+    public ExperienceGiftExperienceCategory(ExperienceGift experienceGift, ExperienceCategory experienceCategory) {
         this.experienceGift = experienceGift;
-        this.situationCategory = situationCategory;
+        this.experienceCategory = experienceCategory;
     }
 
 }

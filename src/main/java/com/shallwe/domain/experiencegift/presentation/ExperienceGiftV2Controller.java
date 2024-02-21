@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -28,16 +29,19 @@ public class ExperienceGiftV2Controller {
 
     private final ExperienceGiftServiceImpl experienceGiftService;
 
-    @Operation(summary = "인기별 전체 경험선물 조회(Paging)", description = "인기별 전체 경험선물 조회합니다.(Paging)")
+    @Operation(summary = "상황별 경험선물 조회(Paging)", description = "상황별 경험선물 조회합니다.(Paging)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "인기별 전체 경험선물 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ExperienceGiftRes.class)))}),
-            @ApiResponse(responseCode = "400", description = "인기별 전체 경험선물 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "200", description = "상황별 전체 경험선물 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ExperienceGiftRes.class)))}),
+            @ApiResponse(responseCode = "400", description = "상황별 전체 경험선물 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    @GetMapping("/popular")
-    public ResponseCustom<Slice<ExperienceGiftRes>> getAllPopularGift(
-            @Parameter(description = "조회 할 페이지와 페이지 크기를 입력해주세요") Pageable pageable
+    @GetMapping("/list")
+    public ResponseCustom<Slice<ExperienceGiftRes>> getPagedExperienceGiftByPopular(
+            @Parameter(name = "sttCategory", description = "상황 카테고리") @RequestParam(name = "sttCategory", required = false) String sttCategory,
+            @Parameter(name = "expCategory", description = "경험 카테고리") @RequestParam(name = "expCategory", required = false) String expCategory,
+            @Parameter(name = "sortCondition", description = "인기순, 추천순, 가격높은순, 가격낮은순") @RequestParam(name = "sortCondition", required = false, defaultValue = "popular") String sortCondition,
+            @Parameter(name = "pagingCondition", description = "조회 할 페이지와 페이지 크기를 입력해주세요(sort는 무시해도 됩니다.)") Pageable pageable
     ) {
-        return ResponseCustom.OK(experienceGiftService.getPagedPopularGift(pageable));
+        return ResponseCustom.OK(experienceGiftService.getPagedExperienceGifts(pageable, sttCategory, expCategory, sortCondition));
     }
 
 }
