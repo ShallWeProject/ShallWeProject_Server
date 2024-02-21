@@ -10,9 +10,10 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "experience_gift")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Entity
 public class ExperienceGift extends BaseEntity {
 
     @Id
@@ -81,6 +82,14 @@ public class ExperienceGift extends BaseEntity {
         this.experienceCategory = experienceCategory;
         this.shopOwner = shopOwner;
         this.note=shopOwnerExperienceReq.getNote();
+    }
+
+    public void addReservationCount() {
+        this.reservationCount++;
+    }
+
+    public void subtractReservationCount() {
+        this.reservationCount--;
     }
 
     @Builder

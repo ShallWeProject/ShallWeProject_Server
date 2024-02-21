@@ -332,8 +332,9 @@ public class ExperienceGiftServiceImpl implements ExperienceGiftService {
     }
 
     @Override
-    public Slice<ExperienceGiftRes> getPagedExperienceGifts(Pageable pageable, String sttCategory, String expCategory, String sortCondition) {
-        return experienceGiftRepository.findPagedExperienceGifts(pageable, sttCategory, expCategory, sortCondition);
+    public Slice<ExperienceGiftRes> getPagedExperienceGifts(final Pageable pageable, final String sttCategory,
+                                                            final String searchCondition, final String expCategory, final String sortCondition) {
+        return experienceGiftRepository.findPagedExperienceGifts(pageable, sttCategory, searchCondition, expCategory, sortCondition);
     }
 
 }

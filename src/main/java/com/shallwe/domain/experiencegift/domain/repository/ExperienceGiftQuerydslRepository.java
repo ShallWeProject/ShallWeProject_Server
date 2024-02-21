@@ -16,6 +16,5 @@ public interface ExperienceGiftQuerydslRepository {
     List<ExperienceGift> findPopularGiftsBySttCategoryId(Long sttCategoryId);
     List<ExperienceGift> findPopularGiftsByExpCategoryId(Long ExpCategoryId);
     List<ExperienceGift> findAllPopularGifts();
-    Slice<ExperienceGiftRes> findPagedExperienceGifts(Pageable pageable, String sttCategory, String expCategory, String sortCondition);
-
+    Slice<ExperienceGiftRes> findPagedExperienceGifts(Pageable pageable, String sttCategory, String searchCondition, String expCategory, String sortCondition);
 }
