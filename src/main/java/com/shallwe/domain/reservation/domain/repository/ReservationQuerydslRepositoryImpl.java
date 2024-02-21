@@ -102,16 +102,16 @@ public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRep
     public List<Reservation> findReservationsByDateAndUser(LocalDate date, User user) {
         return queryFactory
             .selectFrom(reservation)
-            .leftJoin(reservation.experienceGift, experienceGift).fetchJoin()
-            .leftJoin(reservation.experienceGift.subtitle, subtitle).fetchJoin()
-            .leftJoin(reservation.memoryPhotos, memoryPhoto).fetchJoin()
-            .leftJoin(memoryPhoto.uploader).fetchJoin()
-            .leftJoin(reservation.sender).fetchJoin()
-            .leftJoin(reservation.receiver).fetchJoin()
+            .leftJoin(reservation.experienceGift, experienceGift)
+            .leftJoin(reservation.experienceGift.subtitle, subtitle)
+            .leftJoin(reservation.memoryPhotos, memoryPhoto)
+            .leftJoin(memoryPhoto.uploader)
+            .leftJoin(reservation.sender)
+            .leftJoin(reservation.receiver)
             .where(
                 reservation.date.eq(date)
                     .and(reservation.sender.eq(user).or(reservation.receiver.eq(user)))
-                    .and(reservation.reservationStatus.in(ReservationStatus.COMPLETED))
+                    .and(reservation.reservationStatus.in(ReservationStatus.COMPLETED, ReservationStatus.USING))
             )
             .fetch();
     }
