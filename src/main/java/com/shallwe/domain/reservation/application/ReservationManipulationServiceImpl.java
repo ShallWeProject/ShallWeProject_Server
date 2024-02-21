@@ -41,9 +41,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
     private final UserRepository userRepository;
 
     @Transactional
-    public List<ReservationResponse> addOwnerReservation(
-            OwnerReservationCreate ownerReservationCreate,
-            UserPrincipal userPrincipal) {
+    public List<ReservationResponse> addOwnerReservation(OwnerReservationCreate ownerReservationCreate, UserPrincipal userPrincipal) {
         ExperienceGift experienceGift = experienceGiftRepository.findById(ownerReservationCreate.getExperienceGiftId())
                 .orElseThrow(ExperienceGiftNotFoundException::new);
 
@@ -75,6 +73,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
         if (reservation.getReservationStatus().equals(WAITING)) {
             reservation.updateStatus(ReservationStatus.BOOKED);
             reservation.updateUserReservationRequest(reservationRequest, sender, receiver);
+            experienceGift.addReservationCount();
         } else {
             throw new InvalidReservationException();
         }
