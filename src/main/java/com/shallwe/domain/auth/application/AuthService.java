@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.client.RestTemplate;
 
 
 @RequiredArgsConstructor
@@ -47,6 +48,7 @@ public class AuthService {
     private final CustomTokenProviderService customTokenProviderService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final RestTemplate appleSignInTemplate;
 
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
@@ -254,6 +256,10 @@ public class AuthService {
         DefaultAssert.isTrue(token.get().getUserEmail().equals(authentication.getName()), "사용자 인증에 실패하였습니다.");
 
         return true;
+    }
+
+    public AppleSignInRes appleSignIn(AppleSignInReq appleSignInReq) {
+        return null;
     }
 
 }

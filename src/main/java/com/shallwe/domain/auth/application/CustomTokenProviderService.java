@@ -7,7 +7,8 @@ import com.shallwe.global.config.security.OAuth2Config;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.domain.auth.dto.TokenMapping;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.shallwe.global.infrastructure.feign.apple.AppleClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,13 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CustomTokenProviderService {
 
-    @Autowired
-    private OAuth2Config oAuth2Config;
-
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private final OAuth2Config oAuth2Config;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final AppleClient appleClient;
 
     public TokenMapping refreshToken(Authentication authentication, String refreshToken) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
