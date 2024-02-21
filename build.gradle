@@ -25,6 +25,7 @@ dependencies {
 
 	//외부 API 호출할 때 쓰는 RestTemplate 라이브러리
 	implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.1'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
 
 	//S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
