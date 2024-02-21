@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.shallwe.domain.auth.dto.*;
 import com.shallwe.domain.auth.exception.AlreadyExistEmailException;
 import com.shallwe.domain.auth.exception.InvalidPasswordException;
+import com.shallwe.domain.auth.exception.InvalidProviderIdException;
 import com.shallwe.domain.auth.exception.UnRegisteredUserException;
 import com.shallwe.domain.common.Status;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
@@ -264,9 +265,9 @@ public class AuthService {
     @Transactional
     public AuthRes appleSignIn(AppleSignInReq appleSignInReq) {
         Claims claims = appleJwtUtils.getClaimsBy(appleSignInReq.getIdentityToken());
-        Long userId = Long.parseLong(claims.getId());
+        String providerId = claims.get("sub").toString();
 
-        User user = userRepository.findById(userId).orElseThrow(InvalidUserException::new);
+        User user = userRepository.findByProviderId(providerId).orElseThrow(InvalidProviderIdException::new);
         if(user.getName() == null || user.getPhoneNumber() == null || user.getAge() == null || user.getGender() == null) {
             throw new UnRegisteredUserException();
         }
