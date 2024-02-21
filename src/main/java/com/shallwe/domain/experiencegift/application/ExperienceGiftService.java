@@ -7,6 +7,8 @@ import com.shallwe.domain.experiencegift.dto.response.ExperienceExpCategoryRes;
 import com.shallwe.domain.experiencegift.dto.response.ExperienceRes;
 import com.shallwe.domain.experiencegift.dto.response.ExperienceSttCategoryRes;
 import com.shallwe.global.config.security.token.UserPrincipal;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -31,6 +33,8 @@ public interface ExperienceGiftService {
     ExperienceMainRes mainPage(UserPrincipal userPrincipal);
 
     List<ExperienceRes> getAllPopularGift(UserPrincipal userPrincipal);
+
+    Slice<ExperienceGiftRes> getPagedPopularGift(Pageable pageable);
 
     void registerExperienceGift(UserPrincipal userPrincipal, ShopOwnerExperienceReq shopOwnerExperienceReq);
 

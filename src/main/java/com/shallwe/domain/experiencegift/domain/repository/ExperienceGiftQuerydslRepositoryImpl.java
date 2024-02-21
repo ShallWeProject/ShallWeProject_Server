@@ -3,8 +3,13 @@ package com.shallwe.domain.experiencegift.domain.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shallwe.domain.common.Status;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
+import com.shallwe.domain.experiencegift.dto.response.ExperienceGiftRes;
+import com.shallwe.domain.experiencegift.dto.response.QExperienceGiftRes;
 import com.shallwe.domain.reservation.domain.QReservation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -90,6 +95,33 @@ public class ExperienceGiftQuerydslRepositoryImpl implements ExperienceGiftQuery
                 .groupBy(experienceGift.id)
                 .orderBy(reservation.id.count().desc())
                 .fetch();
+    }
+
+    @Override
+    public Slice<ExperienceGiftRes> findPagedPopularGifts(final Pageable pageable) {
+        QReservation reservation = QReservation.reservation;
+
+        List<ExperienceGiftRes> results = queryFactory
+                .select(new QExperienceGiftRes(
+                        experienceGift.id,
+                        experienceGift.giftImgUrl,
+                        experienceGift.subtitle.title,
+                        experienceGift.title,
+                        experienceGift.price
+                ))
+                .from(experienceGift)
+                .leftJoin(experienceGift.subtitle)
+                .where(experienceGift.status.eq(Status.ACTIVE))
+                // WAITING이 아닌 예약의 개수를 기준으로 정렬
+                .orderBy(experienceGift.reservationCount.desc().nullsLast())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1) // +1 to check if next slice is available
+                .fetch();
+
+        boolean hasNext = results.size() > pageable.getPageSize();
+        List<ExperienceGiftRes> content = hasNext ? results.subList(0, pageable.getPageSize()) : results;
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 
 }

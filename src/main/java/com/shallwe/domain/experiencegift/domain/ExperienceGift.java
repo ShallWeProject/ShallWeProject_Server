@@ -19,13 +19,30 @@ public class ExperienceGift extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "price")
+    private Long price;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "gift_img_url")
+    private String giftImgUrl;
+
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "note")
+    private String note;
+
+    @Column(name = "reservation_count")
+    private Long reservationCount; // 인기순 정렬을 위한 WAITING이 아닌 Reservation 개수 카운트
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subtitle_id")
     private Subtitle subtitle;
-
-    private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "experience_category_id")
@@ -35,17 +52,9 @@ public class ExperienceGift extends BaseEntity {
     @JoinColumn(name = "situation_category_id")
     private SituationCategory situationCategory;
 
-    private String description;
-
-    private String giftImgKey;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shopOwner_id")
     private ShopOwner shopOwner;
-
-    private String location;
-
-    private String note;
 
     @OneToMany(mappedBy = "experienceGift")
     private List<ExperienceGiftImage> imgList = new ArrayList<>();
@@ -75,14 +84,14 @@ public class ExperienceGift extends BaseEntity {
     }
 
     @Builder
-    public ExperienceGift(String title, Subtitle subtitle, Long price, ExperienceCategory experienceCategory, SituationCategory situationCategory, String description, String giftImgKey, ShopOwner shopOwner, String location, String note, List<ExperienceGiftImage> imgList) {
+    public ExperienceGift(String title, Subtitle subtitle, Long price, ExperienceCategory experienceCategory, SituationCategory situationCategory, String description, String giftImgUrl, ShopOwner shopOwner, String location, String note, List<ExperienceGiftImage> imgList) {
         this.title = title;
         this.subtitle = subtitle;
         this.price = price;
         this.experienceCategory = experienceCategory;
         this.situationCategory = situationCategory;
         this.description = description;
-        this.giftImgKey = giftImgKey;
+        this.giftImgUrl = giftImgUrl;
         this.shopOwner = shopOwner;
         this.location = location;
         this.note = note;
