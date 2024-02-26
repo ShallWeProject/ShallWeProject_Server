@@ -79,7 +79,7 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
   public Message confirmPayment(UserPrincipal userPrincipal, Long reservationId) {
     Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
         InvalidReservationException::new);
-    if (!reservation.getReservationStatus().equals(WAITING)) {
+    if (!reservation.getReservationStatus().equals(BOOKED)) {
       return Message.builder()
           .message("올바르지 않은 시도입니다.")
           .build();

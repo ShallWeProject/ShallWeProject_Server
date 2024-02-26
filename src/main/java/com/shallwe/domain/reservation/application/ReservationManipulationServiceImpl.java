@@ -15,7 +15,8 @@ import com.shallwe.domain.reservation.dto.response.ReservationResponse;
 import com.shallwe.domain.reservation.dto.request.UserReservationCreate;
 import com.shallwe.domain.reservation.dto.request.UpdateReservationReq;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
-import com.shallwe.domain.reservation.exception.InvalidUserException;
+import com.shallwe.domain.reservation.exception.InvalidSenderException;
+import com.shallwe.domain.reservation.exception.InvalidReceiverException;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
@@ -58,10 +59,10 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
     @Transactional
     public ReservationResponse addUserReservation(UserReservationCreate reservationRequest, UserPrincipal userPrincipal) {
         User sender = userRepository.findById(userPrincipal.getId())
-                .orElseThrow(InvalidUserException::new);
+                .orElseThrow(InvalidSenderException::new);
 
         User receiver = userRepository.findByPhoneNumberAndStatus(reservationRequest.getPhoneNumber(), Status.ACTIVE)
-                .orElseThrow(InvalidUserException::new);
+                .orElseThrow(InvalidReceiverException::new);
 
         ExperienceGift experienceGift = experienceGiftRepository.findById(reservationRequest.getExperienceGiftId())
                 .orElseThrow(ExperienceGiftNotFoundException::new);

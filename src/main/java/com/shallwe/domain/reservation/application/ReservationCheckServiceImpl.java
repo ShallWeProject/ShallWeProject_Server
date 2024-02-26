@@ -1,5 +1,6 @@
 package com.shallwe.domain.reservation.application;
 
+import static com.shallwe.domain.reservation.domain.ReservationStatus.BOOKED;
 import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
 
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
@@ -13,7 +14,7 @@ import com.shallwe.domain.reservation.dto.response.ReservationResponse;
 import com.shallwe.domain.reservation.dto.response.ValidTimeSlotRes;
 import com.shallwe.domain.reservation.exception.InvalidAvailableTimeException;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
-import com.shallwe.domain.reservation.exception.InvalidUserException;
+import com.shallwe.domain.reservation.exception.InvalidSenderException;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -40,7 +41,7 @@ public class ReservationCheckServiceImpl implements ReservationCheckService{
         .orElseThrow(ExperienceGiftNotFoundException::new);
 
     List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndReservationStatus(
-            experienceGift, WAITING)
+            experienceGift, BOOKED)
         .orElseThrow(InvalidAvailableTimeException::new);
     System.out.println(Arrays.toString(reservations.toArray()));
     return reservations.stream().map(reservation -> ValidTimeSlotRes.builder()
@@ -83,7 +84,7 @@ public class ReservationCheckServiceImpl implements ReservationCheckService{
 
   public List<ReservationResponse> findUserReservation(UserPrincipal userPrincipal) {
     return reservationRepository.findAllBySenderId(userPrincipal.getId()).orElseThrow(
-            InvalidUserException::new)
+            InvalidSenderException::new)
         .stream().map(ReservationResponse::toDtoUser).collect(Collectors.toList());
   }
 
