@@ -9,7 +9,7 @@ import com.shallwe.domain.memoryphoto.exception.MemoryPhotoUploaderMismatchExcep
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationMemoryPhotoRepository;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
-import com.shallwe.domain.reservation.exception.InvalidUserException;
+import com.shallwe.domain.reservation.exception.InvalidSenderException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -34,7 +34,7 @@ public class MemoryPhotoServiceImpl implements MemoryPhotoService{
     @Override
     public List<MemoryPhotoDetailRes> getMemoryPhotoByDate(final UserPrincipal userPrincipal, final LocalDate date) {
         User user = userRepository.findById(userPrincipal.getId())
-                .orElseThrow(InvalidUserException::new);
+                .orElseThrow(InvalidSenderException::new);
         List<Reservation> reservations = reservationRepository.findReservationsByDateAndUser(date, user);
 
         return reservations.stream()
@@ -46,7 +46,7 @@ public class MemoryPhotoServiceImpl implements MemoryPhotoService{
     @Transactional
     public Message uploadMemoryPhoto(UserPrincipal userPrincipal, UploadMemoryPhotoReq uploadMemoryPhotoReq) {
         User user = userRepository.findById(userPrincipal.getId())
-                .orElseThrow(InvalidUserException::new);
+                .orElseThrow(InvalidSenderException::new);
 
         Reservation reservation = reservationRepository.findById(uploadMemoryPhotoReq.getReservationId())
                 .orElseThrow(InvalidReservationException::new);

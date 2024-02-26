@@ -23,10 +23,9 @@ public class OwnerReservationCreate {
   private Long experienceGiftId;
 
   @Schema(description = "이용 가능 시간 map. \" 날짜1 \": \"시간1\", \"시간2\", \"시간3\" 형식",
-      example = "\"dateTimeMap\": {\n"
-          + "        \"2023-12-25\": [\"10:00\", \"13:00\"],\n"
-          + "        \"2023-12-26\": [\"11:00\", \"14:00\"]\n"
-          + "    }")
+      example =
+          "2024-02-05\": [\"11:00\", \"14:00\"]"
+      )
   private Map<LocalDate, List<LocalTime>> dateTimeMap;
 
   public static List<Reservation> toEntityForOwner(OwnerReservationCreate ownerReservationCreate,
