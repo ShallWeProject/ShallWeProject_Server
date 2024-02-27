@@ -3,6 +3,7 @@ package com.shallwe.domain.shopowner.application;
 
 import static com.shallwe.domain.reservation.domain.ReservationStatus.BOOKED;
 import static com.shallwe.domain.reservation.domain.ReservationStatus.CONFIRMED;
+import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
 
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
