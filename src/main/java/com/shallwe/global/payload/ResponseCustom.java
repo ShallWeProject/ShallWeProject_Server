@@ -116,6 +116,16 @@ public class ResponseCustom<T>{
                 .build();
     }
 
+    public static <T> ResponseCustom<T> METHOD_NOT_ALLOWED(@Nullable T data){
+        return (ResponseCustom<T>) ResponseCustom.builder()
+                .transaction_time(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .data(data)
+                .build();
+    }
+
+
     public static <T> ResponseCustom<T> INTERNAL_SERVER_ERROR(){
         return (ResponseCustom<T>) ResponseCustom.builder()
                 .transaction_time(LocalDateTime.now())
@@ -129,6 +139,15 @@ public class ResponseCustom<T>{
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .description(description)
+                .build();
+    }
+
+    public static <T> ResponseCustom<T> INTERNAL_SERVER_ERROR(@Nullable T data){
+        return (ResponseCustom<T>) ResponseCustom.builder()
+                .transaction_time(LocalDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .data(data)
                 .build();
     }
 
