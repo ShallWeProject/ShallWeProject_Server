@@ -1,13 +1,14 @@
 package com.shallwe.domain.auth.presentation;
 
 
-import com.shallwe.domain.auth.dto.ShopOwnerChangePasswordReq;
+import com.shallwe.domain.auth.dto.request.*;
+import com.shallwe.domain.auth.dto.response.AuthRes;
+import com.shallwe.domain.auth.dto.response.SmsResponseDto;
 import com.shallwe.global.infrastructure.sms.NaverSmsClient;
 import com.shallwe.global.infrastructure.sms.dto.NaverVerifySmsReq;
 import com.shallwe.global.payload.ResponseCustom;
 import jakarta.validation.Valid;
 
-import com.shallwe.domain.auth.dto.*;
 import com.shallwe.global.payload.ErrorResponse;
 import com.shallwe.global.config.security.token.CurrentUser;
 import com.shallwe.global.config.security.token.UserPrincipal;

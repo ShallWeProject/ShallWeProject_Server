@@ -1,4 +1,4 @@
-package com.shallwe.global.infrastructure.feign.apple.dto;
+package com.shallwe.domain.auth.dto.response;
 
 import lombok.Data;
 

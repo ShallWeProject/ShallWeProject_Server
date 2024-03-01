@@ -2,7 +2,7 @@ package com.shallwe.global.config.security.handler;
 
 import com.shallwe.global.DefaultAssert;
 import com.shallwe.global.config.security.AuthConfig;
-import com.shallwe.global.config.security.util.CustomCookie;
+import com.shallwe.global.utils.CustomCookie;
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.auth.dto.TokenMapping;
 import com.shallwe.domain.auth.domain.repository.CustomAuthorizationRequestRepository;

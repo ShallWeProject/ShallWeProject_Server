@@ -1,9 +1,9 @@
 package com.shallwe.global.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shallwe.domain.auth.dto.AppleTokenReq;
+import com.shallwe.domain.auth.dto.request.AppleTokenReq;
 import com.shallwe.global.config.security.AuthConfig;
-import com.shallwe.global.infrastructure.feign.apple.dto.ApplePublicKeyRes;
+import com.shallwe.domain.auth.dto.response.ApplePublicKeyRes;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;

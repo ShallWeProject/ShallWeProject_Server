@@ -3,13 +3,13 @@ package com.shallwe.global.infrastructure.sms;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shallwe.domain.auth.domain.VerificationCode;
 import com.shallwe.domain.auth.domain.repository.VerificationCodeRepository;
-import com.shallwe.domain.auth.dto.MessageDTO;
-import com.shallwe.domain.auth.dto.NaverCloudSmsReq;
-import com.shallwe.domain.auth.dto.ValidVerificationCodeReq;
+import com.shallwe.domain.auth.dto.MessageMapping;
+import com.shallwe.domain.auth.dto.request.NaverCloudSmsReq;
+import com.shallwe.domain.auth.dto.request.ValidVerificationCodeReq;
 import com.shallwe.global.infrastructure.sms.exception.InvalidPhoneNumberException;
 import com.shallwe.global.infrastructure.sms.exception.InvalidVerificationCodeException;
 import com.shallwe.global.infrastructure.sms.exception.TimeOutException;
-import com.shallwe.domain.auth.dto.SmsResponseDto;
+import com.shallwe.domain.auth.dto.response.SmsResponseDto;
 import com.shallwe.global.payload.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,19 +55,19 @@ public class NaverSmsClient implements SmsClient {
 
         String code = generateRandomCode();
 
-        MessageDTO messageDTO = MessageDTO.builder()
+        MessageMapping messageMapping = MessageMapping.builder()
                 .to(receivePhoneNumber)
                 .content("[Shall We] 인증번호 [" + code + "]를 입력해주세요.").build();
 
-        List<MessageDTO> messages = new ArrayList<>();
-        messages.add(messageDTO);
+        List<MessageMapping> messages = new ArrayList<>();
+        messages.add(messageMapping);
 
         NaverCloudSmsReq naverCloudSmsReq = NaverCloudSmsReq.builder()
                 .type("SMS")
                 .contentType("COMM")
                 .countryCode("82")
                 .from(PHONE_NUMBER)
-                .content(messageDTO.getContent())
+                .content(messageMapping.getContent())
                 .messages(messages)
                 .build();
 
