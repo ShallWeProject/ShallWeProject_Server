@@ -7,7 +7,6 @@ import com.shallwe.global.config.security.AuthConfig;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.domain.auth.dto.TokenMapping;
 
-import com.shallwe.global.infrastructure.feign.apple.AppleClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +26,6 @@ public class CustomTokenProviderService {
 
     private final AuthConfig authConfig;
     private final CustomUserDetailsService customUserDetailsService;
-    private final AppleClient appleClient;
 
     public TokenMapping refreshToken(Authentication authentication, String refreshToken) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
