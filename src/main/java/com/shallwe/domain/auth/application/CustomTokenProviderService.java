@@ -3,11 +3,10 @@ package com.shallwe.domain.auth.application;
 import java.security.Key;
 import java.util.Date;
 
-import com.shallwe.global.config.security.OAuth2Config;
+import com.shallwe.global.config.security.AuthConfig;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.domain.auth.dto.TokenMapping;
 
-import com.shallwe.global.infrastructure.feign.apple.AppleClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,17 +24,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CustomTokenProviderService {
 
-    private final OAuth2Config oAuth2Config;
+    private final AuthConfig authConfig;
     private final CustomUserDetailsService customUserDetailsService;
-    private final AppleClient appleClient;
 
     public TokenMapping refreshToken(Authentication authentication, String refreshToken) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Date now = new Date();
 
-        Date accessTokenExpiresIn = new Date(now.getTime() + oAuth2Config.getAuth().getAccessTokenExpirationMsec());
+        Date accessTokenExpiresIn = new Date(now.getTime() + authConfig.getAuth().getAccessTokenExpirationMsec());
 
-        String secretKey = oAuth2Config.getAuth().getTokenSecret();
+        String secretKey = authConfig.getAuth().getTokenSecret();
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         Key key = Keys.hmacShaKeyFor(keyBytes);
 
@@ -58,10 +56,10 @@ public class CustomTokenProviderService {
 
         Date now = new Date();
 
-        Date accessTokenExpiresIn = new Date(now.getTime() + oAuth2Config.getAuth().getAccessTokenExpirationMsec());
-        Date refreshTokenExpiresIn = new Date(now.getTime() + oAuth2Config.getAuth().getRefreshTokenExpirationMsec());
+        Date accessTokenExpiresIn = new Date(now.getTime() + authConfig.getAuth().getAccessTokenExpirationMsec());
+        Date refreshTokenExpiresIn = new Date(now.getTime() + authConfig.getAuth().getRefreshTokenExpirationMsec());
 
-        String secretKey = oAuth2Config.getAuth().getTokenSecret();
+        String secretKey = authConfig.getAuth().getTokenSecret();
 
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         Key key = Keys.hmacShaKeyFor(keyBytes);
@@ -87,7 +85,7 @@ public class CustomTokenProviderService {
 
     public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(oAuth2Config.getAuth().getTokenSecret())
+                .setSigningKey(authConfig.getAuth().getTokenSecret())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -110,7 +108,7 @@ public class CustomTokenProviderService {
 
     public Long getExpiration(String token) {
         // accessToken 남은 유효시간
-        Date expiration = Jwts.parserBuilder().setSigningKey(oAuth2Config.getAuth().getTokenSecret()).build().parseClaimsJws(token).getBody().getExpiration();
+        Date expiration = Jwts.parserBuilder().setSigningKey(authConfig.getAuth().getTokenSecret()).build().parseClaimsJws(token).getBody().getExpiration();
         // 현재 시간
         Long now = new Date().getTime();
         //시간 계산
@@ -120,7 +118,7 @@ public class CustomTokenProviderService {
     public boolean validateToken(String token) {
         try {
             //log.info("bearerToken = {} \n oAuth2Config.getAuth()={}", token, oAuth2Config.getAuth().getTokenSecret());
-            Jwts.parserBuilder().setSigningKey(oAuth2Config.getAuth().getTokenSecret()).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(authConfig.getAuth().getTokenSecret()).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException ex) {
             log.error("잘못된 JWT 서명입니다.");

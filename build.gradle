@@ -19,13 +19,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	//Swagger, RestDocs
+	//Swagger
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
 	testImplementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-api', version: '2.1.0'
-
-	//외부 API 호출할 때 쓰는 RestTemplate 라이브러리
-	implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.1'
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
 
 	//S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
@@ -34,11 +30,15 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+	implementation 'org.bouncycastle:bcpkix-jdk18on:1.77'
 
 	//lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	// http client
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
 
 	//db
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.32'
@@ -60,7 +60,6 @@ dependencies {
 	//Monitoring
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
-
 }
 
 tasks.named('test') {

@@ -3,28 +3,24 @@ package com.shallwe.global.infrastructure.sms;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shallwe.domain.auth.domain.VerificationCode;
 import com.shallwe.domain.auth.domain.repository.VerificationCodeRepository;
-import com.shallwe.domain.auth.dto.MessageDTO;
-import com.shallwe.domain.auth.dto.NaverCloudSmsReq;
-import com.shallwe.domain.auth.dto.ValidVerificationCodeReq;
+import com.shallwe.domain.auth.dto.MessageMapping;
+import com.shallwe.domain.auth.dto.request.NaverCloudSmsReq;
+import com.shallwe.domain.auth.dto.request.ValidVerificationCodeReq;
 import com.shallwe.global.infrastructure.sms.exception.InvalidPhoneNumberException;
 import com.shallwe.global.infrastructure.sms.exception.InvalidVerificationCodeException;
 import com.shallwe.global.infrastructure.sms.exception.TimeOutException;
-import com.shallwe.domain.auth.dto.SmsResponseDto;
+import com.shallwe.domain.auth.dto.response.SmsResponseDto;
 import com.shallwe.global.payload.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,7 +45,6 @@ public class NaverSmsClient implements SmsClient {
     @Value("${sms.naver-cloud.sender-phone}")
     private String PHONE_NUMBER;
 
-    private final RestTemplate naverSmsTemplate;
     private final VerificationCodeRepository verificationCodeRepository;
 
     @Override
@@ -58,27 +53,21 @@ public class NaverSmsClient implements SmsClient {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String signature = makeSignature(timestamp);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("x-ncp-apigw-timestamp", timestamp);
-        headers.set("x-ncp-iam-access-key", ACCESS_KEY);
-        headers.set("x-ncp-apigw-signature-v2", signature);
-
         String code = generateRandomCode();
 
-        MessageDTO messageDTO = MessageDTO.builder()
+        MessageMapping messageMapping = MessageMapping.builder()
                 .to(receivePhoneNumber)
                 .content("[Shall We] 인증번호 [" + code + "]를 입력해주세요.").build();
 
-        List<MessageDTO> messages = new ArrayList<>();
-        messages.add(messageDTO);
+        List<MessageMapping> messages = new ArrayList<>();
+        messages.add(messageMapping);
 
         NaverCloudSmsReq naverCloudSmsReq = NaverCloudSmsReq.builder()
                 .type("SMS")
                 .contentType("COMM")
                 .countryCode("82")
                 .from(PHONE_NUMBER)
-                .content(messageDTO.getContent())
+                .content(messageMapping.getContent())
                 .messages(messages)
                 .build();
 
@@ -92,10 +81,20 @@ public class NaverSmsClient implements SmsClient {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(naverCloudSmsReq);
-        HttpEntity<String> httpBody = new HttpEntity<>(body, headers);
 
-        naverSmsTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        return naverSmsTemplate.postForEntity("/" + SERVICE_ID + "/messages", httpBody, SmsResponseDto.class).getBody();
+        RestClient restClient = RestClient.builder()
+                .requestFactory(new HttpComponentsClientHttpRequestFactory())
+                .baseUrl("https://sens.apigw.ntruss.com/sms/v2/services")
+                .build();
+
+        return restClient.post().uri("/" + SERVICE_ID + "/messages")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-ncp-apigw-timestamp", timestamp)
+                .header("x-ncp-iam-access-key", ACCESS_KEY)
+                .header("x-ncp-apigw-signature-v2", signature)
+                .body(body)
+                .retrieve()
+                .body(SmsResponseDto.class);
     }
 
     @Transactional

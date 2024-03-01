@@ -16,7 +16,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import com.shallwe.global.config.security.util.CustomCookie;
+import com.shallwe.global.utils.CustomCookie;
 import com.shallwe.domain.auth.domain.repository.CustomAuthorizationRequestRepository;
 
 @RequiredArgsConstructor

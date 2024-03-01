@@ -9,21 +9,26 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 @Entity
 @Getter
 public class Token extends BaseEntity {
 
     @Id
+    @Column(name = "user_email")
     private String userEmail;
 
-//    @Column(columnDefinition = "test") // 컬럼 타입을 "test"로 변경
+    @Column(name = "refresh_token")
     private String refreshToken;
 
     public Token updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;
+    }
+
+    @Builder
+    public Token(String userEmail, String refreshToken) {
+        this.userEmail = userEmail;
+        this.refreshToken = refreshToken;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.shallwe.domain.auth.dto;
+package com.shallwe.domain.auth.dto.response;
 
 import lombok.Data;
 

@@ -4,13 +4,13 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class MessageDTO {
+public class MessageMapping {
 
     private String to;
     private String content;
 
     @Builder
-    public MessageDTO(String to, String content) {
+    public MessageMapping(String to, String content) {
         this.to = to;
         this.content = content;
     }
