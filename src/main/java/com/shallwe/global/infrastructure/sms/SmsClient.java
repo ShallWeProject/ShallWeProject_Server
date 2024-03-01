@@ -1,7 +1,6 @@
 package com.shallwe.global.infrastructure.sms;
 
-import com.shallwe.domain.auth.dto.SmsResponseDto;
-import com.shallwe.global.infrastructure.sms.dto.NaverVerifySmsReq;
+import com.shallwe.domain.auth.dto.response.SmsResponseDto;
 
 public interface SmsClient {
 

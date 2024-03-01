@@ -1,8 +1,8 @@
 package com.shallwe.global.config.security.handler;
 
 import com.shallwe.global.DefaultAssert;
-import com.shallwe.global.config.security.OAuth2Config;
-import com.shallwe.global.config.security.util.CustomCookie;
+import com.shallwe.global.config.security.AuthConfig;
+import com.shallwe.global.utils.CustomCookie;
 import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.auth.dto.TokenMapping;
 import com.shallwe.domain.auth.domain.repository.CustomAuthorizationRequestRepository;
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,7 +31,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 
     private final CustomTokenProviderService customTokenProviderService;
-    private final OAuth2Config oAuth2Config;
+    private final AuthConfig authConfig;
     private final TokenRepository tokenRepository;
     private final CustomAuthorizationRequestRepository customAuthorizationRequestRepository;
 
@@ -43,8 +42,8 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         TokenMapping token = customTokenProviderService.createToken(authentication);
-        CustomCookie.addCookie(response, "Authorization", "Bearer_" + token.getAccessToken(), (int) oAuth2Config.getAuth().getAccessTokenExpirationMsec());
-        CustomCookie.addCookie(response, "Refresh_Token", "Bearer_" + token.getRefreshToken(), (int) oAuth2Config.getAuth().getRefreshTokenExpirationMsec());
+        CustomCookie.addCookie(response, "Authorization", "Bearer_" + token.getAccessToken(), (int) authConfig.getAuth().getAccessTokenExpirationMsec());
+        CustomCookie.addCookie(response, "Refresh_Token", "Bearer_" + token.getRefreshToken(), (int) authConfig.getAuth().getRefreshTokenExpirationMsec());
 
         clearAuthenticationAttributes(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
@@ -77,7 +76,7 @@ public class CustomSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthen
     private boolean isAuthorizedRedirectUri(String uri) {
         URI clientRedirectUri = URI.create(uri);
 
-        return oAuth2Config.getOauth2().getAuthorizedRedirectUris()
+        return authConfig.getOauth2().getAuthorizedRedirectUris()
                 .stream()
                 .anyMatch(authorizedRedirectUri -> {
                     URI authorizedURI = URI.create(authorizedRedirectUri);

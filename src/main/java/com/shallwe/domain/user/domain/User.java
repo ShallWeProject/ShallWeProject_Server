@@ -31,8 +31,6 @@ public class User extends BaseEntity {
 
     private String password;
 
-    private String profileImgUrl;
-
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -48,10 +46,6 @@ public class User extends BaseEntity {
 
     public void updateName(String name){
         this.name = name;
-    }
-
-    public void updateProfileImage(String imageUrl){
-        this.profileImgUrl = imageUrl;
     }
 
     public void updateMarketingConsent(boolean status) {
@@ -71,14 +65,13 @@ public class User extends BaseEntity {
     }
 
     @Builder
-    public User(String name, String birthDay, Integer age, String phoneNumber, String email, String password, String profileImgUrl, Gender gender, Boolean marketingConsent, Provider provider, String providerId, Role role) {
+    public User(String name, String birthDay, Integer age, String phoneNumber, String email, String password, Gender gender, Boolean marketingConsent, Provider provider, String providerId, Role role) {
         this.name = name;
         this.birthDay = birthDay;
         this.age = age;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
-        this.profileImgUrl = profileImgUrl;
         this.gender = gender;
         this.marketingConsent = marketingConsent;
         this.provider = provider;

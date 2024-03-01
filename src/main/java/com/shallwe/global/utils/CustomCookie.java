@@ -1,4 +1,4 @@
-package com.shallwe.global.config.security.util;
+package com.shallwe.global.utils;
 
 import java.util.Base64;
 import java.util.Optional;

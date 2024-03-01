@@ -1,5 +1,6 @@
-package com.shallwe.domain.auth.dto;
+package com.shallwe.domain.auth.dto.request;
 
+import com.shallwe.domain.auth.dto.MessageMapping;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,10 +14,10 @@ public class NaverCloudSmsReq {
     private String countryCode;
     private String from;
     private String content;
-    List<MessageDTO> messages;
+    List<MessageMapping> messages;
 
     @Builder
-    public NaverCloudSmsReq(String type, String contentType, String countryCode, String from, String content, List<MessageDTO> messages) {
+    public NaverCloudSmsReq(String type, String contentType, String countryCode, String from, String content, List<MessageMapping> messages) {
         this.type = type;
         this.contentType = contentType;
         this.countryCode = countryCode;

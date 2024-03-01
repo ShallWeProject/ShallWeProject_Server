@@ -1,11 +1,11 @@
-package com.shallwe.domain.auth.dto;
+package com.shallwe.domain.auth.dto.response;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class NaverCloudSmsRes {
+public class SmsResponseDto {
 
     private String requestId;
     private LocalDateTime requestTime;

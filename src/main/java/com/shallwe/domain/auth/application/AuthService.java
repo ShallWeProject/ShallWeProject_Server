@@ -2,15 +2,15 @@ package com.shallwe.domain.auth.application;
 
 import java.util.Optional;
 
+import com.shallwe.domain.auth.domain.AppleToken;
+import com.shallwe.domain.auth.domain.repository.AppleTokenRepository;
 import com.shallwe.domain.auth.dto.*;
-import com.shallwe.domain.auth.exception.AlreadyExistEmailException;
-import com.shallwe.domain.auth.exception.InvalidPasswordException;
-import com.shallwe.domain.auth.exception.InvalidProviderIdException;
-import com.shallwe.domain.auth.exception.UnRegisteredUserException;
+import com.shallwe.domain.auth.dto.request.*;
+import com.shallwe.domain.auth.dto.response.AuthRes;
+import com.shallwe.domain.auth.exception.*;
 import com.shallwe.domain.common.Status;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
-import com.shallwe.domain.auth.dto.ShopOwnerChangePasswordReq;
 import com.shallwe.domain.shopowner.exception.AlreadyExistPhoneNumberException;
 import com.shallwe.domain.shopowner.exception.InvalidPhoneNumberException;
 import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
@@ -23,7 +23,6 @@ import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.error.DefaultAuthenticationException;
-import com.shallwe.global.infrastructure.feign.apple.AppleClient;
 import com.shallwe.global.payload.ErrorCode;
 import com.shallwe.global.payload.Message;
 import com.shallwe.domain.auth.domain.repository.TokenRepository;
@@ -32,16 +31,13 @@ import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.global.utils.AppleJwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.client.RestTemplate;
 
 
 @Service
@@ -57,6 +53,7 @@ public class AuthService {
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
     private final ShopOwnerRepository shopOwnerRepository;
+    private final AppleTokenRepository appleTokenRepository;
 
     @Transactional
     public AuthRes signUp(final SignUpReq signUpReq) {
@@ -66,33 +63,41 @@ public class AuthService {
         User newUser = User.builder()
                 .providerId(signUpReq.getProviderId())
                 .provider(signUpReq.getProvider())
-                .name(signUpReq.getNickname())
                 .email(signUpReq.getEmail())
-                .profileImgUrl(signUpReq.getProfileImgUrl())
                 .password(passwordEncoder.encode(signUpReq.getProviderId()))
                 .role(Role.USER)
                 .build();
-
         userRepository.save(newUser);
 
-        UserPrincipal userPrincipal = UserPrincipal.createUser(newUser);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userPrincipal,
-                null,
-                userPrincipal.getAuthorities()
-        );
+        return getUserAuthRes(newUser);
+    }
 
-        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
-        Token token = Token.builder()
-                .refreshToken(tokenMapping.getRefreshToken())
-                .userEmail(tokenMapping.getUserEmail())
-                .build();
-        tokenRepository.save(token);
+    @Transactional
+    public AuthRes appleSignUp(AppleSignUpReq appleSignUpReq) {
+        Claims claims = appleJwtUtils.getClaimsBy(appleSignUpReq.getIdentityToken());
+        String providerId = claims.get("sub").toString();
 
-        return AuthRes.builder()
-                .accessToken(tokenMapping.getAccessToken())
-                .refreshToken(tokenMapping.getRefreshToken())
+        if (userRepository.existsByProviderId(providerId)) {
+            throw new AlreadyExistsProviderIdException();
+        }
+
+        String appleRefreshToken = appleJwtUtils.getAppleToken(appleSignUpReq.getAuthorizationCode());
+        AppleToken appleTokenReq = AppleToken.builder()
+                .providerId(providerId)
+                .refreshToken(appleRefreshToken)
                 .build();
+        appleTokenRepository.save(appleTokenReq);
+
+        User newUser = User.builder()
+                .providerId(providerId)
+                .provider(Provider.APPLE)
+                .email(appleSignUpReq.getEmail())
+                .password(passwordEncoder.encode(providerId))
+                .role(Role.USER)
+                .build();
+        userRepository.save(newUser);
+
+        return getUserAuthRes(newUser);
     }
 
     @Transactional
@@ -103,25 +108,20 @@ public class AuthService {
             throw new InvalidPasswordException();
         }
 
-        UserPrincipal userPrincipal = UserPrincipal.createUser(user);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userPrincipal,
-                null,
-                userPrincipal.getAuthorities()
-        );
+        return getUserAuthRes(user);
+    }
 
-        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
-        Token token = Token.builder()
-                .refreshToken(tokenMapping.getRefreshToken())
-                .userEmail(tokenMapping.getUserEmail())
-                .build();
+    @Transactional
+    public AuthRes appleSignIn(AppleSignInReq appleSignInReq) {
+        Claims claims = appleJwtUtils.getClaimsBy(appleSignInReq.getIdentityToken());
+        String providerId = claims.get("sub").toString();
 
-        tokenRepository.save(token);
+        User user = userRepository.findByProviderId(providerId).orElseThrow(InvalidProviderIdException::new);
+        if (user.getName() == null || user.getPhoneNumber() == null || user.getAge() == null || user.getGender() == null) {
+            throw new UnRegisteredUserException();
+        }
 
-        return AuthRes.builder()
-                .accessToken(tokenMapping.getAccessToken())
-                .refreshToken(token.getRefreshToken())
-                .build();
+        return getUserAuthRes(user);
     }
 
     @Transactional
@@ -148,9 +148,10 @@ public class AuthService {
         Token updateToken = token.updateRefreshToken(tokenMapping.getRefreshToken());
         tokenRepository.save(updateToken);
 
-        AuthRes authResponse = AuthRes.builder().accessToken(tokenMapping.getAccessToken()).refreshToken(updateToken.getRefreshToken()).build();
-
-        return authResponse;
+        return AuthRes.builder().
+                accessToken(tokenMapping.getAccessToken())
+                .refreshToken(updateToken.getRefreshToken())
+                .build();
     }
 
     @Transactional
@@ -176,30 +177,9 @@ public class AuthService {
                 .password(passwordEncoder.encode(shopOwnerSignUpReq.getPassword()))
                 .marketingConsent(shopOwnerSignUpReq.getMarketingConsent())
                 .build();
-
         shopOwnerRepository.save(shopOwner);
 
-        UserPrincipal userPrincipal = UserPrincipal.createShopOwner(shopOwner);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userPrincipal,
-                null,
-                userPrincipal.getAuthorities()
-        );
-
-        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
-
-        Token token = Token.builder()
-                .refreshToken(tokenMapping.getRefreshToken())
-                .userEmail(tokenMapping.getUserEmail())
-                .build();
-        tokenRepository.save(token);
-
-        AuthRes authRes = AuthRes.builder()
-                .accessToken(tokenMapping.getAccessToken())
-                .refreshToken(token.getRefreshToken())
-                .build();
-
-        return authRes;
+        return getShopOwnerAuthRes(shopOwner);
     }
 
     @Transactional
@@ -211,27 +191,7 @@ public class AuthService {
             throw new InvalidPasswordException();
         }
 
-        UserPrincipal userPrincipal = UserPrincipal.createShopOwner(shopOwner);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userPrincipal,
-                null,
-                userPrincipal.getAuthorities()
-        );
-
-        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
-
-        Token token = Token.builder()
-                .refreshToken(tokenMapping.getRefreshToken())
-                .userEmail(tokenMapping.getUserEmail())
-                .build();
-        tokenRepository.save(token);
-
-        AuthRes authRes = AuthRes.builder()
-                .accessToken(tokenMapping.getAccessToken())
-                .refreshToken(token.getRefreshToken())
-                .build();
-
-        return authRes;
+        return getShopOwnerAuthRes(shopOwner);
     }
 
     @Transactional
@@ -262,16 +222,7 @@ public class AuthService {
         return true;
     }
 
-    @Transactional
-    public AuthRes appleSignIn(AppleSignInReq appleSignInReq) {
-        Claims claims = appleJwtUtils.getClaimsBy(appleSignInReq.getIdentityToken());
-        String providerId = claims.get("sub").toString();
-
-        User user = userRepository.findByProviderId(providerId).orElseThrow(InvalidProviderIdException::new);
-        if(user.getName() == null || user.getPhoneNumber() == null || user.getAge() == null || user.getGender() == null) {
-            throw new UnRegisteredUserException();
-        }
-
+    private AuthRes getUserAuthRes(User user) {
         UserPrincipal userPrincipal = UserPrincipal.createUser(user);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 userPrincipal,
@@ -280,6 +231,29 @@ public class AuthService {
         );
 
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+        Token token = Token.builder()
+                .refreshToken(tokenMapping.getRefreshToken())
+                .userEmail(tokenMapping.getUserEmail())
+                .build();
+
+        tokenRepository.save(token);
+
+        return AuthRes.builder()
+                .accessToken(tokenMapping.getAccessToken())
+                .refreshToken(token.getRefreshToken())
+                .build();
+    }
+
+    private AuthRes getShopOwnerAuthRes(ShopOwner shopOwner) {
+        UserPrincipal userPrincipal = UserPrincipal.createShopOwner(shopOwner);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userPrincipal,
+                null,
+                userPrincipal.getAuthorities()
+        );
+
+        TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
+
         Token token = Token.builder()
                 .refreshToken(tokenMapping.getRefreshToken())
                 .userEmail(tokenMapping.getUserEmail())
