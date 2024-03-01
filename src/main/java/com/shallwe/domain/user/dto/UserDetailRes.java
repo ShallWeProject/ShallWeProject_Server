@@ -28,7 +28,6 @@ public class UserDetailRes {
                 .age(user.getAge())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
-                .profileImgUrl(user.getProfileImgUrl())
                 .gender(user.getGender())
                 .status(user.getStatus())
                 .build();
@@ -36,14 +35,13 @@ public class UserDetailRes {
 
     @Builder
     @QueryProjection
-    public UserDetailRes(Long id, String name, String birthDay, Integer age, String phoneNumber, String email, String profileImgUrl, Gender gender, Status status) {
+    public UserDetailRes(Long id, String name, String birthDay, Integer age, String phoneNumber, String email, Gender gender, Status status) {
         this.id = id;
         this.name = name;
         this.birthDay = birthDay;
         this.age = age;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.profileImgUrl = profileImgUrl;
         this.gender = gender;
         this.status = status;
     }

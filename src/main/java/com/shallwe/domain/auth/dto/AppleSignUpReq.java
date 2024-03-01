@@ -1,18 +1,18 @@
 package com.shallwe.domain.auth.dto;
 
-import com.shallwe.domain.user.domain.Provider;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 
 @Data
-public class SignUpReq {
+public class AppleSignUpReq {
 
-    @Schema( type = "string", example = "123123", description="카카오/애플 고유 유저 ID 입니다.")
-    private String providerId;
+    @Schema(type = "String", description = "애플 로그인을 위한 IdentityToken")
+    private String identityToken;
 
-    @Schema( type = "string", example = "KAKAO / GOOGLE ", description="카카오/애플/구글 로그인 제공자 입니다.")
-    private Provider provider;
+    @Schema(type = "String", description = "애플 로그인을 위한 AuthorizationCode")
+    private String authorizationCode;
 
     @Schema( type = "string", example = "string", description="사용자 이름 입니다.")
     private String name;

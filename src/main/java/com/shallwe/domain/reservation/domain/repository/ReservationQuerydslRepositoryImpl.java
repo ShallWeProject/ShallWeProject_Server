@@ -42,7 +42,6 @@ public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRep
                                 user.age,
                                 user.phoneNumber,
                                 user.email,
-                                user.profileImgUrl,
                                 user.gender,
                                 user.status
                                 ),
@@ -79,7 +78,6 @@ public class ReservationQuerydslRepositoryImpl implements ReservationQuerydslRep
                                 user.age,
                                 user.phoneNumber,
                                 user.email,
-                                user.profileImgUrl,
                                 user.gender,
                                 user.status
                         ),
