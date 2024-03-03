@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,17 +53,18 @@ public class UserController {
         return ResponseCustom.OK(userServiceImpl.inactiveCurrentUser(userPrincipal, postComplainReq));
     }
 
-    @Operation(summary = "유저 정보 입력", description = "마켓팅 정보 동의와 나이, 성별 정보를 입력받습니다.")
+    @Operation(summary = "유저 세부정보 입력", description = "이름, 마켓팅 정보 동의와 나이, 성별 정보를 입력받습니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저 정보 입력 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SignUpUserRes.class))}),
+            @ApiResponse(responseCode = "200", description = "유저 정보 입력 성공"),
             @ApiResponse(responseCode = "400", description = "유저 정보 입력 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @PatchMapping
-    public ResponseCustom<SignUpUserRes> signUpCurrentUser(
+    public ResponseEntity<Void> signUpCurrentUser(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @Parameter(description = "SignUpUserReq 를 확인해주세요.", required = true) @RequestBody SignUpUserReq signUpUserReq
     ) {
-        return ResponseCustom.OK(userServiceImpl.signUpCurrentUser(userPrincipal, signUpUserReq));
+        userServiceImpl.signUpCurrentUser(userPrincipal, signUpUserReq);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "유저가 보낸 선물 조회", description = "유저가 보낸 선물들을 조회합니다.")
