@@ -6,6 +6,7 @@ import com.shallwe.domain.auth.domain.AppleToken;
 import com.shallwe.domain.auth.domain.repository.AppleTokenRepository;
 import com.shallwe.domain.auth.dto.*;
 import com.shallwe.domain.auth.dto.request.*;
+import com.shallwe.domain.auth.dto.response.AppleSignInRes;
 import com.shallwe.domain.auth.dto.response.AuthRes;
 import com.shallwe.domain.auth.exception.*;
 import com.shallwe.domain.common.Status;
@@ -84,7 +85,7 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthRes appleSignIn(AppleSignInReq appleSignInReq) {
+    public AppleSignInRes appleSignIn(AppleSignInReq appleSignInReq) {
         Claims claims = appleJwtUtils.getClaimsBy(appleSignInReq.getIdentityToken());
         String providerId = claims.get("sub").toString();
 
@@ -110,12 +111,19 @@ public class AuthService {
         }
 
         User user = optionalUser.get();
+        boolean isSignUpComplete = true;
 
         if (user.getName() == null || user.getPhoneNumber() == null || user.getAge() == null || user.getGender() == null) {
-            throw new UnRegisteredUserException();
+            isSignUpComplete = false;
         }
 
-        return getUserAuthRes(user);
+        AuthRes userAuthRes = getUserAuthRes(user);
+        return AppleSignInRes.builder()
+                .isSignUpComplete(isSignUpComplete)
+                .accessToken(userAuthRes.getAccessToken())
+                .refreshToken(userAuthRes.getRefreshToken())
+                .tokenType(userAuthRes.getTokenType())
+                .build();
     }
 
     @Transactional
