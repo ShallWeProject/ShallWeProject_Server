@@ -2,6 +2,7 @@ package com.shallwe.domain.auth.presentation;
 
 
 import com.shallwe.domain.auth.dto.request.*;
+import com.shallwe.domain.auth.dto.response.AppleSignInRes;
 import com.shallwe.domain.auth.dto.response.AuthRes;
 import com.shallwe.domain.auth.dto.response.SmsResponseDto;
 import com.shallwe.global.infrastructure.sms.NaverSmsClient;
@@ -62,11 +63,11 @@ public class AuthController {
 
     @Operation(summary = "애플 로그인", description = "애플 로그인을 수행합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "애플 로그인 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRes.class) ) } ),
+            @ApiResponse(responseCode = "200", description = "애플 로그인 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AppleSignInRes.class) ) } ),
             @ApiResponse(responseCode = "400", description = "애플 로그인 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping(value="/sign-in/apple")
-    public ResponseCustom<AuthRes> appleSignIn(
+    public ResponseCustom<AppleSignInRes> appleSignIn(
             @Parameter(description = "SignInReq Schema를 확인해주세요.", required = true) @RequestBody AppleSignInReq appleSignInReq
     ) {
         return ResponseCustom.OK(authService.appleSignIn(appleSignInReq));
