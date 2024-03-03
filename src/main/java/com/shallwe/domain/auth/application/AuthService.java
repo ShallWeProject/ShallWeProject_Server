@@ -73,34 +73,6 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthRes appleSignUp(AppleSignUpReq appleSignUpReq) {
-        Claims claims = appleJwtUtils.getClaimsBy(appleSignUpReq.getIdentityToken());
-        String providerId = claims.get("sub").toString();
-
-        if (userRepository.existsByProviderId(providerId)) {
-            throw new AlreadyExistsProviderIdException();
-        }
-
-        String appleRefreshToken = appleJwtUtils.getAppleToken(appleSignUpReq.getAuthorizationCode());
-        AppleToken appleTokenReq = AppleToken.builder()
-                .providerId(providerId)
-                .refreshToken(appleRefreshToken)
-                .build();
-        appleTokenRepository.save(appleTokenReq);
-
-        User newUser = User.builder()
-                .providerId(providerId)
-                .provider(Provider.APPLE)
-                .email(appleSignUpReq.getEmail())
-                .password(passwordEncoder.encode(providerId))
-                .role(Role.USER)
-                .build();
-        userRepository.save(newUser);
-
-        return getUserAuthRes(newUser);
-    }
-
-    @Transactional
     public AuthRes signIn(final SignInReq signInReq) {
         User user = userRepository.findByEmailAndStatus(signInReq.getEmail(), Status.ACTIVE)
                 .orElseThrow(InvalidUserException::new);
@@ -116,7 +88,29 @@ public class AuthService {
         Claims claims = appleJwtUtils.getClaimsBy(appleSignInReq.getIdentityToken());
         String providerId = claims.get("sub").toString();
 
-        User user = userRepository.findByProviderId(providerId).orElseThrow(InvalidProviderIdException::new);
+        Optional<User> optionalUser = userRepository.findByProviderId(providerId);
+
+        if (optionalUser.isEmpty()) {
+            String appleRefreshToken = appleJwtUtils.getAppleToken(appleSignInReq.getAuthorizationCode());
+            AppleToken appleTokenReq = AppleToken.builder()
+                    .providerId(providerId)
+                    .refreshToken(appleRefreshToken)
+                    .build();
+            appleTokenRepository.save(appleTokenReq);
+
+            User newUser = User.builder()
+                    .providerId(providerId)
+                    .provider(Provider.APPLE)
+                    .password(passwordEncoder.encode(providerId))
+                    .role(Role.USER)
+                    .build();
+            userRepository.save(newUser);
+
+            optionalUser = Optional.of(newUser);
+        }
+
+        User user = optionalUser.get();
+
         if (user.getName() == null || user.getPhoneNumber() == null || user.getAge() == null || user.getGender() == null) {
             throw new UnRegisteredUserException();
         }
