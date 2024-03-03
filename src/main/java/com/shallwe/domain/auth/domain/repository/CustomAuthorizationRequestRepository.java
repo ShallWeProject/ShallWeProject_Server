@@ -1,6 +1,6 @@
 package com.shallwe.domain.auth.domain.repository;
 
-import com.shallwe.global.config.security.util.CustomCookie;
+import com.shallwe.global.utils.CustomCookie;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
