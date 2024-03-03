@@ -58,15 +58,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public SignUpUserRes signUpCurrentUser(final UserPrincipal userPrincipal, final SignUpUserReq signUpUserReq) {
+    public void signUpCurrentUser(final UserPrincipal userPrincipal, final SignUpUserReq signUpUserReq) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(InvalidUserException::new);
 
+        user.updateName(signUpUserReq.getName());
         user.updatePhoneNumber(signUpUserReq.getPhoneNumber());
         user.updateMarketingConsent(signUpUserReq.getMarketingConsent());
         user.updateAge(signUpUserReq.getAge());
         user.updateGender(signUpUserReq.getGender());
-
-        return SignUpUserRes.toDto();
     }
 
     @Override
