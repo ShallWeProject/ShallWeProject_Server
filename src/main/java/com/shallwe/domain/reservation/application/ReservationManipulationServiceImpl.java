@@ -105,13 +105,14 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
 
         if(reservation.getReservationStatus().equals(BOOKED)) { // BOOKED 상태일 때 WAITING으로 변경
             reservation.updateStatus(WAITING);
+            naverSmsClient.sendCancel(reservation);
+            reservation.clearReservation();
         } else if(reservation.getReservationStatus().equals(CONFIRMED)) { // CONFIRMED 상태일 때 CANCELLED로 변경
             reservation.updateStatus(CANCELLED);
+            naverSmsClient.sendCancel(reservation);
         } else { // 예약 상태가 BOOKED나 CONFIRMED가 아닐 경우
             throw new NotAvailableReservationStatusException();
         }
-
-        naverSmsClient.sendCancel(reservation);
     }
 
 }
