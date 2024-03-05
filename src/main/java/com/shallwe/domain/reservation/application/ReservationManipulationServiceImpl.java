@@ -8,7 +8,6 @@ import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.experiencegift.domain.repository.ExperienceGiftRepository;
 import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundException;
 import com.shallwe.domain.reservation.domain.Reservation;
-import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.reservation.dto.response.DeleteReservationRes;
 import com.shallwe.domain.reservation.dto.request.OwnerReservationCreate;
@@ -21,7 +20,6 @@ import com.shallwe.domain.reservation.exception.InvalidSenderException;
 import com.shallwe.domain.reservation.exception.InvalidReceiverException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
-import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 
 import java.util.List;
@@ -71,7 +69,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
             reservationRequest.getExperienceGiftId())
         .orElseThrow(ExperienceGiftNotFoundException::new);
 
-    Reservation reservation = reservationRepository.findByDateAndTimeAndExperienceGift(
+    Reservation reservation = reservationRepository.findByDateAndTimeAndExperienceGiftWithPessimisticLock(
             reservationRequest.getDate(), reservationRequest.getTime(), experienceGift)
         .orElseThrow(InvalidReservationException::new);
 
