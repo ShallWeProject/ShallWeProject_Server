@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class UpdateReservationReq {
 
-    @Schema(type = "long", example = "2", description = "예약 날짜")
+    @Schema(type = "long", example = "2", description = "바꾸기 전 예약 ID")
     private Long reservationId;
 
     @Schema(type = "string", example = "2023-08-25", description = "예약 날짜")

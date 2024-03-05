@@ -143,7 +143,7 @@ public class ReservationController {
     public ResponseCustom<ReservationResponse> updateReservation(
             @Parameter(description = "수정 요청을 확인해주세요.", required = true) @RequestBody UpdateReservationReq updateReq,
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
-    ) {
+    ) throws Exception {
         return ResponseCustom.OK(
                 reservationManipulationService.updateReservation(updateReq, userPrincipal));
 
