@@ -1,6 +1,8 @@
 package com.shallwe.domain.reservation.application;
 
 import static com.shallwe.domain.reservation.domain.ReservationStatus.BOOKED;
+import static com.shallwe.domain.reservation.domain.ReservationStatus.CANCELLED;
+import static com.shallwe.domain.reservation.domain.ReservationStatus.CONFIRMED;
 import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
 
 import com.shallwe.domain.common.Status;
@@ -124,7 +126,15 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
   public DeleteReservationRes deleteReservation(Long id) {
     Reservation reservation = reservationRepository.findById(id)
         .orElseThrow(InvalidReservationException::new);
-    reservation.updateStatus(Status.DELETE);
+    if(reservation.getReservationStatus().equals(BOOKED)){
+      reservation.updateStatus(WAITING);
+      reservation.flushReservation();
+    }else if(reservation.getReservationStatus().equals(CONFIRMED)){
+      reservation.updateStatus(CANCELLED);
+      reservation.flushReservation();
+    }else if(reservation.getReservationStatus().equals(WAITING)){
+      reservationRepository.delete(reservation);
+    }
     return DeleteReservationRes.toDTO();
   }
 
