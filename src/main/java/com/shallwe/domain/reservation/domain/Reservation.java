@@ -101,6 +101,7 @@ public class Reservation extends BaseEntity {
         this.reservationStatus = status;
     }
 
+
     public void clearReservation() {
         this.sender = null;
         this.receiver = null;
