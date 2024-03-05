@@ -87,14 +87,14 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
         Reservation reservation = reservationRepository.findReservationById(reservationId).orElseThrow(
                 InvalidReservationException::new);
 
-        if(!Objects.equals(reservation.getExperienceGift().getShopOwner().getId(), shopOwner.getId())) // 경험 선물과 사장님이 일치하지 않을 경우
+        if(!reservation.getExperienceGift().getShopOwner().getId().equals(shopOwner.getId())) // 경험 선물과 사장님이 일치하지 않을 경우
             throw new ShopOwnerExperienceGiftMismatchException();
 
         if (!reservation.getReservationStatus().equals(BOOKED)) // 예약 상태가 BOOKED가 아닐 경우
             throw new NotReservedException();
 
         reservation.updateStatus(CONFIRMED);
-        naverSmsClient.sendInvitationAndConfirm(reservation.getSender(), reservation.getReceiver(), reservation.getExperienceGift(), reservation);
+        naverSmsClient.sendInvitationAndConfirm(reservation);
 
         return Message.builder()
                 .message("예약이 확정되었습니다.")

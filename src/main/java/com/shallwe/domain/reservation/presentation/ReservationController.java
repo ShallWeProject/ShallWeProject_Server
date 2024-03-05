@@ -24,6 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -148,18 +149,18 @@ public class ReservationController {
 
     }
 
-    @Operation(summary = "예약 삭제하기", description = "예약을 삭제합니다")
+    @Operation(summary = "예약 취소하기", description = "예약을 취소합니다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "예약 삭제 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = DeleteReservationRes.class))}),
-            @ApiResponse(responseCode = "400", description = "예약 삭제 실패", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
+            @ApiResponse(responseCode = "201", description = "예약 취소 성공"),
+            @ApiResponse(responseCode = "400", description = "예약 취소 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))})
     })
-    @DeleteMapping
-    public ResponseCustom<DeleteReservationRes> deleteReservation(
-            @Parameter(description = "예약 ID를 확인해주세요.", required = true) @RequestHeader Long id
-    ) {
-        return ResponseCustom.OK(reservationManipulationService.deleteReservation(id));
+    @PatchMapping("/{reservation-id}")
+    public ResponseEntity<Void> cancelReservation(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(name = "reservationId", description = "예약 ID를 확인해주세요.", required = true) @PathVariable(name = "reservation-id") Long reservationId
+    ) throws Exception {
+        reservationManipulationService.cancelReservation(userPrincipal, reservationId);
+        return ResponseEntity.noContent().build();
     }
 
 }

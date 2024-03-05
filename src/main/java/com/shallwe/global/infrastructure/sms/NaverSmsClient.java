@@ -103,7 +103,7 @@ public class NaverSmsClient implements SmsClient {
                 .body(SmsResponseDto.class);
     }
 
-    public void sendReservationApply(User sender, User receiver, ExperienceGift experienceGift, Reservation reservation) throws Exception {
+    public void sendApply(User receiver, ExperienceGift experienceGift, Reservation reservation) throws Exception {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String url = "/alimtalk/v2/services/" + BIZTALK_SERVICE_ID + "/messages";
         String signature = makeSignature(timestamp, url);
@@ -161,8 +161,7 @@ public class NaverSmsClient implements SmsClient {
                 .body(SmsResponseDto.class);
     }
 
-    public void sendInvitationAndConfirm(final User sender, final User receiver, final ExperienceGift experienceGift,
-                                         final Reservation reservation) throws Exception {
+    public void sendInvitationAndConfirm(final Reservation reservation) throws Exception {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String url = "/alimtalk/v2/services/" + BIZTALK_SERVICE_ID + "/messages";
         String signature = makeSignature(timestamp, url);
@@ -178,16 +177,16 @@ public class NaverSmsClient implements SmsClient {
                 })
                 .build();
 
-        String sendUserName = sender.getName();
+        String sendUserName = reservation.getSender().getName();
         String date = reservation.getDate().toString();
         String time = reservation.getTime().toString();
-        String receiveUserName = receiver.getName();
-        String productName = experienceGift.getTitle();
+        String receiveUserName = reservation.getReceiver().getName();
+        String productName = reservation.getExperienceGift().getTitle();
         String persons = reservation.getPersons().toString() + "명";
 
         List<MessageMapping> messages = new ArrayList<>();
         messages.add(MessageMapping.builder()
-                .to(receiver.getPhoneNumber())
+                .to(reservation.getReceiver().getPhoneNumber())
                 .content("[셸위]\n" +
                         sendUserName + "님이 초대장을 보냈어요!\uD83C\uDF81\n" +
                         "\n" +
@@ -201,7 +200,7 @@ public class NaverSmsClient implements SmsClient {
                         "지금 바로 셸위 어플에서 확인해보세요.\uD83E\uDD70")
                 .build());
         messages.add(MessageMapping.builder()
-                .to(sender.getPhoneNumber())
+                .to(reservation.getSender().getPhoneNumber())
                 .content("[셸위]\n" +
                         "예약이 확정되었습니다.\n" +
                         receiveUserName + "님께 초대장이 전달되었습니다.\n" +
@@ -238,6 +237,58 @@ public class NaverSmsClient implements SmsClient {
                 .build();
 
         body = objectMapper.writeValueAsString(alimTalkReq);
+        restClient.post()
+                .uri("/services/" + BIZTALK_SERVICE_ID + "/messages")
+                .body(body)
+                .retrieve()
+                .body(SmsResponseDto.class);
+    }
+
+    public void sendCancel(Reservation reservation) throws Exception {
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String url = "/alimtalk/v2/services/" + BIZTALK_SERVICE_ID + "/messages";
+        String signature = makeSignature(timestamp, url);
+
+        RestClient restClient = RestClient.builder()
+                .requestFactory(new HttpComponentsClientHttpRequestFactory())
+                .baseUrl("https://sens.apigw.ntruss.com/alimtalk/v2")
+                .defaultHeaders(header -> {
+                    header.set("Content-Type", "application/json");
+                    header.set("x-ncp-apigw-timestamp", timestamp);
+                    header.set("x-ncp-iam-access-key", ACCESS_KEY);
+                    header.set("x-ncp-apigw-signature-v2", signature);
+                })
+                .build();
+
+        String date = reservation.getDate().toString();
+        String time = reservation.getTime().toString();
+        String receiveUserName = reservation.getReceiver().getName();
+        String productName = reservation.getExperienceGift().getTitle();
+        String persons = reservation.getPersons().toString() + "명";
+
+        List<MessageMapping> messages = new ArrayList<>();
+        messages.add(MessageMapping.builder()
+                .to(reservation.getSender().getPhoneNumber())
+                .content("[셸위]\n" +
+                        "예약이 취소되었습니다\n" +
+                        "문자로 안내드린 절차에 따라 환불절차 진행 부탁드립니다\n" +
+                        "\n" +
+                        "예약날짜: " + date + "\n" +
+                        "예약시간: " + time + "\n" +
+                        "수취인: " + receiveUserName + "\n" +
+                        "상품명: " + productName + "\n" +
+                        "옵션: "+ persons)
+                .build());
+
+        AlimTalkReq alimTalkReq = AlimTalkReq.builder()
+                .plusFriendId("@shallwee")
+                .templateCode("cancelReservation")
+                .messages(messages)
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(alimTalkReq);
+
         restClient.post()
                 .uri("/services/" + BIZTALK_SERVICE_ID + "/messages")
                 .body(body)
