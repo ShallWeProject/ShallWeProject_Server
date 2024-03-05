@@ -103,7 +103,7 @@ public class NaverSmsClient implements SmsClient {
                 .body(SmsResponseDto.class);
     }
 
-    public SmsResponseDto sendReservationApply(User sender, User receiver, ExperienceGift experienceGift, Reservation reservation) throws Exception {
+    public void sendReservationApply(User sender, User receiver, ExperienceGift experienceGift, Reservation reservation) throws Exception {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String url = "/alimtalk/v2/services/" + BIZTALK_SERVICE_ID + "/messages";
         String signature = makeSignature(timestamp, url);
@@ -141,7 +141,7 @@ public class NaverSmsClient implements SmsClient {
                         "예약날짜: " + date + "\n" +
                         "예약시간: " + time + "\n" +
                         "수취인: " + receiveUserName + "\n" +
-                        "상품명: " + productName +"\n" +
+                        "상품명: " + productName + "\n" +
                         "옵션: " + persons)
                 .build());
 
@@ -154,15 +154,15 @@ public class NaverSmsClient implements SmsClient {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(alimTalkReq);
 
-        return restClient.post()
+        restClient.post()
                 .uri("/services/" + BIZTALK_SERVICE_ID + "/messages")
                 .body(body)
                 .retrieve()
                 .body(SmsResponseDto.class);
     }
 
-    public SmsResponseDto sendInvitation(final User sender, final User receiver, final ExperienceGift experienceGift,
-                                         final Reservation reservation) throws Exception {
+    public void sendInvitation(final User sender, final User receiver, final ExperienceGift experienceGift,
+                               final Reservation reservation) throws Exception {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String url = "/alimtalk/v2/services/" + BIZTALK_SERVICE_ID + "/messages";
         String signature = makeSignature(timestamp, url);
@@ -210,7 +210,7 @@ public class NaverSmsClient implements SmsClient {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(alimTalkReq);
 
-        return restClient.post()
+        restClient.post()
                 .uri("/services/" + BIZTALK_SERVICE_ID + "/messages")
                 .body(body)
                 .retrieve()
