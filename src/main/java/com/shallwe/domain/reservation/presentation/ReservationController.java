@@ -126,7 +126,7 @@ public class ReservationController {
     public ResponseCustom<ReservationResponse> createUserReservation(
             @Parameter(description = "예약 요청을 확인해주세요.", required = true) @RequestBody UserReservationCreate reservationRequest,
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
-    ) {
+    ) throws Exception {
         return ResponseCustom.CREATED(
                 reservationManipulationService.addUserReservation(reservationRequest, userPrincipal));
     }

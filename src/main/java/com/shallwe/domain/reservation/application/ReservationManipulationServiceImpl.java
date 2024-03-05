@@ -17,9 +17,6 @@ import com.shallwe.domain.reservation.dto.request.UpdateReservationReq;
 import com.shallwe.domain.reservation.exception.InvalidReservationException;
 import com.shallwe.domain.reservation.exception.InvalidSenderException;
 import com.shallwe.domain.reservation.exception.InvalidReceiverException;
-import com.shallwe.domain.shopowner.domain.ShopOwner;
-import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
-import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 import com.shallwe.global.config.security.token.UserPrincipal;
@@ -27,6 +24,7 @@ import com.shallwe.global.config.security.token.UserPrincipal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.shallwe.global.infrastructure.sms.NaverSmsClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,18 +36,15 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
 
     private final ReservationRepository reservationRepository;
     private final ExperienceGiftRepository experienceGiftRepository;
-    private final ShopOwnerRepository shopOwnerRepository;
     private final UserRepository userRepository;
+    private final NaverSmsClient naverSmsClient;
 
     @Transactional
     public List<ReservationResponse> addOwnerReservation(OwnerReservationCreate ownerReservationCreate, UserPrincipal userPrincipal) {
         ExperienceGift experienceGift = experienceGiftRepository.findById(ownerReservationCreate.getExperienceGiftId())
                 .orElseThrow(ExperienceGiftNotFoundException::new);
 
-        ShopOwner owner = shopOwnerRepository.findById(userPrincipal.getId())
-                .orElseThrow(InvalidShopOwnerException::new);
-
-        List<Reservation> reservations = OwnerReservationCreate.toEntityForOwner(ownerReservationCreate, experienceGift, owner);
+        List<Reservation> reservations = OwnerReservationCreate.toEntityForOwner(ownerReservationCreate, experienceGift);
         return reservations.stream()
                 .map(reservationRepository::save)
                 .map(ReservationResponse::toDtoOwner)
@@ -57,14 +52,14 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
     }
 
     @Transactional
-    public ReservationResponse addUserReservation(UserReservationCreate reservationRequest, UserPrincipal userPrincipal) {
+    public ReservationResponse addUserReservation(UserReservationCreate reservationRequest, UserPrincipal userPrincipal) throws Exception {
         User sender = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(InvalidSenderException::new);
 
         User receiver = userRepository.findByPhoneNumberAndStatus(reservationRequest.getPhoneNumber(), Status.ACTIVE)
                 .orElseThrow(InvalidReceiverException::new);
 
-        ExperienceGift experienceGift = experienceGiftRepository.findById(reservationRequest.getExperienceGiftId())
+        ExperienceGift experienceGift = experienceGiftRepository.findExperienceGiftById(reservationRequest.getExperienceGiftId())
                 .orElseThrow(ExperienceGiftNotFoundException::new);
 
         Reservation reservation = reservationRepository.findByDateAndTimeAndExperienceGift(
@@ -74,6 +69,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
         if (reservation.getReservationStatus().equals(WAITING)) {
             reservation.updateStatus(ReservationStatus.BOOKED);
             reservation.updateUserReservationRequest(reservationRequest, sender, receiver);
+            naverSmsClient.sendReservationApply(sender, receiver, experienceGift, reservation);
             experienceGift.addReservationCount();
         } else {
             throw new InvalidReservationException();

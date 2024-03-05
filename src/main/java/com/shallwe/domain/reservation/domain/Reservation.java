@@ -37,12 +37,6 @@ public class Reservation extends BaseEntity {
     @Schema(description = "선물 ID")
     private ExperienceGift experienceGift;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    @Schema(description = "사장ID")
-    private ShopOwner owner;
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
     @Schema(description = "보내는이 ID")
@@ -82,9 +76,8 @@ public class Reservation extends BaseEntity {
     private List<MemoryPhoto> memoryPhotos = new ArrayList<>();
 
     @Builder
-    public Reservation(ExperienceGift experienceGift, ShopOwner owner, LocalDate date, LocalTime time, ReservationStatus reservationStatus) {
+    public Reservation(ExperienceGift experienceGift, LocalDate date, LocalTime time, ReservationStatus reservationStatus) {
         this.experienceGift = experienceGift;
-        this.owner = owner;
         this.date = date;
         this.time = time;
         this.reservationStatus = reservationStatus;
@@ -107,4 +100,5 @@ public class Reservation extends BaseEntity {
     public void updateStatus(ReservationStatus status) {
         this.reservationStatus = status;
     }
+
 }
