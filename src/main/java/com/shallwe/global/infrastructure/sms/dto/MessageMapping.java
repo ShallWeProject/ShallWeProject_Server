@@ -1,4 +1,4 @@
-package com.shallwe.domain.auth.dto;
+package com.shallwe.global.infrastructure.sms.dto;
 
 import lombok.Builder;
 import lombok.Data;

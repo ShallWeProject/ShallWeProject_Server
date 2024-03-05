@@ -1,6 +1,6 @@
 package com.shallwe.domain.auth.dto.request;
 
-import com.shallwe.domain.auth.dto.MessageMapping;
+import com.shallwe.global.infrastructure.sms.dto.MessageMapping;
 import lombok.Builder;
 import lombok.Data;
 

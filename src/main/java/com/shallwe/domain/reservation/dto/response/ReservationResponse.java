@@ -6,6 +6,7 @@ import com.shallwe.domain.user.domain.User;
 import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 
 import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,51 +17,48 @@ import lombok.Data;
 @Builder
 public class ReservationResponse {
 
-  private Long id;
-  private Long senderId;
-  private Long ownerId;
-  private String sender;
-  private Long persons;
-  private String date;
-  private String time;
-  private Long experienceGiftId;
-  private String receiver;
-  private String phoneNumber;
-  private String invitationImageURL;
-  private String invitationComment;
-  private ReservationStatus reservationStatus;
+    private Long id;
+    private Long senderId;
+    private String sender;
+    private Long persons;
+    private String date;
+    private String time;
+    private Long experienceGiftId;
+    private String receiver;
+    private String phoneNumber;
+    private String invitationImageURL;
+    private String invitationComment;
+    private ReservationStatus reservationStatus;
 
-  public static ReservationResponse toDtoUser(Reservation reservation) {
-    ReservationResponseBuilder builder = ReservationResponse.builder()
-        .id(reservation.getId())
-        .experienceGiftId(reservation.getExperienceGift().getId())
-        .senderId(Optional.ofNullable(reservation.getSender()).map(User::getId).orElse(null))
-        .ownerId(reservation.getOwner().getId())
-            .sender(Optional.ofNullable(reservation.getSender()).map(User::getName).orElse(null))
-        .persons(Optional.ofNullable(reservation.getPersons()).orElse(null))
-        .date(reservation.getDate().toString())
-        .time(reservation.getTime().toString())
-        .phoneNumber(Optional.ofNullable(reservation.getPhoneNumber()).orElse(null))
-        .receiver(Optional.ofNullable(reservation.getReceiver()).map(User::getName).orElse(null))
-        .invitationImageURL(
-            Optional.ofNullable(reservation.getInvitationImg()).map(AwsS3ImageUrlUtil::toUrl)
-                .orElse(null))
-        .invitationComment(Optional.ofNullable(reservation.getInvitationComment()).orElse(null))
-        .reservationStatus(reservation.getReservationStatus());
+    public static ReservationResponse toDtoUser(Reservation reservation) {
+        ReservationResponseBuilder builder = ReservationResponse.builder()
+                .id(reservation.getId())
+                .experienceGiftId(reservation.getExperienceGift().getId())
+                .senderId(Optional.ofNullable(reservation.getSender()).map(User::getId).orElse(null))
+                .sender(Optional.ofNullable(reservation.getSender()).map(User::getName).orElse(null))
+                .persons(Optional.ofNullable(reservation.getPersons()).orElse(null))
+                .date(reservation.getDate().toString())
+                .time(reservation.getTime().toString())
+                .phoneNumber(Optional.ofNullable(reservation.getPhoneNumber()).orElse(null))
+                .receiver(Optional.ofNullable(reservation.getReceiver()).map(User::getName).orElse(null))
+                .invitationImageURL(
+                        Optional.ofNullable(reservation.getInvitationImg()).map(AwsS3ImageUrlUtil::toUrl)
+                                .orElse(null))
+                .invitationComment(Optional.ofNullable(reservation.getInvitationComment()).orElse(null))
+                .reservationStatus(reservation.getReservationStatus());
 
-    return builder.build();
-  }
+        return builder.build();
+    }
 
-  public static ReservationResponse toDtoOwner(Reservation reservation) {
-    ReservationResponseBuilder builder = ReservationResponse.builder()
-        .id(reservation.getId())
-        .experienceGiftId(reservation.getExperienceGift().getId())
-        .ownerId(reservation.getOwner().getId())
-        .date(reservation.getDate().toString())
-        .time(reservation.getTime().toString())
-        .reservationStatus(reservation.getReservationStatus());
+    public static ReservationResponse toDtoOwner(Reservation reservation) {
+        ReservationResponseBuilder builder = ReservationResponse.builder()
+                .id(reservation.getId())
+                .experienceGiftId(reservation.getExperienceGift().getId())
+                .date(reservation.getDate().toString())
+                .time(reservation.getTime().toString())
+                .reservationStatus(reservation.getReservationStatus());
 
-    return builder.build();
-  }
+        return builder.build();
+    }
 
 }

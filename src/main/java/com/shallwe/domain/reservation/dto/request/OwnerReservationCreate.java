@@ -29,7 +29,7 @@ public class OwnerReservationCreate {
   private Map<LocalDate, List<LocalTime>> dateTimeMap;
 
   public static List<Reservation> toEntityForOwner(OwnerReservationCreate ownerReservationCreate,
-      ExperienceGift experienceGift, ShopOwner owner) {
+      ExperienceGift experienceGift) {
     List<Reservation> reservations = new ArrayList<>();
 
     for (Map.Entry<LocalDate, List<LocalTime>> entry : ownerReservationCreate.getDateTimeMap()
@@ -42,7 +42,6 @@ public class OwnerReservationCreate {
                         .experienceGift(experienceGift)
                         .date(date)
                         .time(time)
-                        .owner(owner)
                         .reservationStatus(WAITING)
                         .build();
                 reservations.add(toEntity);
