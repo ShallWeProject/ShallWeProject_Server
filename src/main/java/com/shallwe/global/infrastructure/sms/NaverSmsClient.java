@@ -197,13 +197,13 @@ public class NaverSmsClient implements SmsClient {
                         "옵션: " + persons + "\n" +
                         "\n" +
                         "따뜻한 마음이 담긴 선물을\n" +
-                        "지금 바로 셸위 어플에서 확인해보세요.\uD83E\uDD70")
+                        "지금 바로 셸위 어플에서 확인해보세요\uD83E\uDD70")
                 .build());
         messages.add(MessageMapping.builder()
                 .to(reservation.getSender().getPhoneNumber())
                 .content("[셸위]\n" +
-                        "예약이 확정되었습니다.\n" +
-                        receiveUserName + "님께 초대장이 전달되었습니다.\n" +
+                        "예약이 확정되었습니다\n" +
+                        receiveUserName + "님께 초대장이 전달되었습니다\n" +
                         "\n" +
                         "셸위가 잊지못할 하루를 만들어드릴게요❤\uFE0F\n" +
                         "\n" +
@@ -217,7 +217,7 @@ public class NaverSmsClient implements SmsClient {
         AlimTalkReq alimTalkReq = AlimTalkReq.builder()
                 .plusFriendId("@shallwee")
                 .templateCode("invitation")
-                .messages(messages)
+                .messages(messages.subList(0, 1))
                 .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
