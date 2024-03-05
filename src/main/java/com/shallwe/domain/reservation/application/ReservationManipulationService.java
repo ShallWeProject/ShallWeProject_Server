@@ -1,6 +1,5 @@
 package com.shallwe.domain.reservation.application;
 
-import com.shallwe.domain.reservation.dto.response.DeleteReservationRes;
 import com.shallwe.domain.reservation.dto.request.OwnerReservationCreate;
 import com.shallwe.domain.reservation.dto.response.ReservationResponse;
 import com.shallwe.domain.reservation.dto.request.UserReservationCreate;
@@ -14,6 +13,6 @@ public interface ReservationManipulationService {
     List<ReservationResponse> addOwnerReservation(OwnerReservationCreate ownerReservationCreate, UserPrincipal userPrincipal);
     ReservationResponse addUserReservation(UserReservationCreate reservationRequest, UserPrincipal userPrincipal) throws Exception;
     ReservationResponse updateReservation(UpdateReservationReq updateReq, UserPrincipal userPrincipal);
-    DeleteReservationRes deleteReservation(Long id);
+    void cancelReservation(UserPrincipal userPrincipal, Long reservationId) throws Exception;
 
 }

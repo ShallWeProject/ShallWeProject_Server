@@ -101,14 +101,14 @@ public class Reservation extends BaseEntity {
         this.reservationStatus = status;
     }
 
-    public void flushReservation(){
+
+    public void clearReservation() {
         this.sender = null;
-        this.invitationImg = "";
-        this.persons = null;
-        this.phoneNumber = null;
         this.receiver = null;
+        this.phoneNumber = null;
         this.invitationComment = null;
-        this.reservationStatus=ReservationStatus.WAITING;
+        this.persons = null;
+        this.invitationImg = null;
     }
 
 }
