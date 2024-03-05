@@ -126,8 +126,8 @@ public class ShopOwnerController {
     @PostMapping("/confirm")
     public ResponseCustom<Message> confirmReservationPayment(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "예약 ID를 입력해주세요", required = true) @RequestParam Long reservationId
-    ) {
+            @Parameter(name = "reservationId", description = "예약 ID를 입력해주세요", required = true) @RequestParam(name = "reservationId") Long reservationId
+    ) throws Exception {
         return ResponseCustom.OK(shopOwnerService.confirmPayment(userPrincipal, reservationId));
     }
 

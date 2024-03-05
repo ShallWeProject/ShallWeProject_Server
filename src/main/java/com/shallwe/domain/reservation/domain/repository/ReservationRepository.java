@@ -7,10 +7,12 @@ import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.shopowner.domain.ShopOwner;
 import com.shallwe.domain.user.domain.User;
+import jakarta.persistence.LockModeType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -34,5 +36,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Optional<Reservation> findByDateAndTimeAndExperienceGift(LocalDate date, LocalTime time, ExperienceGift experienceGift);
 
     Optional<List<Reservation>> findAllByExperienceGiftAndDate(ExperienceGift experienceGift, LocalDate date);
+
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select r from Reservation r where r.date = :date and r.time = :time and r.experienceGift=:experienceGift")
+    Optional<Reservation> findByDateAndTimeAndExperienceGiftWithPessimisticLock(LocalDate date, LocalTime time, ExperienceGift experienceGift);
+
+    @EntityGraph(attributePaths = {"experienceGift", "experienceGift.shopOwner", "sender", "receiver"})
+    Optional<Reservation> findReservationById(Long reservationId);
+
 
 }

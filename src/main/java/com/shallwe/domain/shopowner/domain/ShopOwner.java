@@ -40,9 +40,6 @@ public class ShopOwner extends BaseEntity {
     @Column(name = "bankbook")
     private String bankbook;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    private List<Reservation> reservationList;
-
     public void changePassword(String password) {
         this.password = password;
     }
@@ -60,7 +57,7 @@ public class ShopOwner extends BaseEntity {
     }
 
     @Builder
-    public ShopOwner(String name, String phoneNumber, String password, Boolean marketingConsent, String identification, String businessRegistration, String bankbook, List<Reservation> reservationList) {
+    public ShopOwner(String name, String phoneNumber, String password, Boolean marketingConsent, String identification, String businessRegistration, String bankbook) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.password = password;
@@ -68,7 +65,6 @@ public class ShopOwner extends BaseEntity {
         this.identification = identification;
         this.businessRegistration = businessRegistration;
         this.bankbook = bankbook;
-        this.reservationList = reservationList;
     }
 
 }
