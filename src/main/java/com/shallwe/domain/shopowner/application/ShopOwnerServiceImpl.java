@@ -94,7 +94,7 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
             throw new NotReservedException();
 
         reservation.updateStatus(CONFIRMED);
-        naverSmsClient.sendInvitation(reservation.getSender(), reservation.getReceiver(), reservation.getExperienceGift(), reservation);
+        naverSmsClient.sendInvitationAndConfirm(reservation.getSender(), reservation.getReceiver(), reservation.getExperienceGift(), reservation);
 
         return Message.builder()
                 .message("예약이 확정되었습니다.")

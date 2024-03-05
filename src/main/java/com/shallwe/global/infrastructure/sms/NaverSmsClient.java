@@ -132,8 +132,8 @@ public class NaverSmsClient implements SmsClient {
         messages.add(MessageMapping.builder()
                 .to(receiver.getPhoneNumber())
                 .content("[셸위]\n" +
-                        "예약이 접수되었습니다\n" +
-                        "아래 계좌로 입금이 확인되면 예약확정과 함께 초대장이 발송됩니다\n" +
+                        "예약이 접수되었습니다.\n" +
+                        "아래 계좌로 입금이 확인되면 예약확정과 함께 초대장이 발송됩니다.\n" +
                         "\n" +
                         "\uD83D\uDCCC 금액: " + price + "원\n" +
                         "입금계좌: " + account + "\n" +
@@ -161,8 +161,8 @@ public class NaverSmsClient implements SmsClient {
                 .body(SmsResponseDto.class);
     }
 
-    public void sendInvitation(final User sender, final User receiver, final ExperienceGift experienceGift,
-                               final Reservation reservation) throws Exception {
+    public void sendInvitationAndConfirm(final User sender, final User receiver, final ExperienceGift experienceGift,
+                                         final Reservation reservation) throws Exception {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String url = "/alimtalk/v2/services/" + BIZTALK_SERVICE_ID + "/messages";
         String signature = makeSignature(timestamp, url);
@@ -198,7 +198,21 @@ public class NaverSmsClient implements SmsClient {
                         "옵션: " + persons + "\n" +
                         "\n" +
                         "따뜻한 마음이 담긴 선물을\n" +
-                        "지금 바로 셸위 어플에서 확인해보세요\uD83E\uDD70")
+                        "지금 바로 셸위 어플에서 확인해보세요.\uD83E\uDD70")
+                .build());
+        messages.add(MessageMapping.builder()
+                .to(sender.getPhoneNumber())
+                .content("[셸위]\n" +
+                        "예약이 확정되었습니다.\n" +
+                        receiveUserName + "님께 초대장이 전달되었습니다.\n" +
+                        "\n" +
+                        "셸위가 잊지못할 하루를 만들어드릴게요❤\uFE0F\n" +
+                        "\n" +
+                        "예약날짜: " + date + "\n" +
+                        "예약시간: " + time + "\n" +
+                        "수취인: " + receiveUserName + "\n" +
+                        "상품명: " + productName + "\n" +
+                        "옵션: " + persons)
                 .build());
 
         AlimTalkReq alimTalkReq = AlimTalkReq.builder()
@@ -210,6 +224,20 @@ public class NaverSmsClient implements SmsClient {
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(alimTalkReq);
 
+        restClient.post()
+                .uri("/services/" + BIZTALK_SERVICE_ID + "/messages")
+                .body(body)
+                .retrieve()
+                .body(SmsResponseDto.class);
+
+        messages.remove(0);
+        alimTalkReq = AlimTalkReq.builder()
+                .plusFriendId("@shallwee")
+                .templateCode("reservationConfirmed")
+                .messages(messages)
+                .build();
+
+        body = objectMapper.writeValueAsString(alimTalkReq);
         restClient.post()
                 .uri("/services/" + BIZTALK_SERVICE_ID + "/messages")
                 .body(body)
