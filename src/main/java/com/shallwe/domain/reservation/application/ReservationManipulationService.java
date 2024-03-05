@@ -12,7 +12,7 @@ public interface ReservationManipulationService {
 
     List<ReservationResponse> addOwnerReservation(OwnerReservationCreate ownerReservationCreate, UserPrincipal userPrincipal);
     ReservationResponse addUserReservation(UserReservationCreate reservationRequest, UserPrincipal userPrincipal) throws Exception;
-    ReservationResponse updateReservation(UpdateReservationReq updateReq, UserPrincipal userPrincipal);
+    ReservationResponse updateReservation(UpdateReservationReq updateReq, UserPrincipal userPrincipal) throws Exception;
     void cancelReservation(UserPrincipal userPrincipal, Long reservationId) throws Exception;
 
 }

@@ -296,6 +296,57 @@ public class NaverSmsClient implements SmsClient {
                 .body(SmsResponseDto.class);
     }
 
+    public void sendChange(final Reservation reservation) throws Exception {
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String url = "/alimtalk/v2/services/" + BIZTALK_SERVICE_ID + "/messages";
+        String signature = makeSignature(timestamp, url);
+
+        RestClient restClient = RestClient.builder()
+                .requestFactory(new HttpComponentsClientHttpRequestFactory())
+                .baseUrl("https://sens.apigw.ntruss.com/alimtalk/v2")
+                .defaultHeaders(header -> {
+                    header.set("Content-Type", "application/json");
+                    header.set("x-ncp-apigw-timestamp", timestamp);
+                    header.set("x-ncp-iam-access-key", ACCESS_KEY);
+                    header.set("x-ncp-apigw-signature-v2", signature);
+                })
+                .build();
+
+        String date = reservation.getDate().toString();
+        String time = reservation.getTime().toString();
+        String receiveUserName = reservation.getReceiver().getName();
+        String productName = reservation.getExperienceGift().getTitle();
+        String persons = reservation.getPersons().toString() + "명";
+
+        List<MessageMapping> messages = new ArrayList<>();
+        messages.add(MessageMapping.builder()
+                .to(reservation.getSender().getPhoneNumber())
+                .content("[셸위]\n" +
+                        "예약이 변경되었습니다\n" +
+                        "\n" +
+                        "예약날짜: " + date + "\n" +
+                        "예약시간: " + time + "\n" +
+                        "수취인: " + receiveUserName + "\n" +
+                        "상품명: " + productName + "\n" +
+                        "옵션: " + persons)
+                .build());
+
+        AlimTalkReq alimTalkReq = AlimTalkReq.builder()
+                .plusFriendId("@shallwee")
+                .templateCode("reservationChanges")
+                .messages(messages)
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(alimTalkReq);
+
+        restClient.post()
+                .uri("/services/" + BIZTALK_SERVICE_ID + "/messages")
+                .body(body)
+                .retrieve()
+                .body(SmsResponseDto.class);
+    }
+
     @Transactional
     public Message validVerificationCode(ValidVerificationCodeReq validVerificationCodeReq) {
         LocalDateTime time = LocalDateTime.now();
