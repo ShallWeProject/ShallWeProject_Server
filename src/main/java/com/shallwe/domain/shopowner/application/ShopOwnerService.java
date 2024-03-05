@@ -14,7 +14,7 @@ public interface ShopOwnerService {
 
     List<ValidTimeSlotRes> getShopOwnerReservation(UserPrincipal userPrincipal, Long giftId);
 
-    Message confirmPayment(UserPrincipal userPrincipal, Long reservationId);
+    Message confirmPayment(UserPrincipal userPrincipal, Long reservationId) throws Exception;
 
     Message uploadShopOwnerIdentification(ShopOwnerIdentificationReq shopOwnerIdentificationReq, UserPrincipal userPrincipal);
 

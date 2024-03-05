@@ -1,5 +1,6 @@
 package com.shallwe.domain.reservation.application;
 
+import static com.shallwe.domain.reservation.domain.ReservationStatus.*;
 import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
 
 import com.shallwe.domain.common.Status;
@@ -9,16 +10,14 @@ import com.shallwe.domain.experiencegift.exception.ExperienceGiftNotFoundExcepti
 import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.ReservationStatus;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
-import com.shallwe.domain.reservation.dto.response.DeleteReservationRes;
 import com.shallwe.domain.reservation.dto.request.OwnerReservationCreate;
 import com.shallwe.domain.reservation.dto.response.ReservationResponse;
 import com.shallwe.domain.reservation.dto.request.UserReservationCreate;
 import com.shallwe.domain.reservation.dto.request.UpdateReservationReq;
-import com.shallwe.domain.reservation.exception.InvalidReservationException;
-import com.shallwe.domain.reservation.exception.InvalidSenderException;
-import com.shallwe.domain.reservation.exception.InvalidReceiverException;
+import com.shallwe.domain.reservation.exception.*;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.domain.user.domain.repository.UserRepository;
+import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.config.security.token.UserPrincipal;
 
 import java.util.List;
@@ -39,6 +38,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
     private final UserRepository userRepository;
     private final NaverSmsClient naverSmsClient;
 
+    @Override
     @Transactional
     public List<ReservationResponse> addOwnerReservation(OwnerReservationCreate ownerReservationCreate, UserPrincipal userPrincipal) {
         ExperienceGift experienceGift = experienceGiftRepository.findById(ownerReservationCreate.getExperienceGiftId())
@@ -51,6 +51,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional
     public ReservationResponse addUserReservation(UserReservationCreate reservationRequest, UserPrincipal userPrincipal) throws Exception {
         User sender = userRepository.findById(userPrincipal.getId())
@@ -67,9 +68,9 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
                 .orElseThrow(InvalidReservationException::new);
 
         if (reservation.getReservationStatus().equals(WAITING)) {
-            reservation.updateStatus(ReservationStatus.BOOKED);
+            reservation.updateStatus(BOOKED);
             reservation.updateUserReservationRequest(reservationRequest, sender, receiver);
-            naverSmsClient.sendReservationApply(sender, receiver, experienceGift, reservation);
+            naverSmsClient.sendApply(receiver, experienceGift, reservation);
             experienceGift.addReservationCount();
         } else {
             throw new InvalidReservationException();
@@ -77,6 +78,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
         return ReservationResponse.toDtoUser(reservation);
     }
 
+    @Override
     @Transactional
     public ReservationResponse updateReservation(UpdateReservationReq updateReq, UserPrincipal userPrincipal) {
         Reservation updateReservation = reservationRepository.findById(
@@ -89,12 +91,28 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
         return ReservationResponse.toDtoUser(updateReservation);
     }
 
+    @Override
     @Transactional
-    public DeleteReservationRes deleteReservation(Long id) {
-        Reservation reservation = reservationRepository.findById(id)
+    public void cancelReservation(final UserPrincipal userPrincipal, final Long reservationId) throws Exception {
+        Reservation reservation = reservationRepository.findReservationById(reservationId)
                 .orElseThrow(InvalidReservationException::new);
-        reservation.updateStatus(Status.DELETE);
-        return DeleteReservationRes.toDTO();
+
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(InvalidUserException::new);
+
+        if (!reservation.getSender().getId().equals(user.getId()))
+            throw new UserReservationMismatchException();
+
+        if(reservation.getReservationStatus().equals(BOOKED)) { // BOOKED 상태일 때 WAITING으로 변경
+            reservation.updateStatus(WAITING);
+            naverSmsClient.sendCancel(reservation);
+            reservation.clearReservation();
+        } else if(reservation.getReservationStatus().equals(CONFIRMED)) { // CONFIRMED 상태일 때 CANCELLED로 변경
+            reservation.updateStatus(CANCELLED);
+            naverSmsClient.sendCancel(reservation);
+        } else { // 예약 상태가 BOOKED나 CONFIRMED가 아닐 경우
+            throw new NotAvailableReservationStatusException();
+        }
     }
 
 }
