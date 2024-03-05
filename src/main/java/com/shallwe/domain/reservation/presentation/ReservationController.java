@@ -132,7 +132,7 @@ public class ReservationController {
                 reservationManipulationService.addUserReservation(reservationRequest, userPrincipal));
     }
 
-    @Operation(summary = "예약 수정하기", description = "예약을 수정합니다")
+    @Operation(summary = "예약 수정하기", description = "예약 ID로 해당 예약의 시간을 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "예약 수정 성공", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ReservationResponse.class))}),
