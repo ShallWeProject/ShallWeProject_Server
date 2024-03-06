@@ -40,7 +40,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select r from Reservation r where r.date = :date and r.time = :time and r.experienceGift=:experienceGift")
-    Optional<Reservation> findByDateAndTimeAndExperienceGiftWithPessimisticLock(LocalDate date, LocalTime time, ExperienceGift experienceGift);
+    Optional<Reservation> findByDateAndTimeAndExperienceGiftWithPessimisticLock(@Param("date") LocalDate date, @Param("time") LocalTime time, @Param("experienceGift") ExperienceGift experienceGift);
 
     @EntityGraph(attributePaths = {"experienceGift", "experienceGift.shopOwner", "sender", "receiver"})
     Optional<Reservation> findReservationById(Long reservationId);
