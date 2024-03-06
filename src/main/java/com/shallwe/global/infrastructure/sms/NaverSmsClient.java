@@ -132,8 +132,8 @@ public class NaverSmsClient implements SmsClient {
         messages.add(MessageMapping.builder()
                 .to(receiver.getPhoneNumber())
                 .content("[셸위]\n" +
-                        "예약이 접수되었습니다.\n" +
-                        "아래 계좌로 입금이 확인되면 예약확정과 함께 초대장이 발송됩니다.\n" +
+                        "예약이 접수되었습니다\n" +
+                        "아래 계좌로 입금이 확인되면 예약확정과 함께 초대장이 발송됩니다\n" +
                         "\n" +
                         "\uD83D\uDCCC 금액: " + price + "원\n" +
                         "입금계좌: " + account + "\n" +
