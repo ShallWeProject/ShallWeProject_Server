@@ -73,8 +73,8 @@ public class ReservationCheckServiceImpl implements ReservationCheckService{
     ExperienceGift experienceGift = experienceGiftRepository.findById(giftId)
         .orElseThrow(ExperienceGiftNotFoundException::new);
 
-    List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDate(
-            experienceGift, date)
+    List<Reservation> reservations = reservationRepository.findAllByExperienceGiftAndDateAndReservationStatus(
+            experienceGift, date,BOOKED)
         .orElseThrow(InvalidReservationException::new);
 
     return reservations.stream()
