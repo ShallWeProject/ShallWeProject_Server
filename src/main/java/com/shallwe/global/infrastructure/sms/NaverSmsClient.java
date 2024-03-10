@@ -103,7 +103,7 @@ public class NaverSmsClient implements SmsClient {
                 .body(SmsResponseDto.class);
     }
 
-    public void sendApply(User receiver, ExperienceGift experienceGift, Reservation reservation) throws Exception {
+    public void sendApply(User sender, User receiver, ExperienceGift experienceGift, Reservation reservation) throws Exception {
         String timestamp = String.valueOf(System.currentTimeMillis());
         String url = "/alimtalk/v2/services/" + BIZTALK_SERVICE_ID + "/messages";
         String signature = makeSignature(timestamp, url);
@@ -130,7 +130,7 @@ public class NaverSmsClient implements SmsClient {
 
         List<MessageMapping> messages = new ArrayList<>();
         messages.add(MessageMapping.builder()
-                .to(receiver.getPhoneNumber())
+                .to(sender.getPhoneNumber())
                 .content("[셸위]\n" +
                         "예약이 접수되었습니다\n" +
                         "아래 계좌로 입금이 확인되면 예약확정과 함께 초대장이 발송됩니다\n" +
