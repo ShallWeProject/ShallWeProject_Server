@@ -37,7 +37,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
     Optional<List<Reservation>> findAllByExperienceGiftAndDate(ExperienceGift experienceGift, LocalDate date);
 
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select r from Reservation r where r.date = :date and r.time = :time and r.experienceGift=:experienceGift")
     Optional<Reservation> findByDateAndTimeAndExperienceGiftWithPessimisticLock(@Param("date") LocalDate date, @Param("time") LocalTime time, @Param("experienceGift") ExperienceGift experienceGift);

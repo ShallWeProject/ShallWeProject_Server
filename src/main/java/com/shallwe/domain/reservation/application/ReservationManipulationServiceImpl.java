@@ -81,7 +81,7 @@ public class ReservationManipulationServiceImpl implements ReservationManipulati
         if (reservation.getReservationStatus().equals(WAITING)) {
             reservation.updateStatus(BOOKED);
             reservation.updateUserReservationRequest(reservationRequest, sender, receiver);
-            naverSmsClient.sendApply(receiver, experienceGift, reservation);
+            naverSmsClient.sendApply(sender, receiver, experienceGift, reservation);
             experienceGift.addReservationCount();
         } else {
             throw new InvalidReservationException();
