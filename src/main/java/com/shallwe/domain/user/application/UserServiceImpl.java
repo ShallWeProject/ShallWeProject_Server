@@ -1,9 +1,8 @@
 package com.shallwe.domain.user.application;
 
-import com.shallwe.domain.auth.domain.Token;
-import com.shallwe.domain.auth.domain.repository.TokenRepository;
+import com.shallwe.domain.auth.domain.RefreshToken;
+import com.shallwe.domain.auth.domain.repository.RefreshTokenRepository;
 import com.shallwe.domain.common.Status;
-import com.shallwe.domain.reservation.domain.Reservation;
 import com.shallwe.domain.reservation.domain.repository.ReservationRepository;
 import com.shallwe.domain.user.domain.Complain;
 import com.shallwe.domain.user.domain.User;
@@ -27,7 +26,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final TokenRepository tokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final ReservationRepository reservationRepository;
     private final ComplainRepository complainRepository;
 
@@ -46,11 +45,11 @@ public class UserServiceImpl implements UserService {
                 .content(postComplainReq.getComplain())
                 .build();
 
-        Token token = tokenRepository.findByUserEmail(user.getEmail())
+        RefreshToken refreshToken = refreshTokenRepository.findByProviderId(user.getEmail())
                 .orElseThrow(InvalidTokenException::new);
 
         user.updateStatus(Status.DELETE);
-        tokenRepository.delete(token);
+        refreshTokenRepository.delete(refreshToken);
         complainRepository.save(complain);
 
         return DeleteUserRes.toDto();

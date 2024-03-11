@@ -8,26 +8,27 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(name = "refresh_token")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Token extends BaseEntity {
+public class RefreshToken extends BaseEntity {
 
     @Id
-    @Column(name = "user_email")
-    private String userEmail;
+    @Column(name = "provider_id")
+    private String providerId;
 
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    public Token updateRefreshToken(String refreshToken) {
+    public RefreshToken updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;
     }
 
     @Builder
-    public Token(String userEmail, String refreshToken) {
-        this.userEmail = userEmail;
+    public RefreshToken(String providerId, String refreshToken) {
+        this.providerId = providerId;
         this.refreshToken = refreshToken;
     }
 
