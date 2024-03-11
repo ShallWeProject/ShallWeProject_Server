@@ -70,7 +70,7 @@ public class AuthService {
 
             userRepository.save(newUser);
 
-            if (signInReq.getProvider().equals(Provider.GOOGLE)) {
+            if (signInReq.getProvider().equals(Provider.GOOGLE) && signInReq.getRefreshToken() != null) {
                 OAuth2Token oAuth2Token = OAuth2Token.builder()
                         .providerId(newUser.getProviderId())
                         .refreshToken(signInReq.getRefreshToken())
@@ -86,7 +86,7 @@ public class AuthService {
     }
 
     @Transactional
-    public SignInRes appleSignIn(AppleSignInReq appleSignInReq) {
+    public SignInRes appleSignIn(final AppleSignInReq appleSignInReq) {
         Claims claims = appleJwtUtils.getClaimsBy(appleSignInReq.getIdentityToken());
         String providerId = claims.get("sub").toString();
 

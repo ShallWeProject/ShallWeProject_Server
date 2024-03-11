@@ -18,7 +18,7 @@ public class OAuth2Token {
     @Column(name = "provider_id")
     private String providerId;
 
-    @Column(name = "refresh_token")
+    @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 
     @Builder
