@@ -9,10 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "apple_token")
+@Table(name = "oauth2_token")
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Getter
-public class AppleToken {
+public class OAuth2Token {
 
     @Id
     @Column(name = "provider_id")
@@ -22,7 +22,7 @@ public class AppleToken {
     private String refreshToken;
 
     @Builder
-    public AppleToken(String providerId, String refreshToken) {
+    public OAuth2Token(String providerId, String refreshToken) {
         this.providerId = providerId;
         this.refreshToken = refreshToken;
     }

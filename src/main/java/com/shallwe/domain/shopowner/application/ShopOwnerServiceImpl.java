@@ -3,10 +3,9 @@ package com.shallwe.domain.shopowner.application;
 
 import static com.shallwe.domain.reservation.domain.ReservationStatus.BOOKED;
 import static com.shallwe.domain.reservation.domain.ReservationStatus.CONFIRMED;
-import static com.shallwe.domain.reservation.domain.ReservationStatus.WAITING;
 
-import com.shallwe.domain.auth.domain.Token;
-import com.shallwe.domain.auth.domain.repository.TokenRepository;
+import com.shallwe.domain.auth.domain.RefreshToken;
+import com.shallwe.domain.auth.domain.repository.RefreshTokenRepository;
 import com.shallwe.domain.common.Status;
 import com.shallwe.domain.experiencegift.domain.ExperienceGift;
 import com.shallwe.domain.experiencegift.domain.repository.ExperienceGiftRepository;
@@ -29,10 +28,8 @@ import com.shallwe.global.payload.Message;
 import com.shallwe.global.utils.AwsS3ImageUrlUtil;
 
 import java.util.List;
-import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +40,7 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
 
     private final NaverSmsClient naverSmsClient;
     private final ShopOwnerRepository shopOwnerRepository;
-    private final TokenRepository tokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final ReservationRepository reservationRepository;
     private final ExperienceGiftRepository experienceGiftRepository;
 
@@ -52,11 +49,11 @@ public class ShopOwnerServiceImpl implements ShopOwnerService {
     public Message deleteCurrentShopOwner(UserPrincipal userPrincipal) {
         ShopOwner shopOwner = shopOwnerRepository.findById(userPrincipal.getId())
                 .orElseThrow(InvalidShopOwnerException::new);
-        Token token = tokenRepository.findByUserEmail(userPrincipal.getEmail())
+        RefreshToken refreshToken = refreshTokenRepository.findByProviderId(userPrincipal.getEmail())
                 .orElseThrow(InvalidTokenException::new);
 
         shopOwner.updateStatus(Status.DELETE);
-        tokenRepository.delete(token);
+        refreshTokenRepository.delete(refreshToken);
 
         return Message.builder()
                 .message("사장 탈퇴가 완료되었습니다.")

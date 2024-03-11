@@ -1,20 +1,14 @@
 package com.shallwe.global.config.security;
 
-import com.shallwe.global.config.security.handler.CustomSimpleUrlAuthenticationFailureHandler;
-import com.shallwe.global.config.security.handler.CustomSimpleUrlAuthenticationSuccessHandler;
 import com.shallwe.global.config.security.token.CustomAuthenticationEntryPoint;
 import com.shallwe.global.config.security.token.CustomOncePerRequestFilter;
-import com.shallwe.domain.auth.domain.repository.CustomAuthorizationRequestRepository;
-import com.shallwe.domain.auth.application.CustomDefaultOAuth2UserService;
 import com.shallwe.domain.auth.application.CustomUserDetailsService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -36,10 +30,6 @@ import static org.springframework.security.config.Customizer.*;
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final CustomDefaultOAuth2UserService customOAuth2UserService;
-    private final CustomSimpleUrlAuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-    private final CustomSimpleUrlAuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-    private final CustomAuthorizationRequestRepository customAuthorizationRequestRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -92,17 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/blog/**")
                                 .permitAll()
                         .anyRequest()
-                                .authenticated())
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(authorization -> authorization
-                                .baseUri("/oauth2/authorize")
-                                .authorizationRequestRepository(customAuthorizationRequestRepository))
-                        .redirectionEndpoint(redirection -> redirection
-                                .baseUri("/oauth2/callback/**"))
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService))
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-                        .failureHandler(oAuth2AuthenticationFailureHandler));
+                                .authenticated());
 
         http.addFilterBefore(customOncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
