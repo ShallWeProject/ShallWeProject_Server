@@ -36,6 +36,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     Optional<Reservation> findByDateAndTimeAndExperienceGift(LocalDate date, LocalTime time, ExperienceGift experienceGift);
 
     Optional<List<Reservation>> findAllByExperienceGiftAndDate(ExperienceGift experienceGift, LocalDate date);
+    Optional<List<Reservation>> findAllByExperienceGiftAndDateAndReservationStatus(ExperienceGift experienceGift, LocalDate date,ReservationStatus reservationStatus);
 
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
