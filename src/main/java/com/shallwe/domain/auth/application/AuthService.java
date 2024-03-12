@@ -57,7 +57,7 @@ public class AuthService {
 
     @Transactional
     public SignInRes kakaoGoogleSignIn(final SignInReq signInReq) {
-        Optional<User> optionalUser = userRepository.findByProviderId(signInReq.getProviderId());
+        Optional<User> optionalUser = userRepository.findByProviderIdAndStatus(signInReq.getProviderId(), Status.ACTIVE);
 
         if (optionalUser.isEmpty()) {
             User newUser = User.builder()
@@ -90,7 +90,7 @@ public class AuthService {
         Claims claims = appleJwtUtils.getClaimsBy(appleSignInReq.getIdentityToken());
         String providerId = claims.get("sub").toString();
 
-        Optional<User> optionalUser = userRepository.findByProviderId(providerId);
+        Optional<User> optionalUser = userRepository.findByProviderIdAndStatus(providerId, Status.ACTIVE);
 
         if (optionalUser.isEmpty()) {
             String appleRefreshToken = appleJwtUtils.getAppleToken(appleSignInReq.getAuthorizationCode());
