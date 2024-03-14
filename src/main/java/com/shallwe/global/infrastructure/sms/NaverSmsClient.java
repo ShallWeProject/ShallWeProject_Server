@@ -348,6 +348,56 @@ public class NaverSmsClient implements SmsClient {
     }
 
     @Transactional
+    public SmsResponseDto sendTest(String receivePhoneNumber) throws Exception {
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String url = "/sms/v2/services/" + SMS_SERVICE_ID + "/messages";
+        String signature = makeSignature(timestamp, url);
+
+        String code = generateRandomCode();
+
+        MessageMapping messageMapping = MessageMapping.builder()
+                .to(receivePhoneNumber)
+                .content("[Fire AO] 인증번호 [" + code + "]를 입력해주세요.").build();
+
+        List<MessageMapping> messages = new ArrayList<>();
+        messages.add(messageMapping);
+
+        NaverCloudSmsReq naverCloudSmsReq = NaverCloudSmsReq.builder()
+                .type("SMS")
+                .contentType("COMM")
+                .countryCode("82")
+                .from(PHONE_NUMBER)
+                .content(messageMapping.getContent())
+                .messages(messages)
+                .build();
+
+        VerificationCode verificationCode = VerificationCode.builder()
+                .phoneNumber(receivePhoneNumber)
+                .code(code)
+                .expiryDate(LocalDateTime.now().plusMinutes(10))
+                .build();
+
+        verificationCodeRepository.save(verificationCode);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String body = objectMapper.writeValueAsString(naverCloudSmsReq);
+
+        RestClient restClient = RestClient.builder()
+                .requestFactory(new HttpComponentsClientHttpRequestFactory())
+                .baseUrl("https://sens.apigw.ntruss.com/sms/v2/services")
+                .build();
+
+        return restClient.post().uri("/" + SMS_SERVICE_ID + "/messages")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-ncp-apigw-timestamp", timestamp)
+                .header("x-ncp-iam-access-key", ACCESS_KEY)
+                .header("x-ncp-apigw-signature-v2", signature)
+                .body(body)
+                .retrieve()
+                .body(SmsResponseDto.class);
+    }
+
+    @Transactional
     public Message validVerificationCode(ValidVerificationCodeReq validVerificationCodeReq) {
         LocalDateTime time = LocalDateTime.now();
 
