@@ -162,4 +162,16 @@ public class AuthController {
                 authService.shopOwnerChangePassword(shopOwnerChangePasswordReq));
     }
 
+    @Operation(summary = "인증 문자 전송(테스트용 사용 X)", description = "인증 문자 전송(테스트용 사용 X)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "문자 전송 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = SmsResponseDto.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "문자 전송 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @PostMapping("/send-one/test")
+    public ResponseCustom<SmsResponseDto> sendTest(
+            @Parameter(description = "SmsReq Schema를 참고해주세요", required = true) @RequestBody NaverVerifySmsReq naverVerifySmsReq
+    ) throws Exception {
+        return ResponseCustom.OK(naverSmsClient.sendTest(naverVerifySmsReq.getReceivePhoneNumber()));
+    }
+
 }
