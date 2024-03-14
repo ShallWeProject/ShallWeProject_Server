@@ -46,11 +46,12 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "유저 탈퇴 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @PostMapping("/inactive")
-    public ResponseCustom<DeleteUserRes> inactiveCurrentUser(
+    public ResponseEntity<Void> inactiveCurrentUser(
             @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @Parameter(description = "PostComplainReq를 확인 해 주세요.", required = true) @RequestBody PostComplainReq postComplainReq
     ) {
-        return ResponseCustom.OK(userServiceImpl.inactiveCurrentUser(userPrincipal, postComplainReq));
+        userServiceImpl.inactiveCurrentUser(userPrincipal, postComplainReq);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "유저 세부정보 입력", description = "이름, 마켓팅 정보 동의와 나이, 성별 정보를 입력받습니다.")
