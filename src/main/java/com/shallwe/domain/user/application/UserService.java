@@ -9,7 +9,7 @@ import java.util.List;
 public interface UserService {
 
     UserDetailRes getCurrentUser(UserPrincipal userPrincipal);
-    DeleteUserRes inactiveCurrentUser(UserPrincipal userPrincipal, PostComplainReq postComplainReq);
+    void inactiveCurrentUser(UserPrincipal userPrincipal, PostComplainReq postComplainReq);
     void signUpCurrentUser(UserPrincipal userPrincipal, SignUpUserReq signUpUserReq);
     List<SendGiftDetailRes> findSendGiftsByUser(UserPrincipal userPrincipal);
     List<ReceiveGiftDetailRes> findReceiveGiftsByUser(UserPrincipal userPrincipal);

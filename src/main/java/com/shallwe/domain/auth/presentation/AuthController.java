@@ -2,7 +2,7 @@ package com.shallwe.domain.auth.presentation;
 
 
 import com.shallwe.domain.auth.dto.request.*;
-import com.shallwe.domain.auth.dto.response.AppleSignInRes;
+import com.shallwe.domain.auth.dto.response.SignInRes;
 import com.shallwe.domain.auth.dto.response.AuthRes;
 import com.shallwe.domain.auth.dto.response.SmsResponseDto;
 import com.shallwe.global.infrastructure.sms.NaverSmsClient;
@@ -37,37 +37,25 @@ public class AuthController {
     private final AuthService authService;
     private final NaverSmsClient naverSmsClient;
 
-    @Operation(summary = "유저 회원가입", description = "유저 회원가입을 수행합니다.")
+    @Operation(summary = "카카오/구글 로그인", description = "카카오/구글 로그인을 수행합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRes.class) ) } ),
-            @ApiResponse(responseCode = "400", description = "회원가입 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
-    })
-    @PostMapping(value="/sign-up")
-    public ResponseCustom<AuthRes> signUp(
-            @Parameter(description = "SignUpReq Schema를 확인해주세요.", required = true) @RequestBody SignUpReq signUpReq
-    ) {
-        return ResponseCustom.OK(authService.signUp(signUpReq));
-    }
-
-    @Operation(summary = "유저 로그인", description = "유저 로그인을 수행합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "로그인 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthRes.class) ) } ),
-            @ApiResponse(responseCode = "400", description = "로그인 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+            @ApiResponse(responseCode = "200", description = "카카오/구글 로그인 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = SignInRes.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "카카오/구글 로그인 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping(value="/sign-in")
-    public ResponseCustom<AuthRes> signIn(
+    public ResponseCustom<SignInRes> signIn(
             @Parameter(description = "SignInReq Schema를 확인해주세요.", required = true) @RequestBody SignInReq signInReq
     ) {
-        return ResponseCustom.OK(authService.signIn(signInReq));
+        return ResponseCustom.OK(authService.kakaoGoogleSignIn(signInReq));
     }
 
     @Operation(summary = "애플 로그인", description = "애플 로그인을 수행합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "애플 로그인 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AppleSignInRes.class) ) } ),
+            @ApiResponse(responseCode = "200", description = "애플 로그인 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = SignInRes.class) ) } ),
             @ApiResponse(responseCode = "400", description = "애플 로그인 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
     })
     @PostMapping(value="/sign-in/apple")
-    public ResponseCustom<AppleSignInRes> appleSignIn(
+    public ResponseCustom<SignInRes> appleSignIn(
             @Parameter(description = "SignInReq Schema를 확인해주세요.", required = true) @RequestBody AppleSignInReq appleSignInReq
     ) {
         return ResponseCustom.OK(authService.appleSignIn(appleSignInReq));
@@ -172,6 +160,18 @@ public class AuthController {
     ) {
         return ResponseCustom.OK(
                 authService.shopOwnerChangePassword(shopOwnerChangePasswordReq));
+    }
+
+    @Operation(summary = "인증 문자 전송(테스트용 사용 X)", description = "인증 문자 전송(테스트용 사용 X)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "문자 전송 성공", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = SmsResponseDto.class) ) } ),
+            @ApiResponse(responseCode = "400", description = "문자 전송 실패", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class) ) } ),
+    })
+    @PostMapping("/send-one/test")
+    public ResponseCustom<SmsResponseDto> sendTest(
+            @Parameter(description = "SmsReq Schema를 참고해주세요", required = true) @RequestBody NaverVerifySmsReq naverVerifySmsReq
+    ) throws Exception {
+        return ResponseCustom.OK(naverSmsClient.sendTest(naverVerifySmsReq.getReceivePhoneNumber()));
     }
 
 }

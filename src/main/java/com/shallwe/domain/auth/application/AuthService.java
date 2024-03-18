@@ -2,11 +2,12 @@ package com.shallwe.domain.auth.application;
 
 import java.util.Optional;
 
-import com.shallwe.domain.auth.domain.AppleToken;
-import com.shallwe.domain.auth.domain.repository.AppleTokenRepository;
+import com.shallwe.domain.auth.domain.OAuth2Token;
+import com.shallwe.domain.auth.domain.RefreshToken;
+import com.shallwe.domain.auth.domain.repository.OAuth2TokenRepository;
 import com.shallwe.domain.auth.dto.*;
 import com.shallwe.domain.auth.dto.request.*;
-import com.shallwe.domain.auth.dto.response.AppleSignInRes;
+import com.shallwe.domain.auth.dto.response.SignInRes;
 import com.shallwe.domain.auth.dto.response.AuthRes;
 import com.shallwe.domain.auth.exception.*;
 import com.shallwe.domain.common.Status;
@@ -15,18 +16,16 @@ import com.shallwe.domain.shopowner.domain.repository.ShopOwnerRepository;
 import com.shallwe.domain.shopowner.exception.AlreadyExistPhoneNumberException;
 import com.shallwe.domain.shopowner.exception.InvalidPhoneNumberException;
 import com.shallwe.domain.shopowner.exception.InvalidShopOwnerException;
-import com.shallwe.domain.user.exception.InvalidUserException;
 import com.shallwe.global.DefaultAssert;
 
 import com.shallwe.domain.user.domain.Provider;
 import com.shallwe.domain.user.domain.Role;
-import com.shallwe.domain.auth.domain.Token;
 import com.shallwe.domain.user.domain.User;
 import com.shallwe.global.config.security.token.UserPrincipal;
 import com.shallwe.global.error.DefaultAuthenticationException;
 import com.shallwe.global.payload.ErrorCode;
 import com.shallwe.global.payload.Message;
-import com.shallwe.domain.auth.domain.repository.TokenRepository;
+import com.shallwe.domain.auth.domain.repository.RefreshTokenRepository;
 import com.shallwe.domain.user.domain.repository.UserRepository;
 
 import com.shallwe.global.utils.AppleJwtUtils;
@@ -51,53 +50,55 @@ public class AuthService {
     private final AppleJwtUtils appleJwtUtils;
     private final PasswordEncoder passwordEncoder;
 
-    private final TokenRepository tokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
     private final ShopOwnerRepository shopOwnerRepository;
-    private final AppleTokenRepository appleTokenRepository;
+    private final OAuth2TokenRepository oAuth2TokenRepository;
 
     @Transactional
-    public AuthRes signUp(final SignUpReq signUpReq) {
-        if (userRepository.existsByEmailAndStatus(signUpReq.getEmail(), Status.ACTIVE))
-            throw new AlreadyExistEmailException();
+    public SignInRes kakaoGoogleSignIn(final SignInReq signInReq) {
+        Optional<User> optionalUser = userRepository.findByProviderIdAndStatus(signInReq.getProviderId(), Status.ACTIVE);
 
-        User newUser = User.builder()
-                .providerId(signUpReq.getProviderId())
-                .provider(signUpReq.getProvider())
-                .email(signUpReq.getEmail())
-                .password(passwordEncoder.encode(signUpReq.getProviderId()))
-                .role(Role.USER)
-                .build();
-        userRepository.save(newUser);
+        if (optionalUser.isEmpty()) {
+            User newUser = User.builder()
+                    .provider(signInReq.getProvider())
+                    .providerId(signInReq.getProviderId())
+                    .email(signInReq.getEmail())
+                    .password(passwordEncoder.encode(signInReq.getProviderId()))
+                    .role(Role.USER)
+                    .build();
 
-        return getUserAuthRes(newUser);
-    }
+            userRepository.save(newUser);
 
-    @Transactional
-    public AuthRes signIn(final SignInReq signInReq) {
-        User user = userRepository.findByEmailAndStatus(signInReq.getEmail(), Status.ACTIVE)
-                .orElseThrow(InvalidUserException::new);
-        if (!user.getProviderId().equals(signInReq.getProviderId())) {
-            throw new InvalidPasswordException();
+            if (signInReq.getProvider().equals(Provider.GOOGLE) && signInReq.getRefreshToken() != null) {
+                OAuth2Token oAuth2Token = OAuth2Token.builder()
+                        .providerId(newUser.getProviderId())
+                        .refreshToken(signInReq.getRefreshToken())
+                        .build();
+                oAuth2TokenRepository.save(oAuth2Token);
+            }
+
+            optionalUser = Optional.of(newUser);
         }
 
-        return getUserAuthRes(user);
+        User user = optionalUser.get();
+        return getUserSignInRes(user);
     }
 
     @Transactional
-    public AppleSignInRes appleSignIn(AppleSignInReq appleSignInReq) {
+    public SignInRes appleSignIn(final AppleSignInReq appleSignInReq) {
         Claims claims = appleJwtUtils.getClaimsBy(appleSignInReq.getIdentityToken());
         String providerId = claims.get("sub").toString();
 
-        Optional<User> optionalUser = userRepository.findByProviderId(providerId);
+        Optional<User> optionalUser = userRepository.findByProviderIdAndStatus(providerId, Status.ACTIVE);
 
         if (optionalUser.isEmpty()) {
             String appleRefreshToken = appleJwtUtils.getAppleToken(appleSignInReq.getAuthorizationCode());
-            AppleToken appleTokenReq = AppleToken.builder()
+            OAuth2Token oAuth2Token = OAuth2Token.builder()
                     .providerId(providerId)
                     .refreshToken(appleRefreshToken)
                     .build();
-            appleTokenRepository.save(appleTokenReq);
+            oAuth2TokenRepository.save(oAuth2Token);
 
             User newUser = User.builder()
                     .providerId(providerId)
@@ -111,19 +112,7 @@ public class AuthService {
         }
 
         User user = optionalUser.get();
-        boolean isSignUpComplete = true;
-
-        if (user.getName() == null || user.getPhoneNumber() == null || user.getAge() == null || user.getGender() == null) {
-            isSignUpComplete = false;
-        }
-
-        AuthRes userAuthRes = getUserAuthRes(user);
-        return AppleSignInRes.builder()
-                .isSignUpComplete(isSignUpComplete)
-                .accessToken(userAuthRes.getAccessToken())
-                .refreshToken(userAuthRes.getRefreshToken())
-                .tokenType(userAuthRes.getTokenType())
-                .build();
+        return getUserSignInRes(user);
     }
 
     @Transactional
@@ -132,9 +121,9 @@ public class AuthService {
         boolean checkValid = valid(tokenRefreshRequest.getRefreshToken());
         DefaultAssert.isAuthentication(checkValid);
 
-        Token token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken())
+        RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken())
                 .orElseThrow(() -> new DefaultAuthenticationException(ErrorCode.INVALID_AUTHENTICATION));
-        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(token.getUserEmail());
+        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(refreshToken.getProviderId());
 
         //4. refresh token 정보 값을 업데이트 한다.
         //시간 유효성 확인
@@ -142,25 +131,25 @@ public class AuthService {
 
         Long expirationTime = customTokenProviderService.getExpiration(tokenRefreshRequest.getRefreshToken());
         if (expirationTime > 0) {
-            tokenMapping = customTokenProviderService.refreshToken(authentication, token.getRefreshToken());
+            tokenMapping = customTokenProviderService.refreshToken(authentication, refreshToken.getRefreshToken());
         } else {
             tokenMapping = customTokenProviderService.createToken(authentication);
         }
 
-        Token updateToken = token.updateRefreshToken(tokenMapping.getRefreshToken());
-        tokenRepository.save(updateToken);
+        RefreshToken updateRefreshToken = refreshToken.updateRefreshToken(tokenMapping.getRefreshToken());
+        refreshTokenRepository.save(updateRefreshToken);
 
         return AuthRes.builder().
                 accessToken(tokenMapping.getAccessToken())
-                .refreshToken(updateToken.getRefreshToken())
+                .refreshToken(updateRefreshToken.getRefreshToken())
                 .build();
     }
 
     @Transactional
     public Message signOut(final RefreshTokenReq tokenRefreshRequest) {
-        Token token = tokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken())
+        RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(tokenRefreshRequest.getRefreshToken())
                 .orElseThrow(() -> new DefaultAuthenticationException(ErrorCode.INVALID_AUTHENTICATION));
-        tokenRepository.delete(token);
+        refreshTokenRepository.delete(refreshToken);
 
         return Message.builder()
                 .message("로그아웃 하였습니다.")
@@ -214,17 +203,17 @@ public class AuthService {
         DefaultAssert.isTrue(validateCheck, "Token 검증에 실패하였습니다.");
 
         //2. refresh token 값을 불러온다.
-        Optional<Token> token = tokenRepository.findByRefreshToken(refreshToken);
+        Optional<RefreshToken> token = refreshTokenRepository.findByRefreshToken(refreshToken);
         DefaultAssert.isTrue(token.isPresent(), "탈퇴 처리된 회원입니다.");
 
-        //3. email 값을 통해 인증값을 불러온다
-        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(token.get().getUserEmail());
-        DefaultAssert.isTrue(token.get().getUserEmail().equals(authentication.getName()), "사용자 인증에 실패하였습니다.");
+        //3. providerId 값을 통해 인증값을 불러온다
+        Authentication authentication = customTokenProviderService.getAuthenticationByEmail(token.get().getProviderId());
+        DefaultAssert.isTrue(token.get().getProviderId().equals(authentication.getName()), "사용자 인증에 실패하였습니다.");
 
         return true;
     }
 
-    private AuthRes getUserAuthRes(User user) {
+    private SignInRes getUserSignInRes(User user) {
         UserPrincipal userPrincipal = UserPrincipal.createUser(user);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 userPrincipal,
@@ -233,16 +222,29 @@ public class AuthService {
         );
 
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
-        Token token = Token.builder()
+        RefreshToken refreshToken = RefreshToken.builder()
                 .refreshToken(tokenMapping.getRefreshToken())
-                .userEmail(tokenMapping.getUserEmail())
+                .providerId(user.getProviderId())
                 .build();
 
-        tokenRepository.save(token);
+        refreshTokenRepository.save(refreshToken);
 
-        return AuthRes.builder()
+        boolean isSignUpComplete = user.getName() != null
+                && user.getEmail() != null
+                && user.getPhoneNumber() != null
+                && user.getAge() != null
+                && user.getGender() != null;
+
+        AuthRes userAuthRes = AuthRes.builder()
                 .accessToken(tokenMapping.getAccessToken())
-                .refreshToken(token.getRefreshToken())
+                .refreshToken(refreshToken.getRefreshToken())
+                .build();
+
+        return SignInRes.builder()
+                .isSignUpComplete(isSignUpComplete)
+                .accessToken(userAuthRes.getAccessToken())
+                .refreshToken(userAuthRes.getRefreshToken())
+                .tokenType(userAuthRes.getTokenType())
                 .build();
     }
 
@@ -256,15 +258,15 @@ public class AuthService {
 
         TokenMapping tokenMapping = customTokenProviderService.createToken(authentication);
 
-        Token token = Token.builder()
+        RefreshToken refreshToken = RefreshToken.builder()
                 .refreshToken(tokenMapping.getRefreshToken())
-                .userEmail(tokenMapping.getUserEmail())
+                .providerId(shopOwner.getPhoneNumber())
                 .build();
-        tokenRepository.save(token);
+        refreshTokenRepository.save(refreshToken);
 
         AuthRes authRes = AuthRes.builder()
                 .accessToken(tokenMapping.getAccessToken())
-                .refreshToken(token.getRefreshToken())
+                .refreshToken(refreshToken.getRefreshToken())
                 .build();
 
         return authRes;

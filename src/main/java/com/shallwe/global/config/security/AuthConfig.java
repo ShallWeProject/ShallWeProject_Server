@@ -22,6 +22,7 @@ public class AuthConfig {
         private String tokenSecret;
         private long accessTokenExpirationMsec;
         private long refreshTokenExpirationMsec;
+        private String kakaoAdminKey;
     }
 
     @Data

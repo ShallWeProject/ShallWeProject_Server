@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class AppleSignInRes {
+public class SignInRes {
 
     @Schema(type = "boolean", example = "true", description = "유저 정보 입력이 완료되었는지 여부를 출력합니다.")
     private Boolean isSignUpComplete;
@@ -20,7 +20,7 @@ public class AppleSignInRes {
     private String tokenType = "Bearer";
 
     @Builder
-    public AppleSignInRes(Boolean isSignUpComplete, String accessToken, String refreshToken, String tokenType) {
+    public SignInRes(Boolean isSignUpComplete, String accessToken, String refreshToken, String tokenType) {
         this.isSignUpComplete = isSignUpComplete;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

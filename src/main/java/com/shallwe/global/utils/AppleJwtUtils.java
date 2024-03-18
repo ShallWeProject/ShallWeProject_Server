@@ -2,6 +2,7 @@ package com.shallwe.global.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shallwe.domain.auth.dto.request.AppleTokenReq;
+import com.shallwe.domain.auth.dto.request.AppleTokenRevokeReq;
 import com.shallwe.global.config.security.AuthConfig;
 import com.shallwe.domain.auth.dto.response.ApplePublicKeyRes;
 import io.jsonwebtoken.*;
@@ -106,6 +107,31 @@ public class AppleJwtUtils {
                 .body(AppleTokenReq.Response.class);
 
         return response.getRefresh_token();
+    }
+
+    public void revokeToken(String refreshToken) {
+        RestClient restClient = RestClient.builder()
+                .baseUrl("https://appleid.apple.com/auth")
+                .requestFactory(new HttpComponentsClientHttpRequestFactory())
+                .build();
+
+        AppleTokenRevokeReq appleTokenRevokeReq = AppleTokenRevokeReq.of(
+                authConfig.getAppleAuth().getClientId(),
+                makeClientSecret(),
+                refreshToken
+        );
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("client_id", appleTokenRevokeReq.getClient_id());
+        map.add("client_secret", appleTokenRevokeReq.getClient_secret());
+        map.add("token", appleTokenRevokeReq.getToken());
+
+        restClient.post()
+                .uri("/revoke")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(map)
+                .retrieve()
+                .toBodilessEntity();
     }
 
     public String makeClientSecret() {
