@@ -188,7 +188,7 @@ public class NaverSmsClient implements SmsClient {
         messages.add(MessageMapping.builder()
                 .to(reservation.getReceiver().getPhoneNumber())
                 .content("[셸위]\n" +
-                        sendUserName + "님이 초대장을 보냈어요!\uD83C\uDF81\n" +
+                        sendUserName + "님이 선물을 보냈어요!\uD83C\uDF81\n" +
                         "\n" +
                         "예약날짜: " + date + "\n" +
                         "예약시간: " + time + "\n" +
@@ -196,7 +196,7 @@ public class NaverSmsClient implements SmsClient {
                         "상품명: " + productName + "\n" +
                         "옵션: " + persons + "\n" +
                         "\n" +
-                        "따뜻한 마음이 담긴 선물을\n" +
+                        "따뜻한 마음이 담긴 선물과 초대장을\n" +
                         "지금 바로 셸위 어플에서 확인해보세요\uD83E\uDD70")
                 .build());
         messages.add(MessageMapping.builder()
@@ -216,7 +216,7 @@ public class NaverSmsClient implements SmsClient {
 
         AlimTalkReq alimTalkReq = AlimTalkReq.builder()
                 .plusFriendId("@shallwee")
-                .templateCode("invitation")
+                .templateCode("invitationV3")
                 .messages(messages.subList(0, 1))
                 .build();
 
